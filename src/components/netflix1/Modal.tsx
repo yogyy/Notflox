@@ -1,152 +1,152 @@
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
-import { Movie } from '../../../typing';
-import { Transition, Dialog } from '@headlessui/react';
-import clsx from 'clsx';
+import MuiModal from '@mui/material/Modal';
+import { useRecoilState } from 'recoil';
+import { modalState, movieState } from '../../../atoms/modalAtom';
+import {
+  CheckIcon,
+  HandThumbUpIcon,
+  PlayIcon,
+  PlusIcon,
+  SpeakerWaveIcon,
+  SpeakerXMarkIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import Image from 'next/image';
+import { Element, Genre, Movie } from '../../../typing';
+import { API_KEY, BASE_URL } from '@/utils/request';
+import ReactPlayer from 'react-player';
+import FavoriteButton from '../FavoritesButton';
 
-interface Props {
-  title: string;
-  movies: Movie[];
-  className?: string;
-}
+function Modal() {
+  const [showModal, setShowModal] = useRecoilState(modalState);
+  const [movie, setMovie] = useRecoilState(movieState);
+  //   const [data, setData] = React.useState();
 
-export function RowModal({ title, movies }: Props) {
-  const rowRef = React.useRef<HTMLDivElement>(null);
-  const [isMoved, setIsMoved] = React.useState(false);
+  const [trailer, setTrailer] = React.useState('');
+  const [genres, setGenres] = React.useState<Genre[]>([]);
+  const [muted, setMuted] = React.useState(true);
 
-  const handleClick = (direction: string) => {
-    setIsMoved(true);
-    if (rowRef.current) {
-      const { scrollLeft, clientWidth } = rowRef.current;
-
-      const scrollTo =
-        direction === 'left'
-          ? scrollLeft - clientWidth
-          : scrollLeft + clientWidth;
-      rowRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-    }
+  const handleClose = () => {
+    setShowModal(false);
   };
 
+  React.useEffect(() => {
+    async function fetchMovie() {
+      const data = await fetch(
+        `https://api.themoviedb.org/3/${
+          movie?.media_type === 'tv' ? 'tv' : 'movie'
+        }/${movie?.id}?api_key=${
+          process.env.NEXT_PUBLIC_TMDB_API_KEY
+        }&language=en-US&append_to_response=videos`
+      ).then(response => response.json());
+      if (data?.videos) {
+        const index = data.videos.results.findIndex(
+          (element: Element) => element.type === 'Trailer'
+        );
+        setTrailer(data.videos?.results[index]?.key);
+      }
+      if (data?.genres) {
+        setGenres(data.genres);
+      }
+    }
+
+    fetchMovie();
+  }, [movie]);
+
+  console.log(trailer);
   return (
-    <div className="relative h-full space-y-0.5 md:space-y-2 pl-2">
-      <h2 className="w-56 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-        {title}
-      </h2>
-      <div className="group relative md:-ml-2">
-        <ChevronLeftIcon
-          className={`absolute bg-black/20 top-0 bottom-0 left-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
-            !isMoved && 'hidden'
-          }`}
-          onClick={() => handleClick('left')}
-        />
-        <div
-          className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5"
-          ref={rowRef}
-        >
-          {movies.map(movie => (
-            <ThumbnailHeadless key={movie.id} movie={movie} />
-          ))}
-        </div>
-        <ChevronRightIcon
-          className="absolute bg-black/20 top-0 bottom-0 right-2 z-40 m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100"
-          onClick={() => handleClick('right')}
-        />
-      </div>
-    </div>
-  );
-}
-
-interface ModalProps {
-  movie: Movie;
-}
-
-export const ThumbnailHeadless = ({ movie }: ModalProps) => {
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
-  }
-  return (
-    <>
-      <div className="inset-0 flex items-center justify-center">
+    <MuiModal
+      open={showModal}
+      onClose={handleClose}
+      className="fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md scrollbar-hide"
+    >
+      <>
         <button
-          type="button"
-          onClick={openModal}
-          className="relative h-[150px] md:h-[225px] min-w-[100px] md:min-w-[150px]"
+          className="modalButton absolute right-3 top-3 !z-20 h-6 w-6  xl:h-9 xl:w-9 border-none bg-[#181818] hover:bg-[#181818]"
+          onClick={handleClose}
         >
-          <Image
-            src={`https://image.tmdb.org/t/p/w500/${movie.backdrop_path}`}
-            className="rounded-sm object-cover md:rounded bg-cover"
+          <XMarkIcon className="h-4 w-4 xl:h-6 xl:w-6" />
+        </button>
+        <div className="relative pt-[56.25%]">
+          {/* <Image
+            src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}
+            className="rounded-sm object-cover md:rounded"
             fill
             sizes="100%"
             alt={`Thumbnail ${movie?.name}`}
-            // onClick={() => console.log(movie)}
             draggable={false}
+          /> */}
+          <ReactPlayer
+            url={`https://www.youtube.com/watch?v=${trailer}`}
+            width="100%"
+            height="100%"
+            style={{ position: 'absolute', top: '0', left: '0' }}
+            playing
+            muted={muted}
           />
-        </button>
-      </div>
+          <div className="absolute bottom-10 flex w-full items-center justify-between px-10">
+            <div className="hidden xl:flex space-x-2">
+              {/* <button className="modalButton" >
+                {addedToList ? (
+                  <CheckIcon className="h-7 w-7" />
+                ) : (
+                  <PlusIcon className="h-7 w-7" />
+                )}
+              </button> */}
+              <button className="modalButton">
+                <HandThumbUpIcon className="h-6 w-6" />
+              </button>
+            </div>
+            <button
+              className="right-10 absolute xl:modalButton"
+              onClick={() => setMuted(!muted)}
+            >
+              {muted ? (
+                <SpeakerXMarkIcon className="h-4 w-4" />
+              ) : (
+                <SpeakerWaveIcon className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+        </div>
+        <div className="flex space-x-16 rounded-b-md bg-[#181818] px-10 py-8">
+          <div className="space-y-6 text-lg">
+            <h1 className="font-bold">{movie?.title}</h1>
+            <div className="flex items-center space-x-2 text-sm">
+              <p className="font-semibold text-green-400">
+                {movie!.vote_average * 10}% Match
+              </p>
+              <p className="font-light">
+                {movie?.release_date || movie?.first_air_date}
+              </p>
+              <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
+                HD
+              </div>
+            </div>
+            <div className="flex flex-col gap-x-10 gap-y-4 font-light md:flex-row">
+              <p className="w-5/6">{movie?.overview}</p>
+              <div className="flex flex-col space-y-3 text-sm">
+                <div>
+                  <span className="text-[gray]">Genres:</span>
+                  {genres.map(genre => genre.name).join(', ')}
+                </div>
 
-      <Transition appear show={isOpen} as={React.Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={React.Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black/80" />
-          </Transition.Child>
+                <div>
+                  <span className="text-[gray]">Original language:</span>{' '}
+                  {movie?.original_language}
+                </div>
 
-          <div className="fixed inset-0">
-            <div className="flex min-h-full items-center justify-center text-center">
-              <Transition.Child
-                as={React.Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel
-                  className={clsx(
-                    'relative scrollbar-hide w-full max-w-5xl transform overflow-hidden',
-                    'text-white bg-black p-6 text-left align-middle shadow-xl transition-all',
-                    'flex flex-col-reverse'
-                  )}
-                >
-                  <div className="z-[-2]">
-                    {/* <Image
-                      className="z-[-1] w-full "
-                      src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
-                      fill
-                      alt={movie.title}
-                      draggable={false}
-                    /> */}
-                  </div>
-                  <Dialog.Description className="mt-2" as="p">
-                    {movie.overview}
-                  </Dialog.Description>
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-bold leading-6 top-0"
-                  >
-                    {movie.title}
-                  </Dialog.Title>
-                </Dialog.Panel>
-              </Transition.Child>
+                <div>
+                  <span className="text-[gray]">Total votes:</span>{' '}
+                  {movie?.vote_count}
+                </div>
+              </div>
             </div>
           </div>
-        </Dialog>
-      </Transition>
-    </>
+        </div>
+      </>
+    </MuiModal>
   );
-};
+}
+
+export default Modal;

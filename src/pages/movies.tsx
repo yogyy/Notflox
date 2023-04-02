@@ -4,10 +4,7 @@ import { RowLanscape, RowPotrait } from '@/components/netflix1/Row';
 import requests from '@/utils/request';
 import Head from 'next/head';
 import { Movie } from '../../typing';
-import { useRecoilValue } from 'recoil';
-import * as React from 'react';
-import Modal from '@/components/netflix1/Modal';
-import { modalState } from '../../atoms/modalAtom';
+import RootLayout from '@/components/layouts/layout';
 
 interface Props {
   discoverMovie: Movie[];
@@ -29,31 +26,17 @@ const Movies = ({
   trendingNow,
   upComing,
 }: Props) => {
-  // const showModal = useRecoilValue();
-  const showModal = useRecoilValue(modalState);
   return (
-    <>
-      <Head>
-        <title>Netflix Clone</title>
-      </Head>
-      <Navbar />
-      <div className="main">
-        <main>
-          <Banner netflixOriginals={discoverMovie} />
-          <section className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px] mt-10">
-            <RowLanscape
-              className=""
-              title="Trending Now"
-              movies={trendingNow}
-            />
-            <RowPotrait title="New Release" movies={upComing} />
-            <RowPotrait title="Top Rated" movies={topRated} />
-            <RowPotrait title="Action" movies={actionMovies} />
-          </section>
-        </main>
-        {showModal && <Modal />}
-      </div>
-    </>
+    <RootLayout>
+      <Banner netflixOriginals={discoverMovie} />
+
+      <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10">
+        <RowLanscape className="" title="Trending Now" movies={trendingNow} />
+        <RowPotrait title="New Release" movies={upComing} />
+        <RowPotrait title="Top Rated" movies={topRated} />
+        <RowPotrait title="Action" movies={actionMovies} />
+      </section>
+    </RootLayout>
   );
 };
 
