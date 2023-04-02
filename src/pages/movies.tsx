@@ -5,6 +5,8 @@ import requests from '@/utils/request';
 import Head from 'next/head';
 import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
+import { getSession } from 'next-auth/react';
+import { NextPageContext } from 'next';
 
 interface Props {
   discoverMovie: Movie[];
@@ -42,7 +44,16 @@ const Movies = ({
 
 export default Movies;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context: NextPageContext) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
+      },
+    };
+  }
   const [
     discoverMovie,
     trendingNow,

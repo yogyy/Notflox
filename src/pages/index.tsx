@@ -8,6 +8,8 @@ import { useRecoilValue } from 'recoil';
 import * as React from 'react';
 import Modal from '@/components/netflix1/Modal';
 import { modalState } from '../../atoms/modalAtom';
+import { NextPageContext } from 'next';
+import { getSession } from 'next-auth/react';
 
 interface Props {
   discoverMovie: Movie[];
@@ -59,7 +61,16 @@ const Movies = ({
 
 export default Movies;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context: NextPageContext) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
+      },
+    };
+  }
   const [
     discoverMovie,
     trendingNow,
