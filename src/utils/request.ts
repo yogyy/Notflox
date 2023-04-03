@@ -2,7 +2,7 @@ export const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 export const BASE_URL = 'https://api.themoviedb.org/3';
 
 const requests = {
-  fetchTrending: `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=en-US`,
+  fetchTrending: `${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US`,
   fetchDiscoverMovie: `${BASE_URL}/discover/movie?api_key=${API_KEY}&include_adult=false&page=1&year=2023&without_genres=10749`,
   fetchTopRated: `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US`,
   fetchUpComing: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US`,
