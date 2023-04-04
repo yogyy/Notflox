@@ -3,7 +3,15 @@ export interface Genre {
   name: string;
 }
 
+export interface Network {
+  name: string;
+  id: integer;
+  logo_path: string;
+  origin_country: string;
+}
+
 export interface Movie {
+  production_companies_name: string[];
   title: string;
   backdrop_path: string;
   media_type?: string;
@@ -29,5 +37,6 @@ export interface Element {
     | 'Behind the Scenes'
     | 'Clip'
     | 'Trailer'
-    | 'Teaser';
+    | 'Teaser'
+    | 'Opening Credits';
 }
