@@ -9,14 +9,22 @@ export interface Network {
   logo_path: string;
   origin_country: string;
 }
+export interface ProductionCompany {
+  name: string;
+  id: number;
+  logo_path: string | null;
+  origin_country: string;
+}
 
 export interface Movie {
-  production_companies_name: string[];
+  tagline: string;
+  production_companies: ProductionCompany[];
   title: string;
   backdrop_path: string;
-  media_type?: string;
+  media_type: string;
   release_date?: string;
-  first_air_date: string;
+  first_air_date?: string | undefined;
+  genres: Genre[];
   genre_ids: number[];
   id: number;
   name: string;

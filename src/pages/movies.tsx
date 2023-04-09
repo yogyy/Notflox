@@ -7,37 +7,40 @@ import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { getSession } from 'next-auth/react';
 import { NextPageContext } from 'next';
+import { useRecoilValue } from 'recoil';
+import { modalState } from '../../atoms/modalAtom';
+import Modal from '@/components/netflix1/Modal';
 
 interface Props {
-  discoverMovie: Movie[];
   trendingNow: Movie[];
   topRated: Movie[];
   actionMovies: Movie[];
   comedyMovies: Movie[];
   horrorMovies: Movie[];
   romanceMovies: Movie[];
-  upComing: Movie[];
 }
 
 const Movies = ({
-  discoverMovie,
   actionMovies,
   comedyMovies,
   horrorMovies,
   topRated,
   trendingNow,
-  upComing,
 }: Props) => {
+  const showModal = useRecoilValue(modalState);
+
   return (
     <RootLayout>
-      <Banner netflixOriginals={discoverMovie} />
-
-      <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10">
-        <RowLanscape className="" title="Trending Now" movies={trendingNow} />
-        <RowPotrait title="New Release" movies={upComing} />
-        <RowPotrait title="Top Rated" movies={topRated} />
-        <RowPotrait title="Action" movies={actionMovies} />
-      </section>
+      <main>
+        <Banner netflixOriginals={horrorMovies} />
+        <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10">
+          <RowLanscape className="" title="Trending Now" movies={trendingNow} />
+          <RowPotrait title="New Release" movies={comedyMovies} />
+          <RowPotrait title="Top Rated" movies={topRated} />
+          <RowPotrait title="Action" movies={actionMovies} />
+        </section>
+      </main>
+      {showModal && <Modal />}
     </RootLayout>
   );
 };
@@ -54,30 +57,19 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
-  const [
-    discoverMovie,
-    trendingNow,
-    topRated,
-    actionMovies,
-    comedyMovies,
-    horrorMovies,
-    upComing,
-  ] = await Promise.all([
-    fetch(requests.fetchDiscoverMovie).then(res => res.json()),
-    fetch(requests.fetchTrending).then(res => res.json()),
-    fetch(requests.fetchTopRated).then(res => res.json()),
-    fetch(requests.fetchActionMovies).then(res => res.json()),
-    fetch(requests.fetchComedyMovies).then(res => res.json()),
-    fetch(requests.fetchHorrorMovies).then(res => res.json()),
-    fetch(requests.fetchUpComing).then(res => res.json()),
-  ]);
+  const [trendingNow, topRated, actionMovies, comedyMovies, horrorMovies] =
+    await Promise.all([
+      fetch(requests.fetchTrending).then(res => res.json()),
+      fetch(requests.fetchTopRated).then(res => res.json()),
+      fetch(requests.fetchActionMovies).then(res => res.json()),
+      fetch(requests.fetchComedyMovies).then(res => res.json()),
+      fetch(requests.fetchHorrorMovies).then(res => res.json()),
+    ]);
 
   return {
     props: {
-      discoverMovie: discoverMovie.results,
       trendingNow: trendingNow.results,
       topRated: topRated.results,
-      upComing: upComing.results,
       actionMovies: actionMovies.results,
       comedyMovies: comedyMovies.results,
       horrorMovies: horrorMovies.results,

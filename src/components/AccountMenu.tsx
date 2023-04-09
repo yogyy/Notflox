@@ -3,6 +3,8 @@ import React from 'react';
 
 import useCurrentUser from '@/hooks/useCurrentUser';
 import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
 interface AccountMenuProps {
   visible?: boolean;
@@ -16,13 +18,15 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
   }
 
   return (
-    <div className="bg-black w-56 absolute top-14 right-0 py-5 flex-col border-2 border-gray-800 flex">
+    <div className="bg-[#121212] focus:outline-white w-56 absolute top-14 right-0 py-3 flex-col border-2 border-gray-800 flex">
       <div className="flex flex-col gap-3">
         <Link
           href="/profiles"
           className="px-3 group/item flex flex-row gap-3 items-center w-full"
         >
-          <img
+          <Image
+            width={32}
+            height={32}
             className="w-8 rounded-md"
             src={
               currentUser?.image
@@ -36,13 +40,13 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
           </p>
         </Link>
       </div>
-      <hr className="bg-gray-600 border-0 h-px my-4" />
-      <div
+      <hr className="bg-gray-600 border-0 h-px my-2" />
+      <button
         onClick={() => signOut()}
-        className="px-3 text-center text-white text-sm hover:underline"
+        className="py-2 px-3 text-center flex gap-5 text-white text-sm hover:underline"
       >
-        Sign out of Netflix
-      </div>
+        <ArrowRightOnRectangleIcon className="w-5" /> Sign out of Netflix
+      </button>
     </div>
   );
 };

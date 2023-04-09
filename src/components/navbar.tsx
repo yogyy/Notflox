@@ -11,6 +11,7 @@ import { Netflix } from './icons';
 import NavbarItem from './NavbarItem';
 import MobileMenu from './MobileMenu';
 import Image from 'next/image';
+import Search from './netflix1/Search';
 
 const TOP_OFFSET = 66;
 
@@ -50,12 +51,12 @@ const Navbar = () => {
     <nav className="w-full fixed z-20">
       <div
         className={`px-4 md:px-16 py-2 md:py-6 flex flex-row items-center transition duration-500 ${
-          showBackground ? 'bg-zinc-900 bg-opacity-90' : ''
+          showBackground ? 'bg-zinc-900/90' : ''
         }`}
       >
         <Netflix className="h-4 lg:h-7" />
         <NavbarItem />
-        <div
+        {/* <div
           onClick={toggleMobileMenu}
           className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative"
         >
@@ -66,17 +67,15 @@ const Navbar = () => {
             }`}
           />
           <MobileMenu visible={showMobileMenu} />
-        </div>
-        <div className="flex flex-row ml-auto gap-7 items-center">
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-            <MagnifyingGlassIcon className="w-6" />
-          </div>
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-            <BellIcon className="w-6" />
-          </div>
-          <div
+        </div> */}
+        <div className="flex flex-row ml-auto gap-3 md:gap-5 items-center">
+          <Search />
+          <button className="text-gray-200 hover:text-gray-300 cursor-pointer transition ">
+            <BellIcon className="w-6 m-1" />
+          </button>
+          <button
             onClick={toggleAccountMenu}
-            className="flex flex-row items-center gap-2 cursor-pointer relative"
+            className="flex flex-row items-center gap-2 cursor-pointer relative focus:outline-blue-500 pr-1"
           >
             <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
               <Image
@@ -96,7 +95,7 @@ const Navbar = () => {
               }`}
             />
             <AccountMenu visible={showAccountMenu} />
-          </div>
+          </button>
         </div>
       </div>
     </nav>

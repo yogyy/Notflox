@@ -3,17 +3,25 @@ import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import * as React from 'react';
 import Navbar from '../navbar';
+import { Poppins } from 'next/font/google';
+const poppins = Poppins({ weight: '400', subsets: ['latin'] });
 
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = ({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) => {
   return (
     <>
       <Head>
-        <title>NOTFLOX</title>
+        <title>{`${title} | NOTFLOX`}</title>
       </Head>
       <header>
         <Navbar />
       </header>
-      <main className="relative">{children}</main>
+      <main className={poppins.className}>{children}</main>
     </>
   );
 };

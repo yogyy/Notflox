@@ -3,26 +3,32 @@ import axios from 'axios';
 import { Genre, Movie, Network } from '../../../typing';
 import * as React from 'react';
 import RootLayout from '@/components/layouts/layout';
-import Banner from '@/components/netflix1/Banner';
-import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { baseUrl } from '../../../constants/movie';
 import { ProductionCompany } from '../../../typing';
 import { Tooltip } from '@mui/material';
-import { RowPotrait } from '@/components/netflix1/Row';
+import Recomend from '@/components/netflix1/recomend';
+import { tanggal } from '@/lib/getDate';
 
 interface Props {
   movie: Movie;
   production_companies: ProductionCompany[];
+  genres: Genre[];
 }
 
-export default function MovieDetails({ movie, production_companies }: Props) {
-  const [companys, setCompanys] = React.useState<ProductionCompany[]>([]);
-  const [genres, setGenres] = React.useState<Genre[]>([]);
-  // const [networks, setNetworks] = React.useState<Network[]>([]);
+interface KW {
+  id: number;
+  name: string;
+}
+
+export default function MovieDetails({
+  movie,
+  production_companies,
+  genres,
+}: Props) {
   const [similarTVShows, setSimilarTVShows] = React.useState([]);
   const [filteredTVShows, setFilteredTVShows] = React.useState([]);
+  const [keywords, setKeywords] = React.useState([]);
 
   React.useEffect(() => {
     fetch(
@@ -39,10 +45,24 @@ export default function MovieDetails({ movie, production_companies }: Props) {
     console.log(filteredTVShows);
   }, [movie.id]);
 
+  React.useEffect(() => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/keywords?api_key=${API_KEY}`
+      )
+      .then(response => {
+        setKeywords(response.data.keywords);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    console.log(keywords);
+  }, [movie.id]);
+
   return (
-    <RootLayout title={movie.title || movie.name}>
+    <RootLayout title={movie.title}>
       <div className="relative w-screen h-[56.25vw] object-cover brightness-50 xl:w-screen">
-        <span className="absolute top-[14%] left-[20%] text-3xl font-mono z-10 text-black">
+        <span className="absolute top-[14%] left-[20%] text-3xl font-mono z-10">
           {movie.tagline}
         </span>
         <Image
@@ -56,45 +76,48 @@ export default function MovieDetails({ movie, production_companies }: Props) {
         <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
       </div>
       <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center pt-4 bg-white/20 lg:bg-transparent">
-        <div className="relative aspect-[9/14] w-[164px] h-full bg-slate-800 rounded">
-          <Image
-            src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-            className="rounded-sm object-cover md:rounded"
-            fill
-            sizes="100%"
-            alt={`Thumbnail ${movie?.name}`}
-            draggable={false}
-            onClick={() => console.log(movie)}
-          />
+        <div className="h-max gap-3 md:flex md:flex-col">
+          <div className="relative aspect-[9/14] w-[164px] h-auto bg-zinc-900 rounded flex">
+            <Image
+              src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
+              className="rounded-sm object-cover md:rounded flex"
+              fill
+              sizes="100%"
+              alt={`Thumbnail ${movie?.name}`}
+              draggable={false}
+              onClick={() => console.log(movie)}
+            />
+          </div>
+          <span className="h-"></span>
         </div>
         <div className="md:w-7/12 w-full">
           <h1 className="text-xl font-semibold">
             {movie.title} ({movie.release_date?.slice(0, 4)})
           </h1>
+          <p>{tanggal(movie.release_date || movie.first_air_date)}</p>
           <div className="text-[gray]">
             {genres.map(genre => genre.name).join(', ')}
           </div>
           <hr className="my-2 border-zinc-800" />
           <p>
-            <span className="text-base font-semibold">Rating</span>:{' '}
-            {movie.vote_average.toFixed(1)} /10 from{' '}
+            <span className="text-base font-semibold">Rating</span> :
+            {movie.vote_average.toFixed(1)} / 10 from
             {movie.vote_count.toLocaleString()}
           </p>
-          <p>{movie.overview}</p>
+          <p className="text-gray-300">{movie.overview}</p>
           <hr className="my-2 border-zinc-800" />
-          <div className="ml-2 grid grid-rows-2 grid-cols-3 items-center">
+          <div className="ml-2 grid grid-cols-3 items-center">
             {production_companies.map(network => (
-              <span
+              <div
                 key={network.id}
                 className="flex justify-center m-2"
                 onClick={() => console.log(network)}
               >
-                <Tooltip title={network.name}>
+                <Tooltip title={network.name} disableFocusListener>
                   {network.logo_path ? (
                     <Image
-                      width={50}
-                      height={110}
-                      style={{ width: 'auto', height: 'auto' }}
+                      width={50 || 'auto'}
+                      height={50 || 'auto'}
                       src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
                       alt={network.name}
                     />
@@ -102,24 +125,36 @@ export default function MovieDetails({ movie, production_companies }: Props) {
                     <p className="text-sm">{network.name}</p>
                   )}
                 </Tooltip>
-              </span>
+              </div>
             ))}
           </div>
           <hr className="mt-2 mb-12 border-zinc-800" />
         </div>
       </div>
-      <div
-        id="similar-tv-container"
-        className="lg:mt-52 items-center flex justify-center relative"
-      >
+      <div id="similar-tv-container">
         {/* {similarTVShows.map((tv: Movie) => (
           <div key={tv.id}>
             <ThumbnailPotrait movie={tv} />
           </div>
         ))} */}
-        <section className="px-5 relative items-center w-[1300px]">
-          {/* <RowPotrait title="Similar" movies={filteredTVShows} /> */}
-        </section>
+        <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
+          <div className="flex flex-wrap py-2 mt-10 xl:mb-52 items-center">
+            <h1 className="px-1">Tags :</h1>
+            {keywords.map((keyword: KW) => (
+              <p
+                key={keyword.id}
+                className="bg-white/5 text-gray-300 w-max px-1 rounded-md m-1 "
+              >
+                {keyword.name}
+              </p>
+            ))}
+          </div>
+          <Recomend
+            className=""
+            title="Recommendations"
+            movies={filteredTVShows}
+          />
+        </div>
       </div>
     </RootLayout>
   );

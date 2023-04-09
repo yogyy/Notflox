@@ -1,7 +1,7 @@
 import Navbar from '@/components/navbar';
 import Banner from '@/components/netflix1/Banner';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/Row';
-import requests from '@/utils/request';
+import requests, { API_KEY, BASE_URL } from '@/utils/request';
 import Head from 'next/head';
 import { Movie } from '../../typing';
 import { useRecoilValue } from 'recoil';
@@ -10,6 +10,7 @@ import Modal from '@/components/netflix1/Modal';
 import { modalState } from '../../atoms/modalAtom';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
+import axios from 'axios';
 
 interface Props {
   discoverMovie: Movie[];
@@ -28,11 +29,35 @@ const Movies = ({
   comedyMovies,
   horrorMovies,
   topRated,
-  trendingNow,
   upComing,
 }: Props) => {
   // const showModal = useRecoilValue();
   const showModal = useRecoilValue(modalState);
+  const [discoverNetflix, setDiscoverNetflix] = React.useState([]);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      const discoverNetflixRequest = axios.get(`${BASE_URL}/discover/tv`, {
+        params: {
+          api_key: API_KEY,
+          include_adult: false,
+          page: 1,
+          year: 2023,
+          without_genres: 10749,
+          with_networks: 213,
+          language: 'en-US',
+        },
+      });
+
+      const [discoverNetflixResponse] = await Promise.all([
+        discoverNetflixRequest,
+      ]);
+
+      setDiscoverNetflix((await discoverNetflixResponse).data.results);
+    }
+    fetchData();
+  }, []);
+
   return (
     <>
       <Head>
@@ -42,15 +67,23 @@ const Movies = ({
       <div className="main">
         <main>
           <Banner netflixOriginals={discoverMovie} />
-          <section className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px] mt-10">
+          <section className="space-y-12 md:space-y-10 mx-auto relative md:-mt-72 max-w-[1300px]">
             <RowLanscape
               className=""
-              title="Trending Now"
-              movies={trendingNow}
+              title="Trending Now Netflix"
+              movies={discoverNetflix}
             />
-            <RowPotrait title="New Release" movies={upComing} />
-            <RowPotrait title="Top Rated" movies={topRated} />
-            <RowPotrait title="Action" movies={actionMovies} />
+            {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
+            <div className="">
+              <RowPotrait title="Released Today" movies={upComing} />
+            </div>
+            <RowPotrait title="Top Rated Tv" movies={topRated} />
+            <RowLanscape
+              className=""
+              title="comedyMovies"
+              movies={horrorMovies}
+            />
+            <RowPotrait title="Action Tv" movies={actionMovies} />
           </section>
         </main>
         {showModal && <Modal />}
@@ -86,7 +119,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
     fetch(requests.fetchActionMovies).then(res => res.json()),
     fetch(requests.fetchComedyMovies).then(res => res.json()),
     fetch(requests.fetchHorrorMovies).then(res => res.json()),
-    fetch(requests.fetchUpComing).then(res => res.json()),
+    fetch(requests.fetchAirToday).then(res => res.json()),
   ]);
 
   return {

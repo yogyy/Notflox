@@ -4,9 +4,10 @@ import axios from 'axios';
 import * as React from 'react';
 import { Movie } from '../../../typing';
 import clsx from 'clsx';
-import { Popover, Transition } from '@headlessui/react';
+import { Transition } from '@headlessui/react';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../../../atoms/modalAtom';
+import Link from 'next/link';
 
 const Search = () => {
   const [query, setQuery] = React.useState('');
@@ -14,8 +15,8 @@ const Search = () => {
   const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const [showResults, setShowResults] = React.useState(false);
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
+  // const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
+  // const [showModal, setShowModal] = useRecoilState(modalState);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -94,7 +95,7 @@ const Search = () => {
       </Transition>
       <div
         onClick={() => setShowInput(!showInput)}
-        className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition focus:p-1 p-1"
+        className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition p-1"
         tabIndex={0}
       >
         <MagnifyingGlassIcon className="w-6" />
@@ -104,18 +105,32 @@ const Search = () => {
           <ul className="flex flex-col bg-zinc-900/80">
             {searchResults.map(result => (
               <li
-                className="w-[400px] py-2 hover:cursor-pointer mx-2 flex justify-between"
+                className="w-[400px] py-2 hover:cursor-pointer "
                 key={result.id}
                 onClick={() => {
                   console.log(result);
-                  setCurrentMovie(result);
-                  setShowModal(true);
+                  setSearchResults([]);
+                  // setCurrentMovie(result);
+                  // setShowModal(true);
                 }}
               >
-                <span>{result.title || result.name}</span>{' '}
-                <span className="bg-gray-800 h-fit px-1 rounded-md">
-                  {result.media_type}
-                </span>
+                <Link
+                  href={`/${result.media_type == 'movie' ? 'movie' : 'tv'}/${
+                    result.id
+                  }`}
+                  // href="#"
+                  className="mx-2 flex justify-between"
+                >
+                  <span>
+                    {result.title || result.name} (
+                    {result.release_date && result.release_date?.slice(0, 4)}
+                    {result.first_air_date && result.first_air_date.slice(0, 4)}
+                    )
+                  </span>{' '}
+                  <span className="bg-gray-800 h-fit px-1 rounded-md">
+                    {result.media_type}
+                  </span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -126,25 +141,3 @@ const Search = () => {
 };
 
 export default Search;
-
-function MyPopover() {
-  return (
-    <Popover className="relative">
-      <div>
-        <Popover.Button className="flex items-center">
-          <input type="text" placeholder="Search" className="z-20" />
-          <MagnifyingGlassIcon className="w-6" />
-        </Popover.Button>
-      </div>
-
-      <Popover.Panel className="absolute z-10">
-        <div className="grid grid-cols-1 w-60">
-          <p>Analytics</p>
-          <p>Engagement</p>
-          <p>Security Lorem ipsum dolor sit amet.</p>
-          <p>Integrations</p>
-        </div>
-      </Popover.Panel>
-    </Popover>
-  );
-}
