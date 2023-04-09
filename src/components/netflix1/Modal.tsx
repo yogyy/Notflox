@@ -159,21 +159,16 @@ function Modal() {
               </p>
               <div className="flex flex-col space-y-3 text-sm">
                 <div>
-                  <span className="text-[gray]">
-                    Genres: {movie?.media_type}
-                  </span>
+                  <span className="text-[gray]">Genres : </span>
                   {genres.map(genre => genre.name).join(', ')}
                 </div>
 
                 <div>
                   <span className="text-[gray]">Original language: </span>
                   {movie?.original_language}
-                  <span className="ml-2">
+                  <span className="flex gap-3 flex-wrap mt-2">
                     {networks.map(network => (
                       <div key={network.id}>
-                        <span>
-                          {network.name} {network.id}
-                        </span>
                         <Image
                           width={50 || 'auto'}
                           height={50 || 'auto'}
