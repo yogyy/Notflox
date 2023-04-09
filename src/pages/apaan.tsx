@@ -17,7 +17,7 @@ export default function Home() {
   // }, [router]);
 
   return (
-    <RootLayout>
+    <RootLayout title={'app lama'}>
       <Billboard />
       <div className="pb-40">
         <MovieList title="trending now" data={movies} />

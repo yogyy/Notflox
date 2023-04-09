@@ -36,7 +36,6 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
         );
       })
       .catch(error => console.error('Error fetching similar TV shows:', error));
-    console.log(filteredTVShows);
   }, [movie.id]);
 
   React.useEffect(() => {
@@ -51,7 +50,6 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
       .catch(error => {
         console.error(error);
       });
-    console.log(keywords);
   }, [movie.id]);
 
   return (
