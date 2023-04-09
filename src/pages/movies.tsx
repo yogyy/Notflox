@@ -30,7 +30,7 @@ const Movies = ({
   const showModal = useRecoilValue(modalState);
 
   return (
-    <RootLayout>
+    <RootLayout title="Movies">
       <main>
         <Banner netflixOriginals={horrorMovies} />
         <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10">
