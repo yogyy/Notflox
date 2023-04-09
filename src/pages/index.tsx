@@ -67,7 +67,7 @@ const Movies = ({
       <div className="main">
         <main>
           <Banner netflixOriginals={discoverMovie} />
-          <section className="space-y-12 md:space-y-10 mx-auto relative md:-mt-72 max-w-[1300px]">
+          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px]">
             <RowLanscape
               className=""
               title="Trending Now Netflix"

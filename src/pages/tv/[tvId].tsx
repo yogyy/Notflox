@@ -44,7 +44,6 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
         `https://api.themoviedb.org/3/tv/${movie.id}/keywords?api_key=${API_KEY}`
       )
       .then(response => {
-        // console.log(response.data.results);
         setKeywords(response.data.results);
       })
       .catch(error => {
@@ -76,7 +75,6 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
             sizes="100%"
             alt={`Thumbnail ${movie?.name}`}
             draggable={false}
-            onClick={() => console.log(movie)}
           />
         </div>
         <div className="md:w-7/12 w-full">
@@ -100,7 +98,6 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
               <div
                 key={network.id}
                 className="flex justify-center m-2"
-                onClick={() => console.log(network)}
               >
                 <Tooltip title={network.name} disableFocusListener>
                   {network.logo_path ? (

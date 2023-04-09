@@ -5,18 +5,14 @@ import * as React from 'react';
 import { Movie } from '../../../typing';
 import clsx from 'clsx';
 import { Transition } from '@headlessui/react';
-import { useRecoilState } from 'recoil';
-import { modalState, movieState } from '../../../atoms/modalAtom';
 import Link from 'next/link';
 
 const Search = () => {
   const [query, setQuery] = React.useState('');
-  const [showInput, setShowInput] = React.useState(false);
+  const [showInput, setShowInput] = React.useState(true);
   const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const [showResults, setShowResults] = React.useState(false);
-  // const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  // const [showModal, setShowModal] = useRecoilState(modalState);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -43,7 +39,6 @@ const Search = () => {
       );
 
       setSearchResults(filteredResults);
-      console.log(filteredResults);
       setShowResults(true);
     } else {
       setSearchResults([]);
@@ -93,25 +88,21 @@ const Search = () => {
           )}
         />
       </Transition>
-      <div
+      <button
         onClick={() => setShowInput(!showInput)}
         className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition p-1"
-        tabIndex={0}
       >
         <MagnifyingGlassIcon className="w-6" />
-      </div>
+      </button>
       <div className="absolute top-10 max-h-40 overflow-y-auto">
         {query.length >= 3 && (
           <ul className="flex flex-col bg-zinc-900/80">
             {searchResults.map(result => (
               <li
-                className="w-[400px] py-2 hover:cursor-pointer "
+                className="w-full py-2 hover:cursor-pointer "
                 key={result.id}
                 onClick={() => {
-                  console.log(result);
                   setSearchResults([]);
-                  // setCurrentMovie(result);
-                  // setShowModal(true);
                 }}
               >
                 <Link

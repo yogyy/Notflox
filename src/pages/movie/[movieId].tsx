@@ -83,7 +83,6 @@ export default function MovieDetails({
               sizes="100%"
               alt={`Thumbnail ${movie?.name}`}
               draggable={false}
-              onClick={() => console.log(movie)}
             />
           </div>
           <span className="h-"></span>
@@ -109,7 +108,6 @@ export default function MovieDetails({
               <div
                 key={network.id}
                 className="flex justify-center m-2"
-                onClick={() => console.log(network)}
               >
                 <Tooltip title={network.name} disableFocusListener>
                   {network.logo_path ? (

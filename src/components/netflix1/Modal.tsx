@@ -56,7 +56,6 @@ function Modal() {
     }
 
     fetchMovie();
-    console.log(trailer);
   }, [movie, trailer]);
 
   return (

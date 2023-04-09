@@ -1,12 +1,17 @@
+import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 
-const NavbarItem = () => {
+interface NavItem {
+  className?: string;
+}
+
+const NavbarItem = ({ className }: NavItem) => {
   const router = useRouter();
   const arrOfRoute = router.route.split('/');
   return (
-    <div className="flex-row ml-8 gap-7 hidden lg:flex font-semibold">
+    <div className={clsx('font-semibold', className)}>
       {links.map(link => (
         <Link
           href={link.url}

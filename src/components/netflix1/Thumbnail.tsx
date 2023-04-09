@@ -29,7 +29,6 @@ export function ThumbnailPotrait({ movie }: Props) {
           sizes="100%"
           alt={`Thumbnail ${movie?.name}`}
           draggable={false}
-          onClick={() => console.log(movie)}
         />
       </div>
     </div>
@@ -54,7 +53,6 @@ export function ThumbnailLanscape({ movie }: Props) {
         fill
         sizes="100%"
         alt={`Thumbnail ${movie?.name}`}
-        onClick={() => console.log(movie)}
         draggable={false}
       />
     </div>
