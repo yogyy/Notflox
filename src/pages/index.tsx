@@ -6,11 +6,13 @@ import Head from 'next/head';
 import { Movie } from '../../typing';
 import { useRecoilValue } from 'recoil';
 import * as React from 'react';
-import Modal from '@/components/netflix1/Modal';
+import ModalVid from '@/components/netflix1/ModalVid';
 import { modalState } from '../../atoms/modalAtom';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import axios from 'axios';
+import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
+import BasicModal from '@/components/netflix1/modaltest';
 
 interface Props {
   discoverMovie: Movie[];
@@ -21,28 +23,27 @@ interface Props {
   horrorMovies: Movie[];
   romanceMovies: Movie[];
   upComing: Movie[];
+  Animation: Movie[];
 }
 
 const Movies = ({
   discoverMovie,
   actionMovies,
-  comedyMovies,
+  Animation,
   horrorMovies,
   topRated,
   upComing,
 }: Props) => {
-  // const showModal = useRecoilValue();
   const showModal = useRecoilValue(modalState);
   const [discoverNetflix, setDiscoverNetflix] = React.useState([]);
 
   React.useEffect(() => {
     async function fetchData() {
-      const discoverNetflixRequest = axios.get(`${BASE_URL}/discover/tv`, {
+      const discoverNetflixRequest = axios.get(`${BASE_URL}/tv/popular`, {
         params: {
           api_key: API_KEY,
           include_adult: false,
           page: 1,
-          year: 2023,
           without_genres: 10749,
           with_networks: 213,
           language: 'en-US',
@@ -75,18 +76,23 @@ const Movies = ({
             />
             {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
             <div className="">
-              <RowPotrait title="Released Today" movies={upComing} />
+              <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+                Released Today
+              </h2>
+              <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                {upComing.map(movie => (
+                  <div key={movie.id} className="mt-1">
+                    <ThumbnailPotrait movie={movie} />
+                  </div>
+                ))}
+              </div>
             </div>
-            <RowPotrait title="Top Rated Tv" movies={topRated} />
-            <RowLanscape
-              className=""
-              title="comedyMovies"
-              movies={horrorMovies}
-            />
-            <RowPotrait title="Action Tv" movies={actionMovies} />
+            <RowPotrait title="Top Rated Netflix" movies={topRated} />
+            <RowLanscape className="" title="Animations" movies={Animation} />
+            <RowPotrait title="Actions" movies={actionMovies} />
           </section>
         </main>
-        {showModal && <Modal />}
+        {showModal && <ModalVid />}
       </div>
     </>
   );
@@ -112,14 +118,18 @@ export const getServerSideProps = async (context: NextPageContext) => {
     comedyMovies,
     horrorMovies,
     upComing,
+    Animation,
   ] = await Promise.all([
     fetch(requests.fetchDiscoverMovie).then(res => res.json()),
     fetch(requests.fetchTrending).then(res => res.json()),
-    fetch(requests.fetchTopRated).then(res => res.json()),
-    fetch(requests.fetchActionMovies).then(res => res.json()),
+    fetch(requests.fetchTopRatedTv).then(res => res.json()),
+    fetch(requests.fetchActionTvNetflix).then(res => res.json()),
     fetch(requests.fetchComedyMovies).then(res => res.json()),
     fetch(requests.fetchHorrorMovies).then(res => res.json()),
     fetch(requests.fetchAirToday).then(res => res.json()),
+    fetch(
+      `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&page=1&with_networks=213&with_genres=16`
+    ).then(res => res.json()),
   ]);
 
   return {
@@ -127,10 +137,11 @@ export const getServerSideProps = async (context: NextPageContext) => {
       discoverMovie: discoverMovie.results,
       trendingNow: trendingNow.results,
       topRated: topRated.results,
-      upComing: upComing.results,
       actionMovies: actionMovies.results,
       comedyMovies: comedyMovies.results,
       horrorMovies: horrorMovies.results,
+      upComing: upComing.results,
+      Animation: Animation.results,
     },
   };
 };
