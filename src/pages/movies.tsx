@@ -1,15 +1,10 @@
-import Navbar from '@/components/navbar';
 import Banner from '@/components/netflix1/Banner';
-import { RowLanscape, RowPotrait } from '@/components/netflix1/Row';
 import requests from '@/utils/request';
-import Head from 'next/head';
 import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { getSession } from 'next-auth/react';
 import { NextPageContext } from 'next';
-import { useRecoilValue } from 'recoil';
-import { modalState } from '../../atoms/modalAtom';
-import Modal from '@/components/netflix1/Modal';
+import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
 
 interface Props {
   trendingNow: Movie[];
@@ -27,8 +22,6 @@ const Movies = ({
   topRated,
   trendingNow,
 }: Props) => {
-  const showModal = useRecoilValue(modalState);
-
   return (
     <RootLayout title="Movies">
       <main>
@@ -40,7 +33,6 @@ const Movies = ({
           <RowPotrait title="Action" movies={actionMovies} />
         </section>
       </main>
-      {showModal && <Modal />}
     </RootLayout>
   );
 };
