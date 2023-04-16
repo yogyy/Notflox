@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MuiModal from '@mui/material/Modal';
+import Modal from '@mui/material/Modal';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../../../atoms/modalAtom';
 import {
@@ -15,9 +15,8 @@ import Image from 'next/image';
 import { Element, Genre, Movie, Network } from '../../../typing';
 import { API_KEY, BASE_URL } from '@/utils/request';
 import ReactPlayer from 'react-player/youtube';
-import FavoriteButton from '../FavoritesButton';
 
-function Modal() {
+function ModalVid() {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [movie, setMovie] = useRecoilState(movieState);
 
@@ -25,7 +24,6 @@ function Modal() {
   const [genres, setGenres] = React.useState<Genre[]>([]);
   const [networks, setNetworks] = React.useState<Network[]>([]);
   const [muted, setMuted] = React.useState(false);
-  const [data, setData] = React.useState();
 
   const handleClose = () => {
     setShowModal(false);
@@ -34,11 +32,9 @@ function Modal() {
   React.useEffect(() => {
     async function fetchMovie() {
       const data = await fetch(
-        `https://api.themoviedb.org/3/${
-          movie?.media_type === 'movie' ? 'movie' : 'tv'
-        }/${movie?.id}?api_key=${
-          process.env.NEXT_PUBLIC_TMDB_API_KEY
-        }&language=en-US&append_to_response=videos`
+        `${BASE_URL}/${movie?.release_date ? 'movie' : 'tv'}/${
+          movie?.id
+        }?api_key=${API_KEY}&language=en-US&append_to_response=videos`
       ).then(response => response.json());
       if (data?.videos) {
         const index = data.videos.results.findIndex(
@@ -52,14 +48,14 @@ function Modal() {
       if (data?.networks) {
         setNetworks(data.networks);
       }
-      setData(data);
     }
+    console.log(trailer);
 
     fetchMovie();
   }, [movie, trailer]);
 
   return (
-    <MuiModal
+    <Modal
       open={showModal}
       onClose={handleClose}
       className="fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md scrollbar-hide"
@@ -102,33 +98,6 @@ function Modal() {
               draggable={false}
             />
           )}
-
-          <div className="absolute bottom-10 flex w-full items-center justify-between px-10">
-            <div className="hidden xl:flex space-x-2">
-              {/* <button className="modalButton" >
-                {addedToList ? (
-                  <CheckIcon className="h-7 w-7" />
-                ) : (
-                  <PlusIcon className="h-7 w-7" />
-                )}
-              </button> */}
-              {/* <button className="modalButton">
-                <HandThumbUpIcon className="h-6 w-6" />
-              </button> */}
-            </div>
-            {/* {trailer && (
-              <button
-                className="right-10 absolute xl:modalButton"
-                onClick={() => setMuted(!muted)}
-              >
-                {muted ? (
-                  <SpeakerXMarkIcon className="h-4 w-4" />
-                ) : (
-                  <SpeakerWaveIcon className="h-4 w-4" />
-                )}
-              </button>
-            )} */}
-          </div>
         </div>
         <div className="flex space-x-16 rounded-b-md bg-slate-800 px-10 py-8">
           <div className="space-y-6 text-lg">
@@ -190,8 +159,8 @@ function Modal() {
           </div>
         </div>
       </>
-    </MuiModal>
+    </Modal>
   );
 }
 
-export default Modal;
+export default ModalVid;

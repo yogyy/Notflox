@@ -26,7 +26,7 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
 
   React.useEffect(() => {
     fetch(
-      `https://api.themoviedb.org/3/tv/${movie.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`
+      `https://api.themoviedb.org/3/tv/${movie.id}/recommendations?api_key=${API_KEY}&page=1`
     )
       .then(response => response.json())
       .then(data => {
@@ -57,55 +57,58 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
         <span className="absolute top-[14%] left-[20%] text-3xl font-mono z-10">
           {movie.tagline}
         </span>
-        <Image
-          src={`${baseUrl}${movie?.backdrop_path || movie?.poster_path}`}
-          fill
-          alt={`banner ${movie.name}`}
-          priority
-          draggable={false}
-        />
-        <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
-      </div>
-      <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center mt-4">
-        <div className="relative aspect-[9/14] w-[164px] h-full bg-zinc-900 rounded">
+        {movie.backdrop_path !== null ? (
           <Image
-            src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-            className="rounded-sm object-cover md:rounded"
+            src={`${baseUrl}${movie?.backdrop_path || ''}`}
             fill
-            sizes="100%"
-            alt={`Thumbnail ${movie?.name}`}
+            alt={`banner ${movie.name}`}
+            priority
             draggable={false}
           />
+        ) : (
+          <div className="bg-[#121212]"></div>
+        )}
+        <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
+      </div>
+      <div className="relative mx-auto md:justify-center items-center md:items-start lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 mt-4 max-w-[1200px]">
+        <div className="relative -mt-32 md:mt-0 rounded w-[164px]">
+          <Image
+            src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
+            className="rounded-sm md:rounded md:absolute"
+            width={164}
+            height={255}
+            alt={`Thumbnail ${movie?.name}`}
+            draggable={false}
+            onClick={() => console.log(movie)}
+          />
         </div>
-        <div className="md:w-7/12 w-full">
-          <h1 className="text-xl font-semibold">
+        <div className=" w-full">
+          <h1 className="text-2xl font-semibold">
             {movie.name} ({movie.first_air_date?.slice(0, 4)})
           </h1>
+          <h2 className="text- text-gray-400">{movie?.original_name}</h2>
           <p>{tanggal(movie.release_date || movie.first_air_date)}</p>
-          <div className="text-[gray]">
+          <div className="text-gray-400">
             {genres.map(genre => genre.name).join(', ')}
           </div>
           <hr className="my-2 border-zinc-800" />
           <p>
-            <span className="text-base font-semibold">Rating</span> :
-            {movie.vote_average.toFixed(1)} / 10 from
+            <span className="text-base font-semibold">Rating </span> :&nbsp;
+            {movie.vote_average.toFixed(1)} / 10 from&nbsp;
             {movie.vote_count.toLocaleString()}
           </p>
           <p>{movie.overview}</p>
           <hr className="my-2 border-zinc-800" />
           <div className="ml-2 grid grid-cols-3 items-center">
             {networks.map(network => (
-              <div
-                key={network.id}
-                className="flex justify-center m-2"
-              >
+              <div key={network.id} className="flex justify-around">
                 <Tooltip title={network.name} disableFocusListener>
                   {network.logo_path ? (
-                    <Image
-                      width={50 || 'auto'}
-                      height={50 || 'auto'}
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className="w-10 md:w-12 h-auto m-2"
                       src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
-                      alt={network.name}
+                      alt={`Thumnail ${network.name}`}
                     />
                   ) : (
                     <p className="text-sm">{network.name}</p>
@@ -119,12 +122,12 @@ export default function MovieDetails({ movie, networks, genres }: Props) {
       </div>
 
       <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
-        <div className="flex flex-wrap py-2 mt-10 xl:mb-52 items-center">
-          <h1 className="px-1">Tags :</h1>
+        <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+          <h1 className="px-3">Tags :</h1>
           {keywords.map((keyword: KW) => (
             <p
               key={keyword.id}
-              className="bg-white/5 text-gray-300 w-max px-1 rounded-md m-1 "
+              className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
             >
               {keyword.name}
             </p>

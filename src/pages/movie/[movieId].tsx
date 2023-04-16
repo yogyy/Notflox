@@ -32,7 +32,7 @@ export default function MovieDetails({
 
   React.useEffect(() => {
     fetch(
-      `https://api.themoviedb.org/3/movie/${movie.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1&_limit=1`
+      `https://api.themoviedb.org/3/movie/${movie.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`
     )
       .then(response => response.json())
       .then(data => {
@@ -73,19 +73,20 @@ export default function MovieDetails({
         />
         <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
       </div>
-      <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center pt-4 bg-white/20 lg:bg-transparent">
-        <div className="h-max gap-3 md:flex md:flex-col">
-          <div className="relative aspect-[9/14] w-[164px] h-auto bg-zinc-900 rounded flex">
+      <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-white/20 lg:bg-transparent">
+        <div className="h-full gap-3 md:flex md:flex-col relative">
+          <div className="relative -mt-32 md:mt-0 rounded flex">
             <Image
               src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
               className="rounded-sm object-cover md:rounded flex"
-              fill
+              width={164}
+              height={255}
               sizes="100%"
-              alt={`Thumbnail ${movie?.name}`}
+              alt={`Thumbnail ${movie?.title}`}
               draggable={false}
+              onClick={() => console.log(movie)}
             />
           </div>
-          <span className="h-"></span>
         </div>
         <div className="md:w-7/12 w-full">
           <h1 className="text-xl font-semibold">
@@ -105,17 +106,15 @@ export default function MovieDetails({
           <hr className="my-2 border-zinc-800" />
           <div className="ml-2 grid grid-cols-3 items-center">
             {production_companies.map(network => (
-              <div
-                key={network.id}
-                className="flex justify-center m-2"
-              >
+              <div key={network.id} className="flex justify-center m-2">
                 <Tooltip title={network.name} disableFocusListener>
                   {network.logo_path ? (
-                    <Image
-                      width={50 || 'auto'}
-                      height={50 || 'auto'}
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className="w-10 md:w-12 h-auto"
+                      height="auto"
                       src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
-                      alt={network.name}
+                      alt={`Thumbnail ${network.name}`}
                     />
                   ) : (
                     <p className="text-sm">{network.name}</p>
@@ -128,14 +127,9 @@ export default function MovieDetails({
         </div>
       </div>
       <div id="similar-tv-container">
-        {/* {similarTVShows.map((tv: Movie) => (
-          <div key={tv.id}>
-            <ThumbnailPotrait movie={tv} />
-          </div>
-        ))} */}
         <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
-          <div className="flex flex-wrap py-2 mt-10 xl:mb-52 items-center">
-            <h1 className="px-1">Tags :</h1>
+          <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+            <h1 className="px-3">Tags :</h1>
             {keywords.map((keyword: KW) => (
               <p
                 key={keyword.id}

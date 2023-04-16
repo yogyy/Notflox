@@ -12,7 +12,6 @@ import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import axios from 'axios';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
-import BasicModal from '@/components/netflix1/modaltest';
 
 interface Props {
   discoverMovie: Movie[];
@@ -30,9 +29,9 @@ const Movies = ({
   discoverMovie,
   actionMovies,
   Animation,
-  horrorMovies,
   topRated,
   upComing,
+  trendingNow,
 }: Props) => {
   const showModal = useRecoilValue(modalState);
   const [discoverNetflix, setDiscoverNetflix] = React.useState([]);
@@ -72,7 +71,7 @@ const Movies = ({
             <RowLanscape
               className=""
               title="Trending Now Netflix"
-              movies={discoverNetflix}
+              movies={trendingNow}
             />
             {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
             <div className="">
@@ -120,9 +119,13 @@ export const getServerSideProps = async (context: NextPageContext) => {
     upComing,
     Animation,
   ] = await Promise.all([
-    fetch(requests.fetchDiscoverMovie).then(res => res.json()),
-    fetch(requests.fetchTrending).then(res => res.json()),
-    fetch(requests.fetchTopRatedTv).then(res => res.json()),
+    fetch(
+      `${BASE_URL}/discover/tv?api_key=${API_KEY}&include_adult=false&page=1&year=2023&without_genres=10749&with_networks=213&append_to_response=videos`
+    ).then(res => res.json()),
+    fetch(
+      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&language=en-US&with_networks=213`
+    ).then(res => res.json()),
+    fetch(requests.fetchTopRatedNetflix).then(res => res.json()),
     fetch(requests.fetchActionTvNetflix).then(res => res.json()),
     fetch(requests.fetchComedyMovies).then(res => res.json()),
     fetch(requests.fetchHorrorMovies).then(res => res.json()),

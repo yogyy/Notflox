@@ -10,6 +10,7 @@ html {
 body {
   @apply h-full;
   overflow-x: hidden;
+  background-color: #121212;
 }
 
 #_next {

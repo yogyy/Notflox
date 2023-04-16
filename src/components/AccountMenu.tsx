@@ -41,12 +41,13 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
         </Link>
       </div>
       <hr className="bg-gray-600 border-0 h-px my-2" />
-      <button
+      <Link
+        href="#"
         onClick={() => signOut()}
         className="py-2 px-3 text-center flex gap-5 text-white text-sm hover:underline"
       >
         <ArrowRightOnRectangleIcon className="w-5" /> Sign out of Netflix
-      </button>
+      </Link>
     </div>
   );
 };

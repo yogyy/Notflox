@@ -14,10 +14,10 @@ Router.events.on('routeChangeComplete', nProgress.done);
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
+      <RecoilRoot>
         <Component {...pageProps} />
-      </SessionProvider>
-    </RecoilRoot>
+      </RecoilRoot>
+    </SessionProvider>
   );
 }

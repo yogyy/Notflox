@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const Search = () => {
   const [query, setQuery] = React.useState('');
-  const [showInput, setShowInput] = React.useState(true);
+  const [showInput, setShowInput] = React.useState(false);
   const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const [showResults, setShowResults] = React.useState(false);
@@ -66,7 +66,7 @@ const Search = () => {
   }, [debouncedQuery, searchMovies]);
 
   return (
-    <div className="flex relative items-center" onBlur={handleBlur}>
+    <div className="flex relative items-center">
       <Transition
         show={showInput}
         enter="transition-opacity duration-700"
@@ -83,7 +83,7 @@ const Search = () => {
           onChange={handleInputChange}
           onClick={() => setShowResults(true)}
           className={clsx(
-            showInput ? ' bg-black/30 block' : ' bg-transparent',
+            showInput ? ' bg-white/5 block' : ' bg-transparent',
             ' px-2 py-1 transition-all  rounded focus:outline-none'
           )}
         />
@@ -94,39 +94,47 @@ const Search = () => {
       >
         <MagnifyingGlassIcon className="w-6" />
       </button>
-      <div className="absolute top-10 max-h-40 overflow-y-auto">
-        {query.length >= 3 && (
-          <ul className="flex flex-col bg-zinc-900/80">
-            {searchResults.map(result => (
-              <li
-                className="w-full py-2 hover:cursor-pointer "
-                key={result.id}
-                onClick={() => {
-                  setSearchResults([]);
-                }}
-              >
-                <Link
-                  href={`/${result.media_type == 'movie' ? 'movie' : 'tv'}/${
-                    result.id
-                  }`}
-                  // href="#"
-                  className="mx-2 flex justify-between"
+      {showInput && (
+        <div className="absolute top-10 max-h-40 overflow-y-auto">
+          {query.length >= 3 && (
+            <ul className="flex flex-col bg-zinc-900/80">
+              {searchResults.map(result => (
+                <li
+                  className="w-full py-2 hover:cursor-pointer "
+                  key={result.id}
+                  onBlur={handleBlur}
+                  onClick={() => {
+                    setSearchResults([]);
+                  }}
                 >
-                  <span>
-                    {result.title || result.name} (
-                    {result.release_date && result.release_date?.slice(0, 4)}
-                    {result.first_air_date && result.first_air_date.slice(0, 4)}
-                    )
-                  </span>{' '}
-                  <span className="bg-gray-800 h-fit px-1 rounded-md">
-                    {result.media_type}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                  <Link
+                    href={`/${result.media_type == 'movie' ? 'movie' : 'tv'}/${
+                      result.id
+                    }`}
+                    // href="#"
+                    className="mx-2 flex justify-between"
+                  >
+                    <span>
+                      {result.title || result.name}
+                      <span className="ml-1.5">
+                        {result.release_date && (
+                          <>({result.release_date.slice(0, 4)})</>
+                        )}
+                        {result.first_air_date && (
+                          <>({result.first_air_date.slice(0, 4)})</>
+                        )}
+                      </span>
+                    </span>
+                    <span className="bg-gray-800 h-fit px-1 rounded-md">
+                      {result.media_type}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 };

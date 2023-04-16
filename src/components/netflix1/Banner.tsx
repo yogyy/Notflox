@@ -17,8 +17,6 @@ const getRandomMovie = (movies: string | any[]) => {
 
 export default function Banner({ netflixOriginals }: Props) {
   const [movie, setMovie] = React.useState<Movie | null>(null);
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
 
   // React.useEffect(() => {
   //   const intervalId = setInterval(() => {
@@ -35,7 +33,6 @@ export default function Banner({ netflixOriginals }: Props) {
       netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)]
     );
   }, [netflixOriginals]);
-
   return (
     <div className="relative h-full">
       <div className="relative h-[56.25vw]">
@@ -58,10 +55,7 @@ export default function Banner({ netflixOriginals }: Props) {
           </p>
           <div className="">
             <button
-              onClick={() => {
-                setCurrentMovie(movie);
-                setShowModal(true);
-              }}
+              onClick={() => console.log(movie)}
               className="bannerButton bg-white text-black"
             >
               <PlayIcon className="h-4 w-4 text-black md:h-7 md:w-7" /> Play

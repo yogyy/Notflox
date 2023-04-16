@@ -35,7 +35,7 @@ const links = [
   { name: 'Home', url: '/' },
   { name: 'Series', url: '/series' },
   { name: 'Movies', url: '/movies' },
-  { name: 'New & Popular', url: '/asd' },
+  { name: 'Anime', url: '/anime' },
   { name: 'My List', url: '/my-list' },
   // { name: 'Browse by Languages', url: '/' },
 ];

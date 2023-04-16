@@ -48,3 +48,13 @@ export interface Element {
     | 'Teaser'
     | 'Opening Credits';
 }
+
+export interface Anime {
+  animeId: string;
+  animeTitle: string;
+  animeImg: string;
+  releasedDate: string;
+  animeUrl: string;
+  episodeUrl: string;
+  genres: string[];
+}

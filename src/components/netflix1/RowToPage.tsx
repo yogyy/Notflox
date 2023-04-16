@@ -1,8 +1,8 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useRef, useState } from 'react';
 import { Movie } from '../../../typing';
-import { ThumbnailLanscape, ThumbnailPotrait } from './Thumbnail';
 import clsx from 'clsx';
+import { ThumbnailLanscape, ThumbnailPotrait } from './ThumnailToPage';
 
 interface Props {
   title: string;

@@ -3,12 +3,7 @@ import { Movie } from '../../../typing';
 import Image from 'next/image';
 import { API_KEY } from '@/utils/request';
 import Link from 'next/link';
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ClockIcon,
-  FolderIcon,
-} from '@heroicons/react/24/outline';
+import { ClockIcon, FolderIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { tanggal } from '@/lib/getDate';
 
@@ -21,9 +16,12 @@ interface reccomend {
 export default function Recomend({ movies, title, className }: reccomend) {
   return (
     <section
-      className={clsx('relative h-auto space-y-0.5 md:space-y-2', className)}
+      className={clsx(
+        'relative h-auto space-y-0.5 md:space-y-2  mx-4',
+        className
+      )}
     >
-      <h2 className="ml-2 text-xl font-semibold text-[#fcfbfb]">{title}</h2>
+      <h2 className="text-xl font-semibold text-[#fcfbfb]">{title}</h2>
       <div className="group relative">
         <div className="">
           {movies.map(movie => (
@@ -42,35 +40,41 @@ interface Props {
 function Thumbnail({ movie }: Props) {
   const formattedDate = tanggal(movie.release_date || movie.first_air_date);
   return (
-    <article className={clsx('flex flex-col mx-2')}>
+    <article className={clsx('flex flex-col')}>
       <Link
         href={`/${movie.media_type == 'movie' ? 'movie' : 'tv'}/${movie.id}`}
+        className="w-max"
       >
-        <h1 className="text-xl">{movie.title || movie.name}</h1>
+        <h1 className="text-xl hover:text-red-300">
+          {movie.title || movie.name}
+        </h1>
       </Link>
       <span className="text-gray-300 flex text-[10px] relative gap2">
         <ClockIcon className="w-3 mr-1" />
         {formattedDate} <FolderIcon className="w-3 mx-1" />
-        <span className="cursor-pointer">
+        <span className="cursor-pointer hover:text-gray-300">
           {convertGenreIdsToNames(movie.genre_ids, movie)}
         </span>
       </span>
-      <div className="flex">
-        <div className="relative aspect-[9/14] max-h-[150px] md:max-h-[249px] w-24 md:w-40 bg-slate-800 rounded mr-3">
+      <div className="flex mt-1">
+        <Link
+          href={`/${movie.media_type == 'movie' ? 'movie' : 'tv'}/${movie.id}`}
+          className="relative aspect-[9/14] max-h-[150px] md:max-h-[249px] w-24 md:w-40 bg-slate-800 rounded mr-3 "
+        >
           <Image
             src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-            className="rounded-sm object-cover md:rounded float-left"
+            className="rounded-sm object-cover md:rounded float-left hover:brightness-50"
             fill
             sizes="100%"
             alt={`Thumbnail ${movie?.name}`}
             draggable={false}
           />
-        </div>
-        <p className="flex-1 text-gray-300 text-sm">
+        </Link>
+        <p className="flex-1 text-gray-400 text-sm">
           {movie.overview} <br />
         </p>
       </div>
-      <hr className="border-black my-2" />
+      <hr className="border-[#141414] my-2" />
     </article>
   );
 }

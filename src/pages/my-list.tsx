@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { Movie } from '../../typing';
 import { useRecoilValue } from 'recoil';
 import * as React from 'react';
-import Modal from '@/components/netflix1/Modal';
+import Modal from '@/components/netflix1/ModalVid';
 import { modalState } from '../../atoms/modalAtom';
 
 interface Props {
@@ -26,7 +26,6 @@ const Movies = ({ trendingNow }: Props) => {
         <main>
           <Banner netflixOriginals={trendingNow} />
         </main>
-        {showModal && <Modal />}
       </div>
     </>
   );

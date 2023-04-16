@@ -1,24 +1,16 @@
 import Image from 'next/image';
-import { Genre, Movie } from '../../../typing';
-import { ClockIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
-import { modalState, movieState } from '../../../atoms/modalAtom';
-import { useRecoilState } from 'recoil';
+import Link from 'next/link';
+import { Movie } from '../../../typing';
 
 interface Props {
   movie: Movie;
 }
 
 export function ThumbnailPotrait({ movie }: Props) {
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
-
   return (
-    <button
-      onClick={() => {
-        setCurrentMovie(movie);
-        setShowModal(true);
-      }}
+    <Link
+      href={`/${movie?.release_date ? 'movie' : 'tv'}/${movie?.id}`}
       className="cursor-pointer transition duration-200 ease-out hover:brightness-75 w-full h-full p-0.5"
     >
       <div className="relative aspect-[9/14] w-[92px] md:w-[164px] h-full bg-zinc-900 rounded">
@@ -32,21 +24,14 @@ export function ThumbnailPotrait({ movie }: Props) {
           onClick={() => console.log(movie)}
         />
       </div>
-    </button>
+    </Link>
   );
 }
 
 export function ThumbnailLanscape({ movie }: Props) {
-  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-  const [showModal, setShowModal] = useRecoilState(modalState);
-
   return (
-    <button
-      onClick={() => {
-        setCurrentMovie(movie);
-        setShowModal(true);
-      }}
-      className={`relative   cursor-pointer transition duration-200 ease-out hover:brightness-75 p-0.5`}
+    <Link
+      href={`/${movie?.media_type === 'movie' ? 'movie' : 'tv'}/${movie?.id}`}
     >
       <div className="relative aspect-video h-[150px] xl:h-[225px]">
         <Image
@@ -56,8 +41,9 @@ export function ThumbnailLanscape({ movie }: Props) {
           sizes="100%"
           alt={`Thumbnail ${movie?.name}`}
           draggable={false}
+          onClick={() => console.log(movie)}
         />
       </div>
-    </button>
+    </Link>
   );
 }

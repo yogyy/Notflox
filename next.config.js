@@ -6,6 +6,7 @@ const nextConfig = {
       'image.tmdb.org',
       'avatars.githubusercontent.com',
       'lh3.googleusercontent.com',
+      'gogocdn.net',
     ],
   },
 };
