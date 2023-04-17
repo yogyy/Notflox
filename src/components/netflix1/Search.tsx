@@ -34,8 +34,9 @@ const Search = () => {
       );
 
       const filteredResults = response.data.results.filter(
-        (result: any) =>
-          result.media_type === 'movie' || result.media_type === 'tv'
+        (result: Movie) =>
+          (result.media_type === 'movie' || result.media_type === 'tv') &&
+          result.release_date !== ''
       );
 
       setSearchResults(filteredResults);
