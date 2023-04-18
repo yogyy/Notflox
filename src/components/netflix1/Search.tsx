@@ -33,11 +33,13 @@ const Search = () => {
         `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
       );
 
-      const filteredResults = response.data.results.filter(
-        (result: Movie) =>
-          (result.media_type === 'movie' || result.media_type === 'tv') &&
-          result.release_date !== ''
-      );
+      const filteredResults = response.data.results
+        .slice(0, 5)
+        .filter(
+          (result: Movie) =>
+            (result.media_type === 'movie' || result.media_type === 'tv') &&
+            result.release_date !== ''
+        );
 
       setSearchResults(filteredResults);
       setShowResults(true);
@@ -53,7 +55,7 @@ const Search = () => {
   React.useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 500);
+    }, 700);
 
     return () => {
       clearTimeout(timerId);
@@ -84,7 +86,7 @@ const Search = () => {
           onChange={handleInputChange}
           onClick={() => setShowResults(true)}
           className={clsx(
-            showInput ? ' bg-white/5 block' : ' bg-transparent',
+            showInput ? ' bg-white/5 block' : 'bg-transparent',
             ' px-2 py-1 transition-all  rounded focus:outline-none'
           )}
         />
@@ -95,47 +97,58 @@ const Search = () => {
       >
         <MagnifyingGlassIcon className="w-6" />
       </button>
-      {showInput && (
-        <div className="absolute top-10 max-h-40 overflow-y-auto">
-          {query.length >= 3 && (
-            <ul className="flex flex-col bg-zinc-900/80">
-              {searchResults.map(result => (
-                <li
-                  className="w-full py-2 hover:cursor-pointer "
-                  key={result.id}
-                  onBlur={handleBlur}
-                  onClick={() => {
-                    setSearchResults([]);
-                  }}
-                >
-                  <Link
-                    href={`/${result.media_type == 'movie' ? 'movie' : 'tv'}/${
-                      result.id
-                    }`}
-                    // href="#"
-                    className="mx-2 flex justify-between"
-                  >
-                    <span>
-                      {result.title || result.name}
-                      <span className="ml-1.5">
-                        {result.release_date && (
-                          <>({result.release_date.slice(0, 4)})</>
-                        )}
-                        {result.first_air_date && (
-                          <>({result.first_air_date.slice(0, 4)})</>
-                        )}
-                      </span>
-                    </span>
-                    <span className="bg-gray-800 h-fit px-1 rounded-md">
-                      {result.media_type}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+      <div className="absolute top-10">
+        <Transition
+          show={showInput}
+          enter="transition-opacity duration-700"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="transition-opacity duration-350"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          {showInput && (
+            <div className={'max-h-40 overflow-y-auto transition-transform'}>
+              {query.length >= 3 && (
+                <ul className="flex flex-col bg-zinc-900/80">
+                  {searchResults.map(result => (
+                    <li
+                      className="w-[245px] py-2 hover:cursor-pointer"
+                      key={result.id}
+                      onClick={() => {
+                        setSearchResults([]);
+                      }}
+                    >
+                      <Link
+                        href={`/${
+                          result.media_type == 'movie' ? 'movie' : 'tv'
+                        }/${result.id}`}
+                        // href="#"
+                        className="mx-2 flex justify-between"
+                      >
+                        <span>
+                          {result.title || result.name}
+                          <span className="ml-1.5">
+                            {result.release_date && (
+                              <>({result.release_date.slice(0, 4)})</>
+                            )}
+                            {result.first_air_date && (
+                              <>({result.first_air_date.slice(0, 4)})</>
+                            )}
+                          </span>
+                        </span>
+                        <span className="bg-gray-800 h-fit px-1 rounded-md">
+                          {result.media_type}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
-        </div>
-      )}
+        </Transition>
+      </div>
     </div>
   );
 };
