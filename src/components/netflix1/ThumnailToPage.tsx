@@ -16,7 +16,7 @@ export function ThumbnailPotrait({ movie }: Props) {
       <div className="relative aspect-[9/14] w-[92px] md:w-[164px] h-full bg-zinc-900 rounded">
         <Image
           src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-          className="rounded-sm object-cover md:rounded"
+          className="rounded-sm object-cover md:rounded skeleton"
           fill
           sizes="100%"
           alt={`Thumbnail ${movie?.name}`}
@@ -36,7 +36,7 @@ export function ThumbnailLanscape({ movie }: Props) {
       <div className="relative aspect-video h-[150px] xl:h-[225px]">
         <Image
           src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
-          className="rounded-sm object-cover md:rounded bg-cover"
+          className="rounded-sm object-cover md:rounded bg-cover skeleton"
           fill
           sizes="100%"
           alt={`Thumbnail ${movie?.name}`}

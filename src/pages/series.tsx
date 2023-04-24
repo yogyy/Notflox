@@ -12,33 +12,19 @@ interface Props {
   trendingNow: Movie[];
   topRated: Movie[];
   actionTv: Movie[];
-  comedyTv: Movie[];
-  crimesTv: Movie[];
-  mysteryTv: Movie[];
   SciFiTv: Movie[];
 }
 
-const Series = ({
-  actionTv,
-  comedyTv,
-  mysteryTv,
-  crimesTv,
-  topRated,
-  trendingNow,
-  SciFiTv,
-}: Props) => {
+const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
   return (
     <RootLayout title={'TV Show'}>
       <main>
-        <Banner netflixOriginals={trendingNow} />
-        <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px]">
+        <Banner banner={trendingNow.slice(0, 5)} />
+        <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
           <RowLanscape title="Top Rated" movies={topRated} />
           <RowPotrait title="Trending" movies={trendingNow} />
           <RowPotrait title="Sci-Fi & Fantasy" movies={SciFiTv} />
           <RowPotrait title="Action & Adventure" movies={actionTv} />
-          <RowPotrait title="Crimes" movies={crimesTv} />
-          <RowPotrait title="Mystery" movies={mysteryTv} />
-          <RowPotrait title="Comedies" movies={comedyTv} />
         </section>
       </main>
     </RootLayout>
@@ -58,25 +44,15 @@ export const getServerSideProps = async (context: NextPageContext) => {
     };
   }
 
-  const [
-    familyTv,
-    trendingNow,
-    topRated,
-    actionTv,
-    comedyTv,
-    crimesTv,
-    mysteryTv,
-    SciFiTv,
-  ] = await Promise.all([
-    fetch(requests.fetchFamilyTv).then(res => res.json()),
-    fetch(requests.fetchTrendingTv).then(res => res.json()),
-    fetch(requests.fetchTopRatedTv).then(res => res.json()),
-    fetch(requests.fetchActionTv).then(res => res.json()),
-    fetch(requests.fetchComedyTv).then(res => res.json()),
-    fetch(requests.fetchCrimeTv).then(res => res.json()),
-    fetch(requests.fetchMysteryTv).then(res => res.json()),
-    fetch(requests.fetchSciFiTv).then(res => res.json()),
-  ]);
+  const [familyTv, trendingNow, topRated, actionTv, SciFiTv] =
+    await Promise.all([
+      fetch(requests.fetchFamilyTv).then(res => res.json()),
+      fetch(requests.fetchTrendingTv).then(res => res.json()),
+      fetch(requests.fetchTopRatedTv).then(res => res.json()),
+      fetch(requests.fetchActionTv).then(res => res.json()),
+      fetch(requests.fetchMysteryTv).then(res => res.json()),
+      fetch(requests.fetchSciFiTv).then(res => res.json()),
+    ]);
 
   return {
     props: {
@@ -84,10 +60,7 @@ export const getServerSideProps = async (context: NextPageContext) => {
       trendingNow: trendingNow.results,
       topRated: topRated.results,
       actionTv: actionTv.results,
-      comedyTv: comedyTv.results,
       SciFiTv: SciFiTv.results,
-      crimesTv: crimesTv.results,
-      mysteryTv: mysteryTv.results,
     },
   };
 };

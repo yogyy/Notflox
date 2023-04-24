@@ -1,18 +1,19 @@
 import { API_KEY } from '@/utils/request';
 import axios from 'axios';
-import { Genre, Movie, Network } from '../../../typing';
+import { Genre, Movie } from '../../../typing';
 import * as React from 'react';
 import RootLayout from '@/components/layouts/layout';
 import Image from 'next/image';
 import { baseUrl } from '../../../constants/movie';
 import { ProductionCompany } from '../../../typing';
-import { Tooltip } from '@mui/material';
+import Loader from '@/components/loading';
 import Recomend from '@/components/netflix1/recomend';
 import { tanggal } from '@/lib/getDate';
+import { Paginate } from '@/components/Paginate';
 
 interface Props {
   movie: Movie;
-  production_companies: ProductionCompany[];
+  productions: ProductionCompany[];
   genres: Genre[];
 }
 
@@ -21,28 +22,16 @@ interface KW {
   name: string;
 }
 
-export default function MovieDetails({
-  movie,
-  production_companies,
-  genres,
-}: Props) {
+export default function MovieDetails({ movie, productions, genres }: Props) {
   const [similarTVShows, setSimilarTVShows] = React.useState([]);
   const [filteredTVShows, setFilteredTVShows] = React.useState([]);
   const [keywords, setKeywords] = React.useState([]);
 
-  React.useEffect(() => {
-    fetch(
-      `https://api.themoviedb.org/3/movie/${movie.id}/recommendations?api_key=${API_KEY}&language=en-US&page=1`
-    )
-      .then(response => response.json())
-      .then(data => {
-        setSimilarTVShows(data.results);
-        setFilteredTVShows(
-          data.results.filter((tv: Movie) => tv.poster_path !== null)
-        );
-      })
-      .catch(error => console.error('Error fetching similar TV shows:', error));
-  }, [movie.id]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [postPerPage, setpostPerPage] = React.useState(6);
+  const lastPostIndex = currentPage * postPerPage;
+  const firstPostIndex = lastPostIndex - postPerPage;
+  const similarPaginate = similarTVShows.slice(firstPostIndex, lastPostIndex);
 
   React.useEffect(() => {
     axios
@@ -56,6 +45,21 @@ export default function MovieDetails({
         console.error(error);
       });
   }, [movie.id]);
+
+  React.useEffect(() => {
+    axios
+      .get(`/api/recommend/movie/${movie.id}`)
+      .then(response => setSimilarTVShows(response.data.results))
+      .catch(error => console.error('Error fetching similar TV shows:', error));
+    setCurrentPage(1);
+  }, [movie]);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set('title', movie.title || movie.name);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, '', newUrl);
+  }, [movie.name, movie.title]);
 
   return (
     <RootLayout title={movie.title}>
@@ -78,72 +82,78 @@ export default function MovieDetails({
           <div className="relative -mt-32 md:mt-0 rounded flex">
             <Image
               src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-              className="rounded-sm object-cover md:rounded flex"
+              className="rounded-sm object-cover md:rounded flex skeleton"
               width={164}
               height={255}
-              sizes="100%"
+              style={{ width: 'auto' }}
               alt={`Thumbnail ${movie?.title}`}
               draggable={false}
-              onClick={() => console.log(movie)}
             />
           </div>
         </div>
         <div className="md:w-7/12 w-full">
-          <h1 className="text-xl font-semibold">
+          <h1 className="text-xl font-semibold text-red-600">
             {movie.title} ({movie.release_date?.slice(0, 4)})
           </h1>
-          <p>{tanggal(movie.release_date || movie.first_air_date)}</p>
-          <div className="text-[gray]">
-            {genres.map(genre => genre.name).join(', ')}
-          </div>
+          <h2 className="text- text-gray-400">{movie?.original_title}</h2>
+          <p className="text-gray-300 text-sm lg:text-base">{movie.overview}</p>
           <hr className="my-2 border-zinc-800" />
-          <p>
-            <span className="text-base font-semibold">Rating</span> :
-            {movie.vote_average.toFixed(1)} / 10 from
-            {movie.vote_count.toLocaleString()}
-          </p>
-          <p className="text-gray-300">{movie.overview}</p>
-          <hr className="my-2 border-zinc-800" />
-          <div className="ml-2 grid grid-cols-3 items-center">
-            {production_companies.map(network => (
-              <div key={network.id} className="flex justify-center m-2">
-                <Tooltip title={network.name} disableFocusListener>
-                  {network.logo_path ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className="w-10 md:w-12 h-auto"
-                      height="auto"
-                      src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
-                      alt={`Thumbnail ${network.name}`}
-                    />
-                  ) : (
-                    <p className="text-sm">{network.name}</p>
-                  )}
-                </Tooltip>
-              </div>
-            ))}
+          <div className="text-sm text-gray-300">
+            <p>Aired : {tanggal(movie.release_date)}</p>
+            <p>Status : {movie.status}</p>
+            <div className="text-gray-300">
+              <p>
+                Genre :&nbsp;
+                <span className="text-red-300">
+                  {genres.map(genre => genre.name).join(', ')}
+                </span>
+              </p>
+            </div>
+            <p className="text-gray-300">
+              <span className="">Rating :&nbsp;</span>
+              {movie.vote_average.toFixed(1)} / 10 from&nbsp;
+              {movie.vote_count.toLocaleString()}
+            </p>
+            <div className="text-sm text-gray-300">
+              <p>
+                Studio : {productions?.map(studio => studio.name).join(', ')}
+              </p>
+            </div>
           </div>
           <hr className="mt-2 mb-12 border-zinc-800" />
         </div>
       </div>
-      <div id="similar-tv-container">
+      <div>
         <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
-          <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
-            <h1 className="px-3">Tags :</h1>
+          <div className="relative flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+            <h1 id="similar-tv-container" className="px-3">
+              Tags :
+            </h1>
             {keywords.map((keyword: KW) => (
               <p
                 key={keyword.id}
-                className="bg-white/5 text-gray-300 w-max px-1 rounded-md m-1 "
+                className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
               >
                 {keyword.name}
               </p>
             ))}
           </div>
-          <Recomend
-            className=""
-            title="Recommendations"
-            movies={filteredTVShows}
-          />
+
+          <div className="">
+            <Recomend
+              className=""
+              title="Recommendations"
+              movies={similarPaginate}
+            />
+
+            <Paginate
+              currentPage={currentPage}
+              postPerPage={postPerPage}
+              setCurrentPage={setCurrentPage}
+              totalPost={similarTVShows.length}
+            />
+            {/*  */}
+          </div>
         </div>
       </div>
     </RootLayout>
@@ -154,13 +164,13 @@ export async function getServerSideProps({ params }: any) {
   const { movieId } = params;
 
   const { data } = await axios.get(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}&language=en-US`
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
   );
 
   return {
     props: {
       movie: data,
-      production_companies: data.production_companies,
+      productions: data.production_companies,
       genres: data.genres,
     },
   };

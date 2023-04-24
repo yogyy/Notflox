@@ -17,6 +17,7 @@ export interface ProductionCompany {
 }
 
 export interface Movie {
+  homepage: Url;
   tagline: string;
   production_companies: ProductionCompany[];
   title: string;
@@ -24,6 +25,7 @@ export interface Movie {
   media_type: string;
   release_date?: string;
   first_air_date?: string | undefined;
+  last_air_date?: string | undefined;
   genres: Genre[];
   genre_ids: number[];
   id: number;
@@ -31,11 +33,13 @@ export interface Movie {
   origin_country: string[];
   original_language: string;
   original_name: string;
+  original_title: string;
   overview: string;
   popularity: number;
   poster_path: string;
   vote_average: number;
   vote_count: number;
+  status?: string;
 }
 
 export interface Element {
@@ -50,6 +54,7 @@ export interface Element {
 }
 
 export interface Anime {
+  episodeNum?: string;
   animeId: string;
   animeTitle: string;
   animeImg: string;

@@ -59,18 +59,6 @@ const Navbar = () => {
           <Netflix className="h-4 lg:h-7" />
         </div>
         <NavbarItem className="flex-row ml-8 gap-7 hidden lg:flex" />
-        {/* <div
-          onClick={toggleMobileMenu}
-          className="lg:hidden flex flex-row items-center gap-2 ml-8 cursor-pointer relative"
-        >
-          <p className="text-white text-sm">Browse</p>
-          <ChevronDownIcon
-            className={`w-4 text-white fill-white transition ${
-              showMobileMenu ? 'rotate-180' : 'rotate-0'
-            }`}
-          />
-          <MobileMenu visible={showMobileMenu} />
-        </div> */}
         <div className="flex flex-row ml-auto gap-3 md:gap-5 items-center">
           <div className="hidden md:block">
             <Search />

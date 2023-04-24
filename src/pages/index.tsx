@@ -19,7 +19,6 @@ interface Props {
   topRated: Movie[];
   actionMovies: Movie[];
   comedyMovies: Movie[];
-  horrorMovies: Movie[];
   romanceMovies: Movie[];
   upComing: Movie[];
   Animation: Movie[];
@@ -49,9 +48,7 @@ const Movies = ({
         },
       });
 
-      const [discoverNetflixResponse] = await Promise.all([
-        discoverNetflixRequest,
-      ]);
+      const [discoverNetflixResponse] = await [discoverNetflixRequest];
 
       setDiscoverNetflix((await discoverNetflixResponse).data.results);
     }
@@ -66,8 +63,10 @@ const Movies = ({
       <Navbar />
       <div className="main">
         <main>
-          <Banner netflixOriginals={discoverMovie} />
-          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px]">
+          <section>
+            <Banner banner={discoverMovie} />
+          </section>
+          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
             <RowLanscape
               className=""
               title="Trending Now Netflix"
@@ -115,7 +114,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
     topRated,
     actionMovies,
     comedyMovies,
-    horrorMovies,
     upComing,
     Animation,
   ] = await Promise.all([
@@ -128,7 +126,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
     fetch(requests.fetchTopRatedNetflix).then(res => res.json()),
     fetch(requests.fetchActionTvNetflix).then(res => res.json()),
     fetch(requests.fetchComedyMovies).then(res => res.json()),
-    fetch(requests.fetchHorrorMovies).then(res => res.json()),
     fetch(requests.fetchAirToday).then(res => res.json()),
     fetch(
       `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&page=1&with_networks=213&with_genres=16`
@@ -142,7 +139,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
       topRated: topRated.results,
       actionMovies: actionMovies.results,
       comedyMovies: comedyMovies.results,
-      horrorMovies: horrorMovies.results,
       upComing: upComing.results,
       Animation: Animation.results,
     },

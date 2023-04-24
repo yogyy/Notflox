@@ -12,9 +12,16 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { Element, Genre, Movie, Network } from '../../../typing';
+import {
+  Element,
+  Genre,
+  Movie,
+  Network,
+  ProductionCompany,
+} from '../../../typing';
 import { API_KEY, BASE_URL } from '@/utils/request';
 import ReactPlayer from 'react-player/youtube';
+import axios from 'axios';
 
 function ModalVid() {
   const [showModal, setShowModal] = useRecoilState(modalState);
@@ -22,7 +29,7 @@ function ModalVid() {
 
   const [trailer, setTrailer] = React.useState('');
   const [genres, setGenres] = React.useState<Genre[]>([]);
-  const [networks, setNetworks] = React.useState<Network[]>([]);
+  const [networks, setNetworks] = React.useState<ProductionCompany[]>([]);
   const [muted, setMuted] = React.useState(false);
 
   const handleClose = () => {
@@ -31,11 +38,8 @@ function ModalVid() {
 
   React.useEffect(() => {
     async function fetchMovie() {
-      const data = await fetch(
-        `${BASE_URL}/${movie?.release_date ? 'movie' : 'tv'}/${
-          movie?.id
-        }?api_key=${API_KEY}&language=en-US&append_to_response=videos`
-      ).then(response => response.json());
+      const response = await axios.get(`/api/modal/${movie?.id}`);
+      const data = response.data.data;
       if (data?.videos) {
         const index = data.videos.results.findIndex(
           (element: Element) => element.type === 'Trailer'
@@ -45,11 +49,10 @@ function ModalVid() {
       if (data?.genres) {
         setGenres(data.genres);
       }
-      if (data?.networks) {
-        setNetworks(data.networks);
+      if (data?.production_companies) {
+        setNetworks(data.production_companies);
       }
     }
-    console.log(trailer);
 
     fetchMovie();
   }, [movie, trailer]);
@@ -84,7 +87,7 @@ function ModalVid() {
               controls
               playing
               muted={muted}
-              volume={0.5}
+              volume={0.3}
             />
           ) : (
             <Image
@@ -99,12 +102,13 @@ function ModalVid() {
             />
           )}
         </div>
-        <div className="flex space-x-16 rounded-b-md bg-slate-800 px-10 py-8">
+        <div className="flex space-x-16 rounded-b-md bg-[#121212] px-10 py-8">
           <div className="space-y-6 text-lg">
             <h1 className="font-bold text-xl">{movie?.title || movie?.name}</h1>
             <div className="flex items-center space-x-2 text-sm ">
               <p className="font-semibold text-sm text-green-400">
-                {movie!.vote_average * 10}% Match
+                {movie &&
+                  `${(movie.vote_average * 10).toString().slice(0, 2)}% Match`}
               </p>
               <p className="font-light">
                 {movie?.release_date || movie?.first_air_date}
@@ -137,12 +141,16 @@ function ModalVid() {
                   <span className="flex gap-3 flex-wrap mt-2">
                     {networks.map(network => (
                       <div key={network.id}>
-                        <Image
-                          width={50 || 'auto'}
-                          height={50 || 'auto'}
-                          src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
-                          alt={network.name}
-                        />
+                        {network.logo_path && (
+                          <Image
+                            width={50}
+                            height={50}
+                            style={{ height: 'auto' }}
+                            src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
+                            alt={network.name}
+                            onClick={() => console.log(network)}
+                          />
+                        )}
                       </div>
                     ))}
                   </span>

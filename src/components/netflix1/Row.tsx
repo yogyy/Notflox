@@ -75,7 +75,7 @@ export function RowLanscape({ title, movies, className }: Props) {
 
   return (
     <div
-      className={clsx('h-auto relative space-y-0.5 md:space-y-2', className)}
+      className={clsx('h-auto relative space-y-0.5 md:space-y-2 ', className)}
     >
       <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
         {title}

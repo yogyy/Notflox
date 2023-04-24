@@ -9,28 +9,19 @@ import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
 interface Props {
   trendingNow: Movie[];
   topRated: Movie[];
-  actionMovies: Movie[];
   comedyMovies: Movie[];
-  horrorMovies: Movie[];
-  romanceMovies: Movie[];
 }
 
-const Movies = ({
-  actionMovies,
-  comedyMovies,
-  horrorMovies,
-  topRated,
-  trendingNow,
-}: Props) => {
+const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
+  console.log(trendingNow);
   return (
     <RootLayout title="Movies">
       <main>
-        <Banner netflixOriginals={horrorMovies} />
-        <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10">
+        <Banner banner={trendingNow} />
+        <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10 z-[2]">
           <RowLanscape className="" title="Trending Now" movies={trendingNow} />
           <RowPotrait title="New Release" movies={comedyMovies} />
           <RowPotrait title="Top Rated" movies={topRated} />
-          <RowPotrait title="Action" movies={actionMovies} />
         </section>
       </main>
     </RootLayout>
@@ -49,22 +40,17 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
-  const [trendingNow, topRated, actionMovies, comedyMovies, horrorMovies] =
-    await Promise.all([
-      fetch(requests.fetchTrending).then(res => res.json()),
-      fetch(requests.fetchTopRated).then(res => res.json()),
-      fetch(requests.fetchActionMovies).then(res => res.json()),
-      fetch(requests.fetchComedyMovies).then(res => res.json()),
-      fetch(requests.fetchHorrorMovies).then(res => res.json()),
-    ]);
+  const [trendingNow, topRated, comedyMovies] = await Promise.all([
+    fetch(requests.fetchTrending).then(res => res.json()),
+    fetch(requests.fetchTopRated).then(res => res.json()),
+    fetch(requests.fetchComedyMovies).then(res => res.json()),
+  ]);
 
   return {
     props: {
-      trendingNow: trendingNow.results,
-      topRated: topRated.results,
-      actionMovies: actionMovies.results,
-      comedyMovies: comedyMovies.results,
-      horrorMovies: horrorMovies.results,
+      trendingNow: trendingNow.results.slice(0, 10),
+      topRated: topRated.results.slice(0, 10),
+      comedyMovies: comedyMovies.results.slice(0, 10),
     },
   };
 };

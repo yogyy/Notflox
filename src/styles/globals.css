@@ -5,6 +5,7 @@
 html {
   color-scheme: dark;
   @apply h-full;
+  scroll-behavior: smooth !important;
 }
 
 body {
@@ -19,7 +20,7 @@ body {
 
 @layer components {
   .bannerButton {
-    @apply flex items-center gap-x-2 rounded px-5 py-1.5 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
+    @apply flex items-center gap-x-1 rounded px-2.5 py-1 text-sm font-semibold transition hover:opacity-75 md:py-2.5 md:px-8 md:text-xl;
   }
 
   .modalButton {

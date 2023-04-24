@@ -1,64 +1,73 @@
-import React from 'react';
+import * as React from 'react';
+import { Combobox, Transition } from '@headlessui/react';
+import { API_KEY } from '@/utils/request';
+import axios from 'axios';
+import { Movie } from '../../typing';
+import fetcher from '@/pages/api/fetcher';
+import useSWR from 'swr';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
-interface InputProps {
-  id: string;
-  onChange: any;
-  value: string;
-  label: string;
-  type?: string;
+function MyCombobox() {
+  const [query, setQuery] = React.useState('');
+  const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
+  const [debouncedQuery, setDebouncedQuery] = React.useState('');
+
+  const { data, error } = useSWR(
+    debouncedQuery.trim() === '' ? null : `/api/search/${query}`,
+    fetcher
+  );
+
+  React.useEffect(() => {
+    if (data) {
+      console.log(data.data);
+      setSearchResults(data.data);
+    } else {
+      setSearchResults([]);
+    }
+  }, [data]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  React.useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 700);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [query]);
+
+  if (error) return <div>Error fetching data</div>;
+
+  return (
+    <Combobox value={query}>
+      <Combobox.Input
+        onChange={handleInputChange}
+        className="relative outline-none w-[150px] pt-3 pb-3 pl-10 border-solid border-[#f72727] opacity-[0.8] border transition-all duration-200 ease-in-out"
+      />
+      <MagnifyingGlassIcon className="w-6 absolute z-10" />
+      <Transition
+        as={React.Fragment}
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <Combobox.Options>
+          {searchResults.map(person => (
+            <Combobox.Option
+              key={person.id}
+              value={person.name || person.title}
+            >
+              {person.name || person.title} {person.release_date?.slice(0, 4)}
+            </Combobox.Option>
+          ))}
+        </Combobox.Options>
+      </Transition>
+    </Combobox>
+  );
 }
 
-const Input: React.FC<InputProps> = ({ id, onChange, value, label, type }) => {
-  return (
-    <div className="relative">
-      <input
-        onChange={onChange}
-        value={value}
-        type={type}
-        id={id}
-        className="
-        block
-        rounded-md
-        px-6
-        pt-6
-        pb-1
-        w-full
-        text-md
-      text-white
-      bg-neutral-700
-        appearance-none
-        focus:outline-none
-        focus:ring-0
-        peer
-        invalid:border-b-1
-        "
-        placeholder=" "
-      />
-      <label
-        htmlFor={id}
-        className="
-        absolute 
-        text-md
-      text-zinc-400
-        duration-150 
-        transform 
-        -translate-y-3 
-        scale-75 
-        top-4 
-        z-10 
-        origin-[0] 
-        left-6
-        peer-placeholder-shown:scale-100 
-        peer-placeholder-shown:translate-y-0 
-        peer-focus:scale-75
-        peer-focus:-translate-y-3
-        cursor-text
-      "
-      >
-        {label}
-      </label>
-    </div>
-  );
-};
-
-export default Input;
+export default MyCombobox;

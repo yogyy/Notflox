@@ -120,10 +120,14 @@ const Search = () => {
                       }}
                     >
                       <Link
-                        href={`/${
-                          result.media_type == 'movie' ? 'movie' : 'tv'
-                        }/${result.id}`}
+                        href={{
+                          pathname: `/${
+                            result.media_type == 'movie' ? 'movie' : 'tv'
+                          }/${result.id}`,
+                          query: { title: `${result.name || result.title}` },
+                        }}
                         // href="#"
+
                         className="mx-2 flex justify-between"
                       >
                         <span>

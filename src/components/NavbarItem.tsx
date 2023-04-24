@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
+import { Movie } from '../../typing';
 
 interface NavItem {
   className?: string;
@@ -10,6 +11,8 @@ interface NavItem {
 const NavbarItem = ({ className }: NavItem) => {
   const router = useRouter();
   const arrOfRoute = router.route.split('/');
+  const baseRoute = '/' + arrOfRoute[1];
+
   return (
     <div className={clsx('font-semibold', className)}>
       {links.map(link => (
@@ -36,6 +39,5 @@ const links = [
   { name: 'Series', url: '/series' },
   { name: 'Movies', url: '/movies' },
   { name: 'Anime', url: '/anime' },
-  { name: 'My List', url: '/my-list' },
-  // { name: 'Browse by Languages', url: '/' },
+  { name: 'Details', url: '/movie/' || '/tv/' },
 ];

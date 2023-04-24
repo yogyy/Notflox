@@ -21,7 +21,7 @@ export function ThumbnailPotrait({ movie }: Props) {
       }}
       className="cursor-pointer transition duration-200 ease-out hover:brightness-75 w-full h-full p-0.5"
     >
-      <div className="relative aspect-[9/14] w-[92px] md:w-[164px] h-full bg-zinc-900 rounded">
+      <div className="relative aspect-[9/14] w-[92px] lg:w-[164px] h-full bg-zinc-900 rounded">
         <Image
           src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
           className="rounded-sm object-cover md:rounded"
@@ -29,7 +29,6 @@ export function ThumbnailPotrait({ movie }: Props) {
           sizes="100%"
           alt={`Thumbnail ${movie?.name}`}
           draggable={false}
-          onClick={() => console.log(movie)}
         />
       </div>
     </button>
@@ -46,9 +45,9 @@ export function ThumbnailLanscape({ movie }: Props) {
         setCurrentMovie(movie);
         setShowModal(true);
       }}
-      className={`relative   cursor-pointer transition duration-200 ease-out hover:brightness-75 p-0.5`}
+      className={`relative cursor-pointer transition duration-200 ease-out hover:brightness-75 p-0.5`}
     >
-      <div className="relative aspect-video h-[150px] xl:h-[225px]">
+      <div className="relative aspect-video w-[220px] lg:w-[342px]">
         <Image
           src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
           className="rounded-sm object-cover md:rounded bg-cover"

@@ -16,7 +16,7 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal() {
+function BasicModal() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -42,3 +42,5 @@ export default function BasicModal() {
     </div>
   );
 }
+
+export default BasicModal;
