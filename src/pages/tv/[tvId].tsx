@@ -12,7 +12,7 @@ import { Paginate } from '@/components/Paginate';
 import Link from 'next/link';
 
 interface Props {
-  movie: Movie;
+  tv: Movie;
   networks: Network[];
   genres: Genre[];
   productions: ProductionCompany[];
@@ -22,7 +22,7 @@ interface KW {
   name: string;
 }
 
-export default function MovieDetails({ movie, genres, productions }: Props) {
+export default function MovieDetails({ tv, genres, productions }: Props) {
   const [similarTVShows, setSimilarTVShows] = React.useState([]);
   const [filteredTVShows, setFilteredTVShows] = React.useState([]);
   const [keywords, setKeywords] = React.useState([]);
@@ -35,17 +35,17 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
 
   React.useEffect(() => {
     axios
-      .get(`/api/recommend/tv/${movie.id}`)
+      .get(`/api/recommend/tv/${tv.id}`)
       .then(response => setSimilarTVShows(response.data.results))
 
       .catch(error => console.error('Error fetching similar TV shows:', error));
     setCurrentPage(1);
-  }, [movie.id]);
+  }, [tv.id]);
 
   React.useEffect(() => {
     axios
       .get(
-        `https://api.themoviedb.org/3/tv/${movie.id}/keywords?api_key=${API_KEY}`
+        `https://api.themoviedb.org/3/tv/${tv.id}/keywords?api_key=${API_KEY}`
       )
       .then(response => {
         setKeywords(response.data.results);
@@ -53,26 +53,19 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
       .catch(error => {
         console.error(error);
       });
-  }, [movie.id]);
-
-  React.useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('title', movie.title || movie.name);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.pushState({}, '', newUrl);
-  }, [movie.name, movie.title]);
+  }, [tv.id]);
 
   return (
-    <RootLayout title={movie.name}>
+    <RootLayout title={tv.name}>
       <div className="relative w-screen h-[56.25vw] object-cover brightness-50 xl:w-screen">
         <span className="absolute top-[14%] left-[20%] text-3xl font-mono z-10">
-          {movie.tagline}
+          {tv.tagline}
         </span>
-        {movie.backdrop_path !== null ? (
+        {tv.backdrop_path !== null ? (
           <Image
-            src={`${baseUrl}${movie?.backdrop_path || ''}`}
+            src={`${baseUrl}${tv?.backdrop_path || ''}`}
             fill
-            alt={`banner ${movie.name}`}
+            alt={`banner ${tv.name}`}
             priority
             draggable={false}
           />
@@ -85,19 +78,19 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
         <div className="h-full gap-3 md:flex md:flex-col relative">
           <div className="relative -mt-32 md:mt-0 rounded ">
             <Image
-              src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w342/${tv.poster_path}`}
               className="rounded-sm object-cover md:rounded flex"
               width={164}
               height={255}
               style={{ width: 'auto' }}
-              alt={`Thumbnail ${movie?.name}`}
+              alt={`Thumbnail ${tv?.name}`}
               draggable={false}
-              onClick={() => console.log(movie)}
+              onClick={() => console.log(tv)}
             />
           </div>
           <div className="homepage">
             <h3 className="text-sm text-sky-600">
-              <Link target="_blank" href={movie.homepage}>
+              <Link target="_blank" href={tv.homepage}>
                 Homepage
               </Link>
             </h3>
@@ -105,17 +98,17 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
         </div>
         <div className="md:w-7/12 w-full">
           <h1 className="text-xl font-semibold text-red-600">
-            {movie.name} ({movie.first_air_date?.slice(0, 4)})
+            {tv.name} ({tv.first_air_date?.slice(0, 4)})
           </h1>
-          <h2 className="text- text-gray-300">{movie?.original_name}</h2>
-          <p className="text-sm lg:text-base text-gray-400">{movie.overview}</p>
+          <h2 className="text- text-gray-300">{tv?.original_name}</h2>
+          <p className="text-sm lg:text-base text-gray-400">{tv.overview}</p>
           <hr className="my-2 border-zinc-800" />
           <div className="text-sm text-gray-300">
             <p>
-              Aired : {tanggal(movie.first_air_date)}
-              &nbsp; to {tanggal(movie.last_air_date || '?')}
+              Aired : {tanggal(tv.first_air_date)}
+              &nbsp; to {tanggal(tv.last_air_date || '?')}
             </p>
-            <p>Status : {movie.status}</p>
+            <p>Status : {tv.status}</p>
             <div className="text-gray-300">
               <p>
                 Genre :&nbsp;
@@ -126,8 +119,8 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
             </div>
             <p className="text-gray-300">
               <span className="">Rating :&nbsp;</span>
-              {movie.vote_average.toFixed(1)} / 10 from&nbsp;
-              {movie.vote_count.toLocaleString()}
+              {tv.vote_average.toFixed(1)} / 10 from&nbsp;
+              {tv.vote_count.toLocaleString()}
             </p>
             <div className="text-sm text-gray-300">
               <p>
@@ -171,17 +164,30 @@ export default function MovieDetails({ movie, genres, productions }: Props) {
 }
 
 export async function getServerSideProps({ params }: any) {
-  const { tvId } = params;
+  const tvId = Number(params.tvId);
 
-  const { data } = await axios.get(
-    `https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`
-  );
+  try {
+    const { data } = await axios.get(
+      `https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`
+    );
 
-  return {
-    props: {
-      movie: data,
-      genres: data.genres,
-      productions: data.production_companies,
-    },
-  };
+    return {
+      props: {
+        tv: data,
+        genres: data.genres,
+        productions: data.production_companies,
+      },
+    };
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      return {
+        props: {},
+        notFound: true,
+      };
+    }
+    return {
+      props: {},
+      error: true,
+    };
+  }
 }
