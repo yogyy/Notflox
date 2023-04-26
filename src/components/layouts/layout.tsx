@@ -1,5 +1,3 @@
-import { NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import * as React from 'react';
 import Navbar from '../navbar';
@@ -18,10 +16,12 @@ const RootLayout = ({
       <Head>
         <title>{`${title} | NOTFLOX`}</title>
       </Head>
-      <header>
-        <Navbar />
-      </header>
-      <main className={poppins.className}>{children}</main>
+      <div className="bg-[#121212]">
+        <header>
+          <Navbar />
+        </header>
+        <main className={poppins.className}>{children}</main>
+      </div>
     </>
   );
 };

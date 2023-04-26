@@ -40,8 +40,8 @@ export default function TemporaryDrawer() {
         onClose={toggleDrawer('left', false)}
         disableEnforceFocus
       >
-        <div className="w-[60vw] md:w-[40vw] bg-[#131313] h-full">
-          <div className="flex md:hidden justify-around mt-2 mr-2 p-1 text-white">
+        <div className="w-[60vw] md:w-[200px] bg-[#131313] h-full">
+          <div className="flex md:hidden justify-end mt-2 mr-2 p-1 text-white">
             <Search />
           </div>
           <NavbarItem className="flex-col flex ml-2 gap-3" />

@@ -13,17 +13,16 @@ interface Props {
 }
 
 const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
-  console.log(trendingNow);
   return (
     <RootLayout title="Movies">
-      <main>
-        <Banner banner={trendingNow} />
+      <>
+        <Banner banner={trendingNow.slice(0, 5)} />
         <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10 z-[2]">
           <RowLanscape className="" title="Trending Now" movies={trendingNow} />
           <RowPotrait title="New Release" movies={comedyMovies} />
           <RowPotrait title="Top Rated" movies={topRated} />
         </section>
-      </main>
+      </>
     </RootLayout>
   );
 };
@@ -31,6 +30,8 @@ const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
 export default Movies;
 
 export const getServerSideProps = async (context: NextPageContext) => {
+  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
+
   const session = await getSession(context);
   if (!session) {
     return {

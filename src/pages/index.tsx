@@ -12,13 +12,14 @@ import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 import axios from 'axios';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
+import RootLayout from '@/components/layouts/layout';
+import Loading from '@/components/loading';
 
 interface Props {
   discoverMovie: Movie[];
   trendingNow: Movie[];
   topRated: Movie[];
   actionMovies: Movie[];
-  comedyMovies: Movie[];
   romanceMovies: Movie[];
   upComing: Movie[];
   Animation: Movie[];
@@ -33,72 +34,55 @@ const Movies = ({
   trendingNow,
 }: Props) => {
   const showModal = useRecoilValue(modalState);
-  const [discoverNetflix, setDiscoverNetflix] = React.useState([]);
-
-  React.useEffect(() => {
-    async function fetchData() {
-      const discoverNetflixRequest = axios.get(`${BASE_URL}/tv/popular`, {
-        params: {
-          api_key: API_KEY,
-          include_adult: false,
-          page: 1,
-          without_genres: 10749,
-          with_networks: 213,
-          language: 'en-US',
-        },
-      });
-
-      const [discoverNetflixResponse] = await [discoverNetflixRequest];
-
-      setDiscoverNetflix((await discoverNetflixResponse).data.results);
-    }
-    fetchData();
-  }, []);
 
   return (
-    <>
-      <Head>
-        <title>Netflix Clone</title>
-      </Head>
-      <Navbar />
-      <div className="main">
-        <main>
-          <section>
-            <Banner banner={discoverMovie} />
-          </section>
-          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
-            <RowLanscape
-              className=""
-              title="Trending Now Netflix"
-              movies={trendingNow}
-            />
-            {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
-            <div className="">
-              <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-                Released Today
-              </h2>
-              <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                {upComing.map(movie => (
-                  <div key={movie.id} className="mt-1">
-                    <ThumbnailPotrait movie={movie} />
-                  </div>
-                ))}
+    <RootLayout title="Netflix Clone">
+      {(discoverMovie.length, actionMovies.length) === 0 ? (
+        <div className="h-screen w-screen flex items-center justify-center">
+          <Loading />
+        </div>
+      ) : (
+        <div className="main">
+          <main>
+            <section>
+              <Banner banner={discoverMovie.slice(0, 5)} />
+            </section>
+            <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
+              <RowLanscape
+                className=""
+                title="Trending Now Netflix"
+                movies={trendingNow}
+              />
+              {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
+              <div className="">
+                <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+                  Released Today
+                </h2>
+                <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                  {upComing.map(movie => (
+                    <div key={movie.id} className="mt-1">
+                      <ThumbnailPotrait movie={movie} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-            <RowPotrait title="Top Rated Netflix" movies={topRated} />
-            <RowLanscape className="" title="Animations" movies={Animation} />
-            <RowPotrait title="Actions" movies={actionMovies} />
-          </section>
-        </main>
-        {showModal && <ModalVid />}
-      </div>
-    </>
+              <RowPotrait title="Top Rated Netflix" movies={topRated} />
+              <RowLanscape className="" title="Animations" movies={Animation} />
+              <RowPotrait title="Actions" movies={actionMovies} />
+            </section>
+          </main>
+          {showModal && <ModalVid />}
+        </div>
+      )}
+    </RootLayout>
   );
 };
 
 export default Movies;
 
 export const getServerSideProps = async (context: NextPageContext) => {
+  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
+
   const session = await getSession(context);
   if (!session) {
     return {
@@ -113,7 +97,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
     trendingNow,
     topRated,
     actionMovies,
-    comedyMovies,
     upComing,
     Animation,
   ] = await Promise.all([
@@ -125,7 +108,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
     ).then(res => res.json()),
     fetch(requests.fetchTopRatedNetflix).then(res => res.json()),
     fetch(requests.fetchActionTvNetflix).then(res => res.json()),
-    fetch(requests.fetchComedyMovies).then(res => res.json()),
     fetch(requests.fetchAirToday).then(res => res.json()),
     fetch(
       `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&page=1&with_networks=213&with_genres=16`
@@ -138,7 +120,6 @@ export const getServerSideProps = async (context: NextPageContext) => {
       trendingNow: trendingNow.results,
       topRated: topRated.results,
       actionMovies: actionMovies.results,
-      comedyMovies: comedyMovies.results,
       upComing: upComing.results,
       Animation: Animation.results,
     },

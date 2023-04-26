@@ -6,6 +6,7 @@ import { RecoilRoot } from 'recoil';
 import '@/styles/nprogress.css';
 import { Router } from 'next/router';
 import nProgress from 'nprogress';
+import { PreloadProvider } from '@/components/PreloadContext';
 
 Router.events.on('routeChangeStart', nProgress.start);
 Router.events.on('routeChangeError', nProgress.done);
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
       <RecoilRoot>
-        <Component {...pageProps} />
+        <PreloadProvider>
+          <Component {...pageProps} />
+        </PreloadProvider>
       </RecoilRoot>
     </SessionProvider>
   );

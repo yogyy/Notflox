@@ -1,6 +1,6 @@
 import styles from '@/styles/Loader.module.css';
 
-const loading = () => {
+const Loading = () => {
   return (
     <div className="">
       <div className={styles.loadingcoy}></div>
@@ -8,4 +8,4 @@ const loading = () => {
   );
 };
 
-export default loading;
+export default Loading;

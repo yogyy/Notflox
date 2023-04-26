@@ -18,7 +18,7 @@ interface Props {
 const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
   return (
     <RootLayout title={'TV Show'}>
-      <main>
+      <>
         <Banner banner={trendingNow.slice(0, 5)} />
         <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
           <RowLanscape title="Top Rated" movies={topRated} />
@@ -26,7 +26,7 @@ const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
           <RowPotrait title="Sci-Fi & Fantasy" movies={SciFiTv} />
           <RowPotrait title="Action & Adventure" movies={actionTv} />
         </section>
-      </main>
+      </>
     </RootLayout>
   );
 };
@@ -34,6 +34,8 @@ const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
 export default Series;
 
 export const getServerSideProps = async (context: NextPageContext) => {
+  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
+
   const session = await getSession(context);
   if (!session) {
     return {

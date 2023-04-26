@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 html {
-  color-scheme: dark;
   @apply h-full;
   scroll-behavior: smooth !important;
 }
@@ -11,11 +10,16 @@ html {
 body {
   @apply h-full;
   overflow-x: hidden;
-  background-color: #121212;
 }
 
 #_next {
   @apply h-full;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
 }
 
 @layer components {

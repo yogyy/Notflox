@@ -48,10 +48,6 @@ const Search = () => {
     }
   }, []);
 
-  const handleBlur = () => {
-    setShowResults(false);
-  };
-
   React.useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedQuery(query);

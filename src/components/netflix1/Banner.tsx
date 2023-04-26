@@ -4,8 +4,6 @@ import * as React from 'react';
 import { baseUrl } from '../../../constants/movie';
 import { Movie } from '../../../typing';
 import LongText from './ReadMore';
-import { useRecoilState } from 'recoil';
-import { modalState, movieState } from '../../../atoms/modalAtom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, EffectFade } from 'swiper';
 
@@ -26,7 +24,7 @@ export default function Banner({ banner }: Props) {
           loop={true}
           centeredSlides={true}
           autoplay={{
-            delay: 7500,
+            delay: 5500,
             disableOnInteraction: false,
           }}
           modules={[Autoplay, EffectFade]}

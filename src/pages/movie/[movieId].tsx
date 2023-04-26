@@ -10,6 +10,7 @@ import Loader from '@/components/loading';
 import Recomend from '@/components/netflix1/recomend';
 import { tanggal } from '@/lib/getDate';
 import { Paginate } from '@/components/Paginate';
+import { NextPageContext } from 'next';
 
 interface Props {
   movie: Movie;
@@ -35,9 +36,7 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
 
   React.useEffect(() => {
     axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${movie.id}/keywords?api_key=${API_KEY}`
-      )
+      .get(`/api/movie/keyword/${movie.id}`)
       .then(response => {
         setKeywords(response.data.keywords);
       })
@@ -48,18 +47,11 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
 
   React.useEffect(() => {
     axios
-      .get(`/api/recommend/movie/${movie.id}`)
+      .get(`/api/movie/recommend/${movie.id}`)
       .then(response => setSimilarTVShows(response.data.results))
       .catch(error => console.error('Error fetching similar TV shows:', error));
     setCurrentPage(1);
   }, [movie]);
-
-  React.useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set('title', movie.title || movie.name);
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.pushState({}, '', newUrl);
-  }, [movie.name, movie.title]);
 
   return (
     <RootLayout title={movie.title}>
@@ -160,18 +152,26 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
   );
 }
 
-export async function getServerSideProps({ params }: any) {
-  const { movieId } = params;
+export async function getServerSideProps({ params }: { params: any }) {
+  const movieId = Number(params.movieId);
 
-  const { data } = await axios.get(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
-  );
+  try {
+    const { data } = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+    );
 
-  return {
-    props: {
-      movie: data,
-      productions: data.production_companies,
-      genres: data.genres,
-    },
-  };
+    return {
+      props: {
+        movie: data,
+        productions: data.production_companies,
+        genres: data.genres,
+      },
+    };
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      return {
+        notFound: true,
+      };
+    }
+  }
 }

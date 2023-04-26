@@ -13,19 +13,21 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, EffectFade } from 'swiper';
 
 import 'swiper/css';
-import 'swiper/css/effect-fade';
-import Loader from '@/components/loading';
 import { Skeleton } from '@mui/material';
+import { NextResponse } from 'next/server';
+import RootLayout from '@/components/layouts/layout';
+
+// export const revalidate = 60;
 
 const AnimePage = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [postPerPage, setpostPerPage] = React.useState(10);
+  const [postPerPage, setpostPerPage] = React.useState(12);
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
 
   const [airingNow, setAiringNow] = React.useState<Movie[]>([]);
   const [bannerAnime, setBannerAnime] = React.useState<Movie[]>([]);
-  const [doneFetch, setDoneFetch] = React.useState(true);
+  const [doneFetch, setDoneFetch] = React.useState(false);
 
   const currentAiring = airingNow.slice(firstPostIndex, lastPostIndex);
 
@@ -38,7 +40,7 @@ const AnimePage = () => {
         ]);
         setAiringNow(animeBaru.data);
         setBannerAnime(animeRame.data);
-        setDoneFetch(false);
+        setDoneFetch(true);
       } catch (error) {
         console.error(error);
       }
@@ -47,12 +49,8 @@ const AnimePage = () => {
   }, []);
 
   return (
-    <>
-      <Head>
-        <title>Anime - NOTFLOX </title>
-      </Head>
-      <Navbar />
-      <main>
+    <RootLayout title="Anime">
+      <>
         <div className="main mx-3">
           <div className="flex flex-col justify-center xl:flex-row max-w-[1300px] mx-auto gap-5">
             <section className="flex flex-col pt-20">
@@ -60,17 +58,21 @@ const AnimePage = () => {
 
               <div className="flex">
                 <div className="w-full relative px-2 lg:px-0 m-auto lg:w-[948px]">
-                  {doneFetch ? (
+                  {!doneFetch ? (
                     <Skeleton
                       sx={{ bgcolor: 'grey.900' }}
                       variant="rectangular"
-                      className="w-[220px] lg:w-[948px] aspect-video h-full"
+                      className="w-full lg:w-[948px] aspect-video h-full"
                     />
                   ) : (
                     <Swiper
                       spaceBetween={30}
-                      effect={'fade'}
+                      effect={'slide'}
                       loop={true}
+                      autoplay={{
+                        delay: 4500,
+                        disableOnInteraction: false,
+                      }}
                       centeredSlides={true}
                       pagination={{
                         clickable: true,
@@ -79,7 +81,7 @@ const AnimePage = () => {
                       modules={[Autoplay, Navigation, EffectFade]}
                       className="mySwiper"
                     >
-                      {bannerAnime.map((anime, index) => (
+                      {bannerAnime.slice(0, 5).map((anime, index) => (
                         <SwiperSlide key={anime.id}>
                           <Link
                             href={`/tv/${anime.id}`}
@@ -119,12 +121,12 @@ const AnimePage = () => {
                   </h1>
                 </div>
 
-                {doneFetch ? (
-                  <div className="relative grid gap-3 px-2 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+                {!doneFetch ? (
+                  <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
                     {(() => {
                       const skeletons = [];
 
-                      for (let i = 0; i < 10; i++) {
+                      for (let i = 0; i < 12; i++) {
                         skeletons.push(
                           <Skeleton
                             key={i}
@@ -139,7 +141,7 @@ const AnimePage = () => {
                     })()}
                   </div>
                 ) : (
-                  <div className="relative grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5">
+                  <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
                     {currentAiring.map(anime => (
                       <Link
                         href={`/tv/${anime.id}`}
@@ -219,27 +221,31 @@ const AnimePage = () => {
               </div>
             </section>
           </div>
-          {/* <div className="h-20 flex items-center justify-center bg-[#1c1c1c] mt-3 rounded-sm">
-              <p className="font-base text-xl">
-                Made by&nbsp;
-                <Link
-                  className="text-sky-500"
-                  href="https://www.github.com/yogyy"
-                  target="_blank"
-                >
-                  Yogi
-                </Link>
-              </p>
-            </div> */}
+          <div className="h-20 flex items-center justify-center bg-[#1c1c1c] mt-3 rounded-sm">
+            <p className="font-base text-xl">
+              Made by&nbsp;
+              <Link
+                className="text-sky-500"
+                href="https://www.github.com/yogyy"
+                target="_blank"
+              >
+                Yogi
+              </Link>
+            </p>
+          </div>
         </div>
-      </main>
-    </>
+      </>
+    </RootLayout>
   );
 };
 
 export default AnimePage;
 
 export const getServerSideProps = async (context: NextPageContext) => {
+  context.res?.setHeader(
+    'Cache-Control',
+    'public, max-age=3600, stale-while-revalidate=1800'
+  );
   const session = await getSession(context);
   if (!session) {
     return {

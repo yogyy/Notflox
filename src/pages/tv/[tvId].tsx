@@ -181,13 +181,8 @@ export async function getServerSideProps({ params }: any) {
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
       return {
-        props: {},
         notFound: true,
       };
     }
-    return {
-      props: {},
-      error: true,
-    };
   }
 }
