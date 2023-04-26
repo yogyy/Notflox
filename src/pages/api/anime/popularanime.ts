@@ -17,6 +17,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       `${BASE_URL}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&air_date.gte=${today}&first_air_date_year=2023&with_genres=16&with_original_language=ja`
     );
     res.status(200).json(response.data.results);
+    res.setHeader(
+      'Cache-Control',
+      'public, max-age=3600, stale-while-revalidate=1800'
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

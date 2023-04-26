@@ -2,7 +2,7 @@ export const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 export const BASE_URL = 'https://api.themoviedb.org/3';
 
 const requests = {
-  fetchTrending: `${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US&with_networks=213`,
+  fetchTrending: `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=en-US&with_networks=213`,
   fetchDiscoverMovie: `${BASE_URL}/discover/tv?api_key=${API_KEY}&include_adult=false&page=1&year=2023&without_genres=10749&with_networks=213`,
   fetchTopRated: `${BASE_URL}/movie/top_rated?api_key=${API_KEY}&language=en-US`,
   fetchUpComing: `${BASE_URL}/tv/upcoming?api_key=${API_KEY}&language=en-US`,
@@ -11,6 +11,7 @@ const requests = {
   fetchHorrorMovies: `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=27`,
   fetchRomanceMovies: `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=10749&adult=false`,
   fetchDocumentaries: `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&with_genres=99`,
+  fetchNowPlaying: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`,
   // sad
   fetchNetflixOriginals: `${BASE_URL}/discover/tv?api_key=${API_KEY}&with_networks=213`,
   fetchPopularNetflix: `${BASE_URL}/tv/popular?api_key=${API_KEY}&with_networks=213`,
@@ -28,6 +29,7 @@ const requests = {
   fetchMysteryTv: `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&with_genres=9648`,
   fetchSciFiTv: `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&with_genres=10765`,
   fetchAirToday: `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=en-US&with_networks=213`,
+  fetchNowPlayingTv: `${BASE_URL}/tv/on_the_air?api_key=${API_KEY}&page=1&with_original_language=en`,
 };
 
 export default requests;

@@ -26,6 +26,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const combine = data.flat();
 
     res.status(200).json(combine);
+    res.setHeader(
+      'Cache-Control',
+      'public, max-age=3600, stale-while-revalidate=1800'
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

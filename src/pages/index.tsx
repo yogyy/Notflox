@@ -16,7 +16,6 @@ import RootLayout from '@/components/layouts/layout';
 import Loading from '@/components/loading';
 
 interface Props {
-  discoverMovie: Movie[];
   trendingNow: Movie[];
   topRated: Movie[];
   actionMovies: Movie[];
@@ -26,7 +25,6 @@ interface Props {
 }
 
 const Movies = ({
-  discoverMovie,
   actionMovies,
   Animation,
   topRated,
@@ -37,43 +35,36 @@ const Movies = ({
 
   return (
     <RootLayout title="Netflix Clone">
-      {(discoverMovie.length, actionMovies.length) === 0 ? (
-        <div className="h-screen w-screen flex items-center justify-center">
-          <Loading />
-        </div>
-      ) : (
-        <div className="main">
-          <main>
-            <section>
-              <Banner banner={discoverMovie.slice(0, 5)} />
-            </section>
-            <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
-              <RowLanscape
-                className=""
-                title="Trending Now Netflix"
-                movies={trendingNow}
-              />
-              {/* <RowPotrait title="Trending Tv" movies={NetflixOriginals} /> */}
-              <div className="">
-                <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-                  Released Today
-                </h2>
-                <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                  {upComing.map(movie => (
-                    <div key={movie.id} className="mt-1">
-                      <ThumbnailPotrait movie={movie} />
-                    </div>
-                  ))}
-                </div>
+      <div className="main">
+        <main>
+          <section>
+            <Banner banner={trendingNow.slice(0, 5)} />
+          </section>
+          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
+            <RowLanscape
+              className=""
+              title="Trending Now Netflix"
+              movies={trendingNow}
+            />
+            <div className="">
+              <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+                Released Today
+              </h2>
+              <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                {upComing.map(movie => (
+                  <div key={movie.id} className="mt-1">
+                    <ThumbnailPotrait movie={movie} />
+                  </div>
+                ))}
               </div>
-              <RowPotrait title="Top Rated Netflix" movies={topRated} />
-              <RowLanscape className="" title="Animations" movies={Animation} />
-              <RowPotrait title="Actions" movies={actionMovies} />
-            </section>
-          </main>
-          {showModal && <ModalVid />}
-        </div>
-      )}
+            </div>
+            <RowPotrait title="Top Rated Netflix" movies={topRated} />
+            <RowLanscape className="" title="Animations" movies={Animation} />
+            <RowPotrait title="Actions" movies={actionMovies} />
+          </section>
+        </main>
+        {showModal && <ModalVid />}
+      </div>
     </RootLayout>
   );
 };
@@ -81,8 +72,6 @@ const Movies = ({
 export default Movies;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
-
   const session = await getSession(context);
   if (!session) {
     return {
@@ -92,31 +81,22 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
-  const [
-    discoverMovie,
-    trendingNow,
-    topRated,
-    actionMovies,
-    upComing,
-    Animation,
-  ] = await Promise.all([
-    fetch(
-      `${BASE_URL}/discover/tv?api_key=${API_KEY}&include_adult=false&page=1&year=2023&without_genres=10749&with_networks=213&append_to_response=videos`
-    ).then(res => res.json()),
-    fetch(
-      `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&language=en-US&with_networks=213`
-    ).then(res => res.json()),
-    fetch(requests.fetchTopRatedNetflix).then(res => res.json()),
-    fetch(requests.fetchActionTvNetflix).then(res => res.json()),
-    fetch(requests.fetchAirToday).then(res => res.json()),
-    fetch(
-      `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&page=1&with_networks=213&with_genres=16`
-    ).then(res => res.json()),
-  ]);
+  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
+  const [trendingNow, topRated, actionMovies, upComing, Animation] =
+    await Promise.all([
+      fetch(
+        `${BASE_URL}/trending/tv/week?api_key=${API_KEY}&language=en-US&with_networks=213`
+      ).then(res => res.json()),
+      fetch(requests.fetchTopRatedNetflix).then(res => res.json()),
+      fetch(requests.fetchActionTvNetflix).then(res => res.json()),
+      fetch(requests.fetchAirToday).then(res => res.json()),
+      fetch(
+        `${BASE_URL}/discover/tv?api_key=${API_KEY}&language=en-US&page=1&with_networks=213&with_genres=16`
+      ).then(res => res.json()),
+    ]);
 
   return {
     props: {
-      discoverMovie: discoverMovie.results,
       trendingNow: trendingNow.results,
       topRated: topRated.results,
       actionMovies: actionMovies.results,

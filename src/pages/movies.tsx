@@ -30,8 +30,6 @@ const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
 export default Movies;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
-
   const session = await getSession(context);
   if (!session) {
     return {
@@ -41,10 +39,13 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
+
+  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
+
   const [trendingNow, topRated, comedyMovies] = await Promise.all([
     fetch(requests.fetchTrending).then(res => res.json()),
     fetch(requests.fetchTopRated).then(res => res.json()),
-    fetch(requests.fetchComedyMovies).then(res => res.json()),
+    fetch(requests.fetchNowPlaying).then(res => res.json()),
   ]);
 
   return {

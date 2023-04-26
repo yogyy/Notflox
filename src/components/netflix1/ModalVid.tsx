@@ -148,7 +148,6 @@ function ModalVid() {
                             style={{ height: 'auto' }}
                             src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
                             alt={network.name}
-                            onClick={() => console.log(network)}
                           />
                         )}
                       </div>

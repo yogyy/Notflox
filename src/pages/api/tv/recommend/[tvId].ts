@@ -11,13 +11,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     );
     let data = response.data;
 
-    if (data.results.length === 0) {
-      const similarResponse = await axios.get(
-        `${BASE_URL}/tv/${tvId}/similar?api_key=${API_KEY}`
-      );
-      data = similarResponse.data;
-    }
-
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

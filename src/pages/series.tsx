@@ -8,23 +8,20 @@ import RootLayout from '@/components/layouts/layout';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
 
 interface Props {
-  familyTv: Movie[];
   trendingNow: Movie[];
   topRated: Movie[];
-  actionTv: Movie[];
-  SciFiTv: Movie[];
+  fetchNowPlaying: Movie[];
 }
 
-const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
+const Series = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
   return (
     <RootLayout title={'TV Show'}>
       <>
         <Banner banner={trendingNow.slice(0, 5)} />
         <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-          <RowLanscape title="Top Rated" movies={topRated} />
-          <RowPotrait title="Trending" movies={trendingNow} />
-          <RowPotrait title="Sci-Fi & Fantasy" movies={SciFiTv} />
-          <RowPotrait title="Action & Adventure" movies={actionTv} />
+          <RowLanscape title="Tv Show Trending" movies={trendingNow} />
+          <RowPotrait title="Now Playing" movies={fetchNowPlaying} />
+          <RowPotrait title="Top Rated Tv" movies={topRated} />
         </section>
       </>
     </RootLayout>
@@ -34,8 +31,6 @@ const Series = ({ actionTv, topRated, trendingNow, SciFiTv }: Props) => {
 export default Series;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  context.res?.setHeader('Cache-Control', 'public, max-age=3600');
-
   const session = await getSession(context);
   if (!session) {
     return {
@@ -45,24 +40,19 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
+  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
 
-  const [familyTv, trendingNow, topRated, actionTv, SciFiTv] =
-    await Promise.all([
-      fetch(requests.fetchFamilyTv).then(res => res.json()),
-      fetch(requests.fetchTrendingTv).then(res => res.json()),
-      fetch(requests.fetchTopRatedTv).then(res => res.json()),
-      fetch(requests.fetchActionTv).then(res => res.json()),
-      fetch(requests.fetchMysteryTv).then(res => res.json()),
-      fetch(requests.fetchSciFiTv).then(res => res.json()),
-    ]);
+  const [trendingNow, topRated, fetchNowPlaying] = await Promise.all([
+    fetch(requests.fetchTrendingTv).then(res => res.json()),
+    fetch(requests.fetchTopRatedTv).then(res => res.json()),
+    fetch(requests.fetchNowPlayingTv).then(res => res.json()),
+  ]);
 
   return {
     props: {
-      familyTv: familyTv.results,
-      trendingNow: trendingNow.results,
-      topRated: topRated.results,
-      actionTv: actionTv.results,
-      SciFiTv: SciFiTv.results,
+      trendingNow: trendingNow.results.slice(0, 10),
+      topRated: topRated.results.slice(0, 10),
+      fetchNowPlaying: fetchNowPlaying.results.slice(0, 10),
     },
   };
 };

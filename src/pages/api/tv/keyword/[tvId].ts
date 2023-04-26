@@ -7,17 +7,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const response = await axios.get(
-      `${BASE_URL}/tv/${tvId}/recommendations?api_key=${API_KEY}`
+      `${BASE_URL}/tv/${tvId}/keywords?api_key=${API_KEY}`
     );
     let data = response.data;
-
-    if (data.results.length === 0) {
-      const similarResponse = await axios.get(
-        `${BASE_URL}/tv/${tvId}/similar?api_key=${API_KEY}`
-      );
-      data = similarResponse.data;
-    }
-
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

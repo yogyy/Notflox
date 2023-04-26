@@ -79,7 +79,8 @@ const Navbar = () => {
                     ? currentUser.image
                     : '/images/default-slate.png'
                 }
-                alt=""
+                alt={`${currentUser?.name}`}
+                priority
               />
             </div>
             <ChevronDownIcon

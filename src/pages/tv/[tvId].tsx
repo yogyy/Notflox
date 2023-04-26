@@ -35,7 +35,7 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
 
   React.useEffect(() => {
     axios
-      .get(`/api/recommend/tv/${tv.id}`)
+      .get(`/api/tv/recommend/${tv.id}`)
       .then(response => setSimilarTVShows(response.data.results))
 
       .catch(error => console.error('Error fetching similar TV shows:', error));
@@ -44,9 +44,7 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
 
   React.useEffect(() => {
     axios
-      .get(
-        `https://api.themoviedb.org/3/tv/${tv.id}/keywords?api_key=${API_KEY}`
-      )
+      .get(`/api/tv/keyword/${tv.id}`)
       .then(response => {
         setKeywords(response.data.results);
       })
@@ -85,7 +83,6 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
               style={{ width: 'auto' }}
               alt={`Thumbnail ${tv?.name}`}
               draggable={false}
-              onClick={() => console.log(tv)}
             />
           </div>
           <div className="homepage">
