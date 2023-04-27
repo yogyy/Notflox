@@ -18,7 +18,6 @@ const TOP_OFFSET = 66;
 
 const Navbar = () => {
   const [showAccountMenu, setShowAccountMenu] = React.useState(false);
-  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
   const [showBackground, setShowBackground] = React.useState(false);
 
   const { data: currentUser } = useCurrentUser();
@@ -41,10 +40,6 @@ const Navbar = () => {
 
   const toggleAccountMenu = React.useCallback(() => {
     setShowAccountMenu(current => !current);
-  }, []);
-
-  const toggleMobileMenu = React.useCallback(() => {
-    setShowMobileMenu(current => !current);
   }, []);
 
   return (

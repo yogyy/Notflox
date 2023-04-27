@@ -5,7 +5,6 @@ import * as React from 'react';
 import RootLayout from '@/components/layouts/layout';
 import Image from 'next/image';
 import { baseUrl } from '../../../constants/movie';
-import { Tooltip } from '@mui/material';
 import Recomend from '@/components/netflix1/recomend';
 import { tanggal } from '@/lib/getDate';
 import { Paginate } from '@/components/Paginate';
@@ -24,7 +23,6 @@ interface KW {
 
 export default function MovieDetails({ tv, genres, productions }: Props) {
   const [similarTVShows, setSimilarTVShows] = React.useState([]);
-  const [filteredTVShows, setFilteredTVShows] = React.useState([]);
   const [keywords, setKeywords] = React.useState([]);
 
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -86,7 +84,7 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
             />
           </div>
           <div className="homepage">
-            <h3 className="text-sm text-sky-600">
+            <h3 className="text-sm text-red-500 hover:text-red-600">
               <Link target="_blank" href={tv.homepage}>
                 Homepage
               </Link>

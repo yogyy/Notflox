@@ -6,11 +6,10 @@ import RootLayout from '@/components/layouts/layout';
 import Image from 'next/image';
 import { baseUrl } from '../../../constants/movie';
 import { ProductionCompany } from '../../../typing';
-import Loader from '@/components/loading';
 import Recomend from '@/components/netflix1/recomend';
 import { tanggal } from '@/lib/getDate';
 import { Paginate } from '@/components/Paginate';
-import { NextPageContext } from 'next';
+import Link from 'next/link';
 
 interface Props {
   movie: Movie;
@@ -25,7 +24,6 @@ interface KW {
 
 export default function MovieDetails({ movie, productions, genres }: Props) {
   const [similarTVShows, setSimilarTVShows] = React.useState([]);
-  const [filteredTVShows, setFilteredTVShows] = React.useState([]);
   const [keywords, setKeywords] = React.useState([]);
 
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -81,6 +79,13 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
               alt={`Thumbnail ${movie?.title}`}
               draggable={false}
             />
+          </div>
+          <div className="homepage flex justify-center">
+            <h3 className="text-sm text-red-500 hover:text-red-600">
+              <Link target="_blank" href={movie.homepage}>
+                Homepage
+              </Link>
+            </h3>
           </div>
         </div>
         <div className="md:w-7/12 w-full">

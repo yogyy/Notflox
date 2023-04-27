@@ -6,6 +6,7 @@ import { Movie } from '../../../typing';
 import LongText from './ReadMore';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../../../atoms/modalAtom';
+import Link from 'next/link';
 
 interface Props {
   banner: Movie[];
@@ -17,16 +18,6 @@ const getRandomMovie = (movies: string | any[]) => {
 
 export default function Banner({ banner }: Props) {
   const [movie, setMovie] = React.useState<Movie>();
-
-  // React.useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setMovie(getRandomMovie(banner));
-  //   }, 30000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [banner]);
 
   React.useEffect(() => {
     setMovie(banner[Math.floor(Math.random() * banner.length)]);
@@ -48,14 +39,16 @@ export default function Banner({ banner }: Props) {
           <h1 className="text-2xl font-bold md:text-4xl lg:text-7xl">
             {movie?.title || movie?.name || movie?.original_name}
           </h1>
-          <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
-            <LongText text={movie?.overview} maxLength={150} />
-          </p>
-          <div className="">
-            <button className="bannerButton bg-white text-black">
-              <PlayIcon className="h-4 w-4 text-black md:h-7 md:w-7" /> Play
-            </button>
-          </div>
+          <Link
+            href={{
+              pathname: `/${movie?.release_date ? 'movie' : 'tv'}/${movie?.id}`,
+              query: { title: `${movie?.name || movie?.title}` },
+            }}
+          >
+            <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
+              <LongText text={movie?.overview} maxLength={150} />
+            </p>
+          </Link>
         </div>
       </div>
       <span className="m-10" />

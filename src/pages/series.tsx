@@ -2,7 +2,6 @@ import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
 import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
-import Head from 'next/head';
 import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
