@@ -53,17 +53,15 @@ const AnimePage = () => {
     <RootLayout title="Anime">
       <>
         <div className="main mx-3">
-          {!doneFetch ? (
-            <div className="h-screen w-screen flex justify-center items-center">
-              <Loading />
-            </div>
-          ) : (
-            <div className="flex flex-col justify-center xl:flex-row max-w-[1300px] mx-auto gap-5">
-              <section className="flex flex-col pt-20">
-                {/* <div className="relative w-[255px] md:w-[564px] xl:w-[948px] m-auto"> */}
+          <div className="flex flex-col justify-center xl:flex-row max-w-[1300px] mx-auto gap-5">
+            <section className="flex flex-col pt-20">
+              {/* <div className="relative w-[255px] md:w-[564px] xl:w-[948px] m-auto"> */}
 
-                <div className="flex">
-                  <div className="w-full relative px-2 lg:px-0 m-auto lg:w-[948px]">
+              <div className="flex">
+                <div className="w-full relative lg:px-0 m-auto lg:w-[948px]">
+                  {!doneFetch ? (
+                    <div className="w-full xl:w-[948px] aspect-video h-full rounded-sm bg-zinc-800 animate-pulse" />
+                  ) : (
                     <Swiper
                       spaceBetween={30}
                       effect={'slide'}
@@ -109,16 +107,27 @@ const AnimePage = () => {
                         </SwiperSlide>
                       ))}
                     </Swiper>
-                  </div>
+                  )}
                 </div>
-                <span id="similar-tv-container" className="mb-5"></span>
-                <div className="mt-16 w-full lg:w-[948px] mx-auto">
-                  <div className="py-1 w-full">
-                    <h1 className="text-xl font-semibold mb-5">
-                      Recent Released
-                    </h1>
-                  </div>
+              </div>
+              <span id="similar-tv-container" className="mb-5"></span>
+              <div className="mt-16 w-full lg:w-[948px] mx-auto">
+                <div className="py-1 w-full">
+                  <h1 className="text-xl font-semibold mb-5">
+                    Recent Released
+                  </h1>
+                </div>
 
+                {!doneFetch ? (
+                  <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
+                    {[...Array(12)].map((_, index) => (
+                      <div
+                        key={index}
+                        className="relative w-full h-auto aspect-[9/14] bg-zinc-800 animate-pulse"
+                      />
+                    ))}
+                  </div>
+                ) : (
                   <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
                     {currentAiring.map(anime => (
                       <Link
@@ -133,9 +142,6 @@ const AnimePage = () => {
                               {anime.name}
                             </h2>
                           </div>
-                          {/* <div className="absolute z-[1] bg-black/70 rounded-br px-1 py-0.5">
-                            <p>Episode {anime.}</p>
-                          </div> */}
                           <div className="relative w-full h-auto aspect-[9/14]">
                             <Image
                               src={`http://image.tmdb.org/t/p/w342/${anime.poster_path}`}
@@ -150,23 +156,36 @@ const AnimePage = () => {
                       </Link>
                     ))}
                   </div>
-                  {currentAiring && (
-                    <Paginate
-                      currentPage={currentPage}
-                      postPerPage={postPerPage}
-                      setCurrentPage={setCurrentPage}
-                      totalPost={airingNow.length}
-                    />
-                  )}
+                )}
+                {currentAiring && (
+                  <Paginate
+                    currentPage={currentPage}
+                    postPerPage={postPerPage}
+                    setCurrentPage={setCurrentPage}
+                    totalPost={airingNow.length}
+                  />
+                )}
+              </div>
+            </section>
+            <section
+              id="popular-anime-week"
+              className="mt-20 bg-[#1C1C1C] p-2 rounded xl:mx-0 h-max"
+            >
+              <h1 className="text-xl font-semibold mb-2">
+                Popular Anime Weekly
+              </h1>
+              {!doneFetch ? (
+                <div className="flex">
+                  <h2 className="w-5 m-3 h-5 p-5 rounded-md border flex justify-center items-center text-sm">
+                    1
+                  </h2>
+                  <div className="relative w-[46px] h-[60px] aspect-[9:16] bg-zinc-800 animate-pulse" />
+                  <div className="flex flex-col gap-2">
+                    <span className="relative w-[180px] ml-3 h-4 rounded-sm aspect-[9:16] bg-zinc-800 animate-pulse"></span>
+                    <span className="relative w-[150px] ml-3 h-4 rounded-sm aspect-[9:16] bg-zinc-800 animate-pulse"></span>
+                  </div>
                 </div>
-              </section>
-              <section
-                id="popular-anime-week"
-                className="mt-20 bg-[#1C1C1C] p-2 rounded xl:mx-0 h-max"
-              >
-                <h1 className="text-xl font-semibold mb-2">
-                  Popular Anime Weekly
-                </h1>
+              ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
                   {bannerAnime.slice(0, 10).map((anime, index) => (
                     <Link
@@ -185,9 +204,6 @@ const AnimePage = () => {
                           className="rounded w-12"
                           fill
                           src={`https://image.tmdb.org/t/p/w92/${anime.poster_path}`}
-                          sizes="(max-width: 768px) 100vw,
-                      (max-width: 1200px) 50vw,
-                      33vw"
                         />
                       </div>
                       <h3 className="text-base text-gray-300 flex flex-wrap ">
@@ -196,9 +212,9 @@ const AnimePage = () => {
                     </Link>
                   ))}
                 </div>
-              </section>
-            </div>
-          )}
+              )}
+            </section>
+          </div>
           <div className="h-20 flex items-center justify-center bg-[#1c1c1c] mt-3 rounded-sm">
             <p className="font-base text-xl">
               Made by&nbsp;
