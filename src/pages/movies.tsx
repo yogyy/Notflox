@@ -17,7 +17,7 @@ const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
     <RootLayout title="Movies">
       <>
         <Banner banner={trendingNow.slice(0, 5)} />
-        <section className="space-y-12 md:space-y-10 px-4 mx-auto top-[60%] tengah mt-10 z-[2]">
+        <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
           <RowLanscape className="" title="Trending Now" movies={trendingNow} />
           <RowPotrait title="New Release" movies={comedyMovies} />
           <RowPotrait title="Top Rated" movies={topRated} />
