@@ -11,14 +11,10 @@ import { Paginate } from '@/components/Paginate';
 import { baseUrl } from '../../constants/movie';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, EffectFade } from 'swiper';
-
 import 'swiper/css';
-import { Skeleton } from '@mui/material';
-import { NextResponse } from 'next/server';
 import RootLayout from '@/components/layouts/layout';
-import Loading from '@/components/loading';
-
-// export const revalidate = 60;
+import { reqAuth } from '@/utils/reqAuth';
+import { useQuery } from '@tanstack/react-query';
 
 const AnimePage = () => {
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -26,28 +22,38 @@ const AnimePage = () => {
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
 
-  const [airingNow, setAiringNow] = React.useState<Movie[]>([]);
-  const [bannerAnime, setBannerAnime] = React.useState<Movie[]>([]);
+  // const [airingNow, setAiringNow] = React.useState<Movie[]>([]);
+  // const [bannerAnime, setBannerAnime] = React.useState<Movie[]>([]);
   const [doneFetch, setDoneFetch] = React.useState(false);
 
-  const currentAiring = airingNow.slice(firstPostIndex, lastPostIndex);
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const [animeBaru, animeRame] = await Promise.all([
+  //         axios.get('/api/anime/recentanime'),
+  //         axios.get('/api/anime/popularanime'),
+  //       ]);
+  //       setAiringNow(animeBaru.data);
+  //       setBannerAnime(animeRame.data);
+  //       setDoneFetch(true);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+  const { data: airingNow, isLoading: isLoadingAiringNow } = useQuery<Movie[]>(
+    ['airingNow'],
+    () => axios.get('/api/anime/recentanime').then(response => response.data)
+  );
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [animeBaru, animeRame] = await Promise.all([
-          axios.get('/api/anime/recentanime'),
-          axios.get('/api/anime/popularanime'),
-        ]);
-        setAiringNow(animeBaru.data);
-        setBannerAnime(animeRame.data);
-        setDoneFetch(true);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: bannerAnime, isLoading: isLoadingBannerAnime } = useQuery<
+    Movie[]
+  >(['bannerAnime'], () =>
+    axios.get('/api/anime/popularanime').then(response => response.data)
+  );
+
+  const currentAiring = airingNow?.slice(firstPostIndex, lastPostIndex);
 
   return (
     <RootLayout title="Anime">
@@ -55,11 +61,9 @@ const AnimePage = () => {
         <div className="main mx-3">
           <div className="flex flex-col justify-center xl:flex-row max-w-[1300px] mx-auto gap-5">
             <section className="flex flex-col pt-20">
-              {/* <div className="relative w-[255px] md:w-[564px] xl:w-[948px] m-auto"> */}
-
               <div className="flex">
                 <div className="w-full relative lg:px-0 m-auto lg:w-[948px]">
-                  {!doneFetch ? (
+                  {isLoadingBannerAnime ? (
                     <div className="w-full xl:w-[948px] aspect-video h-full rounded-sm bg-zinc-800 animate-pulse" />
                   ) : (
                     <Swiper
@@ -67,7 +71,7 @@ const AnimePage = () => {
                       effect={'slide'}
                       loop={true}
                       autoplay={{
-                        delay: 4500,
+                        delay: 6500,
                         disableOnInteraction: false,
                       }}
                       centeredSlides={true}
@@ -78,14 +82,9 @@ const AnimePage = () => {
                       modules={[Autoplay, Navigation, EffectFade]}
                       className="mySwiper"
                     >
-                      {bannerAnime.slice(0, 5).map((anime, index) => (
+                      {bannerAnime?.slice(0, 5).map(anime => (
                         <SwiperSlide key={anime.id}>
-                          <Link
-                            href={`/tv/${anime.id}`}
-                            // href="#swiperc"
-                            // target="_blank"
-                            id="swiperc"
-                          >
+                          <Link href={`/tv/${anime.id}`} id="swiperc">
                             <div className="relative w-full xl:w-[948px] aspect-video h-full">
                               <Image
                                 src={`${baseUrl}${
@@ -118,7 +117,7 @@ const AnimePage = () => {
                   </h1>
                 </div>
 
-                {!doneFetch ? (
+                {isLoadingAiringNow ? (
                   <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
                     {[...Array(12)].map((_, index) => (
                       <div
@@ -129,7 +128,7 @@ const AnimePage = () => {
                   </div>
                 ) : (
                   <div className="relative grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
-                    {currentAiring.map(anime => (
+                    {currentAiring?.map(anime => (
                       <Link
                         href={`/tv/${anime.id}`}
                         // target="_blank"
@@ -157,7 +156,7 @@ const AnimePage = () => {
                     ))}
                   </div>
                 )}
-                {currentAiring && (
+                {airingNow && (
                   <Paginate
                     currentPage={currentPage}
                     postPerPage={postPerPage}
@@ -174,7 +173,7 @@ const AnimePage = () => {
               <h1 className="text-xl font-semibold mb-2">
                 Popular Anime Weekly
               </h1>
-              {!doneFetch ? (
+              {isLoadingBannerAnime ? (
                 <div className="flex">
                   <h2 className="w-5 m-3 h-5 p-5 rounded-md border flex justify-center items-center text-sm">
                     1
@@ -187,7 +186,7 @@ const AnimePage = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
-                  {bannerAnime.slice(0, 10).map((anime, index) => (
+                  {bannerAnime?.slice(0, 10).map((anime, index) => (
                     <Link
                       // href={anime.animeUrl.replace(/\/{2,}/g, '/')}
                       href={`/tv/${anime.id}`}
@@ -204,6 +203,7 @@ const AnimePage = () => {
                           className="rounded w-12"
                           fill
                           src={`https://image.tmdb.org/t/p/w92/${anime.poster_path}`}
+                          sizes="auto"
                         />
                       </div>
                       <h3 className="text-base text-gray-300 flex flex-wrap ">
@@ -236,17 +236,11 @@ const AnimePage = () => {
 export default AnimePage;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      },
-    };
-  }
-  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
+  const authResult = await reqAuth(context);
 
+  if (authResult) {
+    return authResult;
+  }
   return {
     props: {},
   };
