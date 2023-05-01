@@ -9,7 +9,7 @@ export const Netflix: React.FC<SvgProps> = ({ fillColor, className }) => {
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
       role="img"
-      width={120}
+      width={100}
       height="1rem"
       fill={fillColor ? fillColor : '#E50914'}
       className={className}

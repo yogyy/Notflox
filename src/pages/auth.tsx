@@ -5,7 +5,7 @@ import { Github, Google, Netflix } from '@/components/icons';
 import Input from '@/components/input';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NextPageContext } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 
 const Auth = () => {
@@ -142,7 +142,7 @@ const Auth = () => {
 
 export default Auth;
 
-export async function getServerSideProps(context: NextPageContext) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
 
   if (session) {

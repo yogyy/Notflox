@@ -43,7 +43,7 @@ function Thumbnail({ movie }: Props) {
       <article className={clsx('flex flex-col')}>
         <Link
           href={`/${movie.media_type == 'movie' ? 'movie' : 'tv'}/${movie.id}`}
-          className="w-full"
+          className="w-fit"
         >
           <h1 className="text-xl hover:text-red-300">
             {movie.title || movie.name}

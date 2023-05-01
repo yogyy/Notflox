@@ -39,5 +39,5 @@ const links = [
   { name: 'Series', url: '/series' },
   { name: 'Movies', url: '/movies' },
   { name: 'Anime', url: '/anime' },
-  { name: 'Details', url: '/movie/' || '/tv/' },
+  { name: 'Test', url: '/test' },
 ];

@@ -29,19 +29,8 @@ const Search = () => {
       return;
     }
     if (query.length >= 3) {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
-      );
-
-      const filteredResults = response.data.results
-        .slice(0, 5)
-        .filter(
-          (result: Movie) =>
-            (result.media_type === 'movie' || result.media_type === 'tv') &&
-            result.release_date !== ''
-        );
-
-      setSearchResults(filteredResults);
+      const response = await axios.get(`/api/search/${query}`);
+      setSearchResults(response.data);
       setShowResults(true);
     } else {
       setSearchResults([]);
@@ -65,7 +54,7 @@ const Search = () => {
   }, [debouncedQuery, searchMovies]);
 
   return (
-    <div className="flex relative items-center">
+    <div className="flex items-end">
       <Transition
         show={showInput}
         enter="transition-opacity duration-700"
@@ -89,9 +78,13 @@ const Search = () => {
       </Transition>
       <button
         onClick={() => setShowInput(!showInput)}
-        className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition p-1"
+        className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-full"
       >
-        <MagnifyingGlassIcon className="w-6" />
+        <MagnifyingGlassIcon
+          className={`${
+            showInput ? 'rotate-90 transition delay-75' : 'transition delay-75'
+          } w-6 m-1 `}
+        />
       </button>
       <div className="absolute top-10">
         <Transition

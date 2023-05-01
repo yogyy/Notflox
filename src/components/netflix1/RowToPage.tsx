@@ -43,7 +43,7 @@ export function RowPotrait({ title, movies }: Props) {
           className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2"
           ref={rowRef}
         >
-          {movies.map(movie => (
+          {movies?.map(movie => (
             <ThumbnailPotrait key={movie.id} movie={movie} />
           ))}
         </div>
@@ -91,7 +91,7 @@ export function RowLanscape({ title, movies, className }: Props) {
           className="flex items-center space-x-2.5 overflow-x-scroll scrollbar-hide md:space-x-3.5 px-2"
           ref={rowRef}
         >
-          {movies.map(movie => (
+          {movies?.map(movie => (
             <ThumbnailLanscape key={movie.id} movie={movie} />
           ))}
         </div>

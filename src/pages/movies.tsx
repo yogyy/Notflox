@@ -3,8 +3,10 @@ import requests from '@/utils/request';
 import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { getSession } from 'next-auth/react';
-import { NextPageContext } from 'next';
+import { GetServerSideProps } from 'next';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
+import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 interface Props {
   trendingNow: Movie[];
@@ -12,15 +14,30 @@ interface Props {
   comedyMovies: Movie[];
 }
 
-const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
+const Movies = () => {
+  const { data: trending } = useQuery<Movie[] | undefined>(
+    ['trendingNow'],
+    fetchTreding
+  );
+  const { data: toprated } = useQuery<Movie[] | undefined>(
+    ['topRated'],
+    fetchTopRated
+  );
+  const { data: newrelease } = useQuery<Movie[] | undefined>(
+    ['newRelease'],
+    fetchNewRelease
+  );
+
   return (
     <RootLayout title="Movies">
       <>
-        <Banner banner={trendingNow.slice(0, 5)} />
+        <div className="">
+          <Banner banner={trending} />
+        </div>
         <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-          <RowLanscape className="" title="Trending Now" movies={trendingNow} />
-          <RowPotrait title="New Release" movies={comedyMovies} />
-          <RowPotrait title="Top Rated" movies={topRated} />
+          <RowLanscape className="" title="Trending Now" movies={trending!} />
+          <RowPotrait title="New Release" movies={newrelease!} />
+          <RowPotrait title="Top Rated" movies={toprated!} />
         </section>
       </>
     </RootLayout>
@@ -29,8 +46,25 @@ const Movies = ({ comedyMovies, topRated, trendingNow }: Props) => {
 
 export default Movies;
 
-export const getServerSideProps = async (context: NextPageContext) => {
-  const session = await getSession(context);
+async function fetchTreding() {
+  const res = await axios.get(requests.fetchTrending);
+  const dataTrend = await res.data.results.slice(0, 5);
+  return dataTrend;
+}
+
+async function fetchTopRated() {
+  const res = await axios.get(requests.fetchTopRated);
+  const dataTrend = await res.data.results.slice(0, 10);
+  return dataTrend;
+}
+async function fetchNewRelease() {
+  const res = await axios.get(requests.fetchNowPlaying);
+  const dataTrend = await res.data.results.slice(0, 10);
+  return dataTrend;
+}
+
+export const getServerSideProps: GetServerSideProps = async ctx => {
+  const session = await getSession(ctx);
   if (!session) {
     return {
       redirect: {
@@ -39,20 +73,16 @@ export const getServerSideProps = async (context: NextPageContext) => {
       },
     };
   }
+  const queryClient = new QueryClient();
 
-  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
-
-  const [trendingNow, topRated, comedyMovies] = await Promise.all([
-    fetch(requests.fetchTrending).then(res => res.json()),
-    fetch(requests.fetchTopRated).then(res => res.json()),
-    fetch(requests.fetchNowPlaying).then(res => res.json()),
+  await Promise.all([
+    queryClient.prefetchQuery(['trendingNow'], fetchTreding),
+    queryClient.prefetchQuery(['topRated'], fetchTopRated),
+    queryClient.prefetchQuery(['newRelease'], fetchNewRelease),
   ]);
-
   return {
     props: {
-      trendingNow: trendingNow.results.slice(0, 10),
-      topRated: topRated.results.slice(0, 10),
-      comedyMovies: comedyMovies.results.slice(0, 10),
+      dehydratedState: dehydrate(queryClient),
     },
   };
 };
