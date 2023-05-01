@@ -21,21 +21,6 @@ const getRandomMovie = (movies: string | any[]) => {
 };
 
 export default function Banner({ banner }: Props) {
-  const [movie, setMovie] = React.useState<Movie | null>(null);
-
-  // React.useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     setMovie(getRandomMovie(banner));
-  //   }, 8000);
-
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [banner]);
-
-  // React.useEffect(() => {
-  //   setMovie(banner[Math.floor(Math.random() * banner.length)]);
-  // }, [banner]);
   return (
     <div className="relative h-full">
       <div className="relative h-[56.25vw] z-[1]">
