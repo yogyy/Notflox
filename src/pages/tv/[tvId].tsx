@@ -9,6 +9,7 @@ import Recomend from '@/components/netflix1/recomend';
 import { tanggal } from '@/lib/getDate';
 import { Paginate } from '@/components/Paginate';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   tv: Movie;
@@ -22,34 +23,29 @@ interface KW {
 }
 
 export default function MovieDetails({ tv, genres, productions }: Props) {
-  const [similarTVShows, setSimilarTVShows] = React.useState([]);
-  const [keywords, setKeywords] = React.useState([]);
-
   const [currentPage, setCurrentPage] = React.useState(1);
   const [postPerPage, setpostPerPage] = React.useState(6);
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  const similarPaginate = similarTVShows.slice(firstPostIndex, lastPostIndex);
 
-  React.useEffect(() => {
-    axios
-      .get(`/api/tv/recommend/${tv.id}`)
-      .then(response => setSimilarTVShows(response.data.results))
+  const { data: similarTVShows, isLoading: isLoadingsimilarTVShows } = useQuery(
+    ['similarTv', tv.id],
+    () => axios.get(`/api/tv/recommend/${tv.id}`).then(res => res.data.results),
+    {
+      cacheTime: 60 * 5,
+      staleTime: 60 * 10,
+    }
+  );
 
-      .catch(error => console.error('Error fetching similar TV shows:', error));
-    setCurrentPage(1);
-  }, [tv.id]);
-
-  React.useEffect(() => {
-    axios
-      .get(`/api/tv/keyword/${tv.id}`)
-      .then(response => {
-        setKeywords(response.data.results);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [tv.id]);
+  const { data: dataKeywords, isLoading: isLoadingKeywords } = useQuery(
+    ['keywordsTv', tv.id],
+    () => axios.get(`/api/tv/keyword/${tv.id}`).then(res => res.data.results),
+    {
+      cacheTime: 60 * 5,
+      staleTime: 60 * 10,
+    }
+  );
+  const similarPaginate = similarTVShows?.slice(firstPostIndex, lastPostIndex);
 
   return (
     <RootLayout title={tv.name}>
@@ -72,17 +68,21 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
       </div>
       <div className="relative bg-gradient-to-b from-[#5f5f5f] to-[#121212] lg:bg-none mx-auto md:justify-center items-center md:items-start lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 pt-4 max-w-[1200px]">
         <div className="h-full gap-3 md:flex md:flex-col relative">
-          <div className="relative -mt-32 md:mt-0 rounded ">
-            <Image
-              src={`https://image.tmdb.org/t/p/w342/${tv.poster_path}`}
-              className="rounded-sm object-cover md:rounded flex"
-              width={164}
-              height={255}
-              style={{ width: 'auto' }}
-              alt={`Thumbnail ${tv?.name}`}
-              draggable={false}
-            />
-          </div>
+          {!isLoadingKeywords ? (
+            <div className="relative w-[164px] h-[255px] -mt-32 md:mt-0 rounded ">
+              <Image
+                src={`https://image.tmdb.org/t/p/w342/${tv.poster_path}`}
+                className="rounded-sm object-cover md:rounded flex"
+                width={165}
+                height={255}
+                alt={`Thumbnail ${tv?.name}`}
+                draggable={false}
+              />
+            </div>
+          ) : (
+            <div className="relative w-[164px] h-auto aspect-[9/14] bg-zinc-800 animate-pulse" />
+          )}
+
           <div className="homepage">
             <h3 className="text-sm text-red-500 hover:text-red-600">
               <Link target="_blank" href={tv.homepage}>
@@ -126,33 +126,66 @@ export default function MovieDetails({ tv, genres, productions }: Props) {
           <hr className="mt-2 mb-12 border-zinc-800" />
         </div>
       </div>
-
       <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
-        <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
-          <h1 id="similar-tv-container" className="px-3">
-            Tags :
-          </h1>
-          {keywords.map((keyword: KW) => (
-            <p
-              key={keyword.id}
-              className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
-            >
-              {keyword.name}
-            </p>
-          ))}
-        </div>
+        {isLoadingKeywords ? (
+          <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center gap-2 mx-3">
+            <h1 id="similar-tv-container" className="px-3">
+              Tags :
+            </h1>
+            {[...Array(12)].map((_, index) => (
+              <div
+                key={index}
+                className="relative w-20 h-5 bg-white/5 animate-pulse"
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+            <h1 id="similar-tv-container" className="px-3">
+              Tags :
+            </h1>
 
-        <Recomend
-          className=""
-          title="Recommendations"
-          movies={similarPaginate}
-        />
-        <Paginate
-          currentPage={currentPage}
-          postPerPage={postPerPage}
-          setCurrentPage={setCurrentPage}
-          totalPost={similarTVShows.length}
-        />
+            {dataKeywords?.map((keyword: KW) => (
+              <p
+                key={keyword.id}
+                className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
+              >
+                {keyword.name}
+              </p>
+            ))}
+          </div>
+        )}
+
+        {isLoadingsimilarTVShows ? (
+          <div className="mt-1 flex-col mx-4 frounded-sm">
+            <p className="text-xl font-semibold text-[#fcfbfb]">
+              Recommendations
+            </p>
+            <div className="w-32 h-4 bg-[#1c1c1c] animate-pulse mb-3 mt-2"></div>
+            <div className="flex">
+              <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-3 animate-pulse"></div>
+              <div className="w-full">
+                <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="">
+            <Recomend
+              className=""
+              title="Recommendations"
+              movies={similarPaginate}
+            />
+            <Paginate
+              currentPage={currentPage}
+              postPerPage={postPerPage}
+              setCurrentPage={setCurrentPage}
+              totalPost={similarTVShows?.length}
+            />
+          </div>
+        )}
       </div>
     </RootLayout>
   );
