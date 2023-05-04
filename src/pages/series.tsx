@@ -1,10 +1,12 @@
 import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
-import { NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import LoaderBlock from '@/components/loader/loaderblock';
 
 interface Props {
   trendingNow: Movie[];
@@ -13,34 +15,35 @@ interface Props {
 }
 
 const Series = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session === null) {
+      router.push('/auth');
+    }
+  }, [router, session]);
+
   return (
     <RootLayout title={'TV Show'}>
-      <>
-        <Banner banner={trendingNow.slice(0, 5)} />
-        <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-          <RowLanscape title="Tv Show Trending" movies={trendingNow} />
-          <RowPotrait title="Now Playing" movies={fetchNowPlaying} />
-          <RowPotrait title="Top Rated Tv" movies={topRated} />
-        </section>
-      </>
+      {session ? (
+        <>
+          <Banner banner={trendingNow.slice(0, 5)} />
+          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
+            <RowLanscape title="Tv Show Trending" movies={trendingNow} />
+            <RowPotrait title="Now Playing" movies={fetchNowPlaying} />
+            <RowPotrait title="Top Rated Tv" movies={topRated} />
+          </section>
+        </>
+      ) : (
+        <LoaderBlock />
+      )}
     </RootLayout>
   );
 };
 
 export default Series;
 
-export const getServerSideProps = async (context: NextPageContext) => {
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      },
-    };
-  }
-  context.res && context.res.setHeader('Cache-Control', 'public, max-age=3600');
-
+export const getStaticProps = async () => {
   const [trendingNow, topRated, fetchNowPlaying] = await Promise.all([
     fetch(requests.fetchTrendingTv).then(res => res.json()),
     fetch(requests.fetchTopRatedTv).then(res => res.json()),
@@ -49,9 +52,10 @@ export const getServerSideProps = async (context: NextPageContext) => {
 
   return {
     props: {
-      trendingNow: trendingNow.results.slice(0, 10),
-      topRated: topRated.results.slice(0, 10),
-      fetchNowPlaying: fetchNowPlaying.results.slice(0, 10),
+      trendingNow: trendingNow.results,
+      topRated: topRated.results,
+      fetchNowPlaying: fetchNowPlaying.results,
     },
+    revalidate: 3600,
   };
 };
