@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user || !user.hashedPassword) {
-          throw new Error('Email does not exist');
+          throw new Error('Incorrect email or password');
         }
 
         const isCorrectPassword = await compare(
@@ -52,15 +52,22 @@ export const authOptions: NextAuthOptions = {
         if (!isCorrectPassword) {
           throw new Error('Incorrect password');
         }
-
-        return user;
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
   ],
 
+  pages: {
+    signIn: '/auth',
+  },
+
   debug: process.env.NODE_ENV === 'development',
   adapter: PrismaAdapter(prismadb),
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 3600 * 24 },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,
   },
