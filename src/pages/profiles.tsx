@@ -43,23 +43,6 @@ const App = () => {
     router.push('/');
   }, [router]);
 
-  const [timeRemaining, setTimeRemaining] = React.useState('');
-
-  React.useEffect(() => {
-    const targetTime = new Date(session?.expires!).getTime();
-    const interval = setInterval(() => {
-      const now = Date.now();
-      const diff = targetTime - now;
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-      setTimeRemaining(
-        `${hours}:${minutes}:${seconds.toString().padStart(2, '0')}`
-      );
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [session]);
-
   return (
     <RootLayout title={`${session?.user ? session?.user.name : 'Anonymous'}`}>
       <div className="h-screen">
@@ -76,7 +59,6 @@ const App = () => {
                 />
               </div>
             </div>
-            {session && <pre>your session {timeRemaining}</pre>}
           </div>
         </div>
       </div>
