@@ -1,18 +1,20 @@
 import * as React from 'react';
-import axios from 'axios';
-import { getSession, signIn, signOut } from 'next-auth/react';
+import axios, { AxiosError } from 'axios';
+import { getSession, signIn } from 'next-auth/react';
 import { Github, Google, Netflix } from '@/components/icons';
 import Input from '@/components/input';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import { Slide, ToastContainer, Zoom, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Auth = () => {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [variant, setVariant] = React.useState('login');
+  const [disabled, setDisabled] = React.useState(false);
 
   const router = useRouter();
 
@@ -23,44 +25,32 @@ const Auth = () => {
   }, []);
 
   const login = React.useCallback(async () => {
-    try {
-      await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-        callbackUrl: '/profiles',
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    router.push('/profiles');
-  }, [email, password, router]);
+    const res = await signIn('credentials', {
+      email: email,
+      password: password,
+      redirect: false,
+      callbackUrl: '/profiles',
+    });
 
-  const register = React.useCallback(async () => {
-    try {
-      await axios.post('/api/register', {
-        email,
-        name,
-        password,
-      });
-
-      login();
-    } catch (error) {
-      console.log(error);
+    console.log(res);
+    if (res?.error === null) {
+      router.push('/profiles');
+    } else if (email === '' && password === '') {
+      toast.error('Email and password required');
+    } else {
+      toast.error(`${res?.error}`);
     }
-  }, [email, name, password, login]);
+  }, [email, password]);
 
   return (
     <>
       <Head>
         <title>Login First</title>
       </Head>
-      <div className="relative h-screen w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
+      <div className="relative h-screen w-full bg-[url('/images/hero.webp')] bg-no-repeat bg-center bg-fixed bg-cover">
         <div className="bg-black h-full lg:bg-black/40">
           <nav className="px-12 py-5 flex">
-            <Link href="/">
-              <Netflix className="h-6" />
-            </Link>
+            <Netflix className="h-6" />
           </nav>
           <div className="flex justify-center">
             <div className="bg-black/70 px-16 py-16 self-center mt-2 lg:max-w-md rounded-md w-full">
@@ -69,37 +59,84 @@ const Auth = () => {
               </h2>
               <div className="flex flex-col gap-6">
                 {variant === 'register' && (
-                  <Input
-                    label="Username"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setName(e.target.value)
-                    }
-                    id="name"
-                    value={name}
-                  />
+                  <div className="relative">
+                    <input
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setName(e.target.value)
+                      }
+                      value={name}
+                      type="text"
+                      disabled={variant === 'register'}
+                      id="name"
+                      className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/30 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1"
+                      required
+                    />
+                    <label
+                      htmlFor="name"
+                      className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 cursor-text"
+                    >
+                      Username
+                    </label>
+                  </div>
                 )}
-                <Input
-                  label="Email"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setEmail(e.target.value)
-                  }
-                  id="email"
-                  type="email"
-                  value={email}
-                />
-                <Input
-                  label="Password"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setPassword(e.target.value)
-                  }
-                  id="password"
-                  type="password"
-                  value={password}
-                />
+                <div className="relative email">
+                  <input
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setEmail(e.target.value)
+                    }
+                    value={variant === 'register' ? 'not@available.com' : email}
+                    type="email"
+                    id="email"
+                    disabled={variant === 'register'}
+                    className={`block rounded-md px-6 pt-6 pb-1 w-full text-md bg-neutral-700/30 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1 ${
+                      variant === 'register' ? 'text-gray-400' : ''
+                    } `}
+                    required
+                  />
+                  <label
+                    htmlFor="email"
+                    className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 cursor-text"
+                  >
+                    Email
+                  </label>
+                </div>
+
+                <div className="relative pass">
+                  <input
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setPassword(e.target.value)
+                    }
+                    value={variant === 'register' ? '' : password}
+                    type="password"
+                    id="password"
+                    disabled={variant === 'register'}
+                    className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/30 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1"
+                    required
+                  />
+                  <label
+                    htmlFor="password"
+                    className="absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-6 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 cursor-text"
+                  >
+                    Password
+                  </label>
+                </div>
               </div>
               <button
-                onClick={variant === 'login' ? login : register}
-                className="bg-red-600 text-white rounded-md py-3 w-full mt-10 hover:bg-red-700 transition-colors"
+                disabled={variant === 'register' || disabled}
+                onClick={() => {
+                  setDisabled(true);
+                  login();
+                  setTimeout(() => {
+                    setDisabled(false);
+                  }, 2000);
+                }}
+                className={`${
+                  disabled
+                    ? 'cursor-not-allowed bg-red-900'
+                    : 'hover:bg-red-700'
+                }
+                " bg-red-600 text-white rounded-md py-3 w-full mt-10  transition-colors"
+                `}
               >
                 {variant === 'login' ? 'Masuk' : 'Daftar'}
               </button>
@@ -116,10 +153,17 @@ const Auth = () => {
                 >
                   <Github size="30px" className="fill-black " />
                 </div>
-                <div onClick={() => signOut()} className="">
-                  signOut
-                </div>
               </div>
+              <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={true}
+                closeOnClick={true}
+                draggable={true}
+                pauseOnHover={true}
+                theme="dark"
+                limit={1}
+              />
               <p className="text-neutral-500 mt-12">
                 {variant === 'login'
                   ? 'First time using Notflox?'
