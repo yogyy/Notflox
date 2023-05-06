@@ -6,12 +6,6 @@ import { Anime, Movie } from '../../typing';
 import { API_KEY } from '@/utils/request';
 import Image from 'next/image';
 import { getSession, useSession } from 'next-auth/react';
-import {
-  GetServerSideProps,
-  GetStaticProps,
-  NextApiRequest,
-  NextPageContext,
-} from 'next';
 import Link from 'next/link';
 import Navbar from '@/components/navbar';
 
@@ -41,6 +35,10 @@ const Test = () => {
 
       <div className="w-full flex justify-center">
         <Link href="/test">test</Link>
+        <div className="">
+          <p>sesi</p>
+          <pre>{JSON.stringify(session, null, 2)}</pre>
+        </div>
       </div>
       <div className="bg-red-500"></div>
       <div className="">
@@ -89,20 +87,20 @@ const Test = () => {
 
 export default Test;
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const session = await getSession(ctx);
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
+// export const getServerSideProps: GetServerSideProps = async ctx => {
+//   const session = await getSession(ctx);
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: '/',
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {
-      session,
-    },
-  };
-};
+//   return {
+//     props: {
+//       session,
+//     },
+//   };
+// };

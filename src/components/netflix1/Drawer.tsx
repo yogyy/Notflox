@@ -40,8 +40,9 @@ export default function TemporaryDrawer() {
         open={state['left']}
         onClose={toggleDrawer('left', false)}
         disableEnforceFocus
+        className="z-50"
       >
-        <div className="w-[60vw] sm:w-[200px] bg-[#131313] h-full px-4 py-2 ">
+        <div className="w-[60vw] sm:w-[200px] bg-[#131313] h-full px-4 py-2">
           {/* <div className="flex md:hidden justify-end mt-2 mr-2 p-1 text-white">
             <Search />
           </div> */}

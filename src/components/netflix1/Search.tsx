@@ -6,6 +6,9 @@ import { Movie } from '../../../typing';
 import clsx from 'clsx';
 import { Transition } from '@headlessui/react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Search = () => {
   const [query, setQuery] = React.useState('');
@@ -13,6 +16,7 @@ const Search = () => {
   const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
   const [debouncedQuery, setDebouncedQuery] = React.useState('');
   const [showResults, setShowResults] = React.useState(false);
+  const { data: session } = useSession();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -53,6 +57,17 @@ const Search = () => {
     }
   }, [debouncedQuery, searchMovies]);
 
+  const error = () =>
+    toast.warn(`Must Login to access this`, {
+      position: 'top-center',
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'dark',
+    });
+
   return (
     <div className="flex items-end">
       <Transition
@@ -77,7 +92,9 @@ const Search = () => {
         />
       </Transition>
       <button
-        onClick={() => setShowInput(!showInput)}
+        onClick={() => {
+          session ? setShowInput(!showInput) : error();
+        }}
         className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-full"
       >
         <MagnifyingGlassIcon
@@ -86,6 +103,7 @@ const Search = () => {
           } w-6 m-1 `}
         />
       </button>
+      <ToastContainer limit={1} />
       <div className="absolute top-10">
         <Transition
           show={showInput}
@@ -100,6 +118,7 @@ const Search = () => {
             <div className={'max-h-40 overflow-y-auto transition-transform'}>
               {query.length >= 3 && (
                 <ul className="flex flex-col bg-zinc-900/80">
+                  <div className=""></div>
                   {searchResults.map(result => (
                     <li
                       className="w-[245px] py-2 hover:cursor-pointer"

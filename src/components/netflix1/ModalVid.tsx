@@ -22,6 +22,8 @@ import {
 import { API_KEY, BASE_URL } from '@/utils/request';
 import ReactPlayer from 'react-player/youtube';
 import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import LoaderBlock from '../loader/loaderblock';
 
 function ModalVid() {
   const [showModal, setShowModal] = useRecoilState(modalState);
@@ -34,28 +36,41 @@ function ModalVid() {
 
   const handleClose = () => {
     setShowModal(false);
+    setMovie(null);
   };
 
-  React.useEffect(() => {
-    async function fetchMovie() {
-      const response = await axios.get(`/api/modal/${movie?.id}`);
-      const data = response.data.data;
-      if (data?.videos) {
-        const index = data.videos.results.findIndex(
-          (element: Element) => element.type === 'Trailer'
-        );
-        setTrailer(data.videos?.results[index]?.key);
-      }
-      if (data?.genres) {
-        setGenres(data.genres);
-      }
-      if (data?.production_companies) {
-        setNetworks(data.production_companies);
-      }
-    }
+  const { data, isError, isFetching } = useQuery(
+    ['movie', movie?.id],
+    async () => {
+      const response = await axios.get(
+        `${BASE_URL}/tv/${movie?.id}?api_key=${API_KEY}&language=en-US&append_to_response=videos`
+      );
+      return response.data;
+    },
+    { cacheTime: 60 * 5000, staleTime: 30 * 5000 }
+  );
 
-    fetchMovie();
-  }, [movie, trailer]);
+  React.useEffect(() => {
+    if (data?.videos) {
+      const index = data.videos.results.findIndex(
+        (element: Element) => element.type === 'Trailer'
+      );
+      setTrailer(data.videos?.results[index]?.key);
+    }
+    if (data?.genres) {
+      setGenres(data.genres);
+    }
+    if (data?.production_companies) {
+      setNetworks(data.production_companies);
+    }
+  }, [data]);
+
+  if (isError)
+    return (
+      <div className="fixed inset-0 bg-[#121212]/50 backdrop-blur-sm z-40">
+        <LoaderBlock />
+      </div>
+    );
 
   return (
     <Modal
@@ -82,7 +97,6 @@ function ModalVid() {
                 position: 'absolute',
                 top: '0',
                 left: '0',
-                // pointerEvents: 'none',
               }}
               controls
               playing
@@ -102,7 +116,7 @@ function ModalVid() {
             />
           )}
         </div>
-        <div className="flex space-x-16 rounded-b-md bg-[#121212] px-10 py-8">
+        <div className="flex space-x-16 rounded-b-md bg-[#121212]/95 px-10 py-8">
           <div className="space-y-6 text-lg">
             <h1 className="font-bold text-xl">{movie?.title || movie?.name}</h1>
             <div className="flex items-center space-x-2 text-sm ">
@@ -118,7 +132,7 @@ function ModalVid() {
               </div>
             </div>
             <div className="flex flex-col gap-x-10 gap-y-4 font-light md:flex-row justify-between">
-              <p className="w-5/6 text-base">
+              <p className="w-5/6 font-semibold">
                 {movie?.overview}{' '}
                 {!movie?.overview && (
                   <>
@@ -145,7 +159,7 @@ function ModalVid() {
                           <Image
                             width={50}
                             height={50}
-                            style={{ height: 'auto' }}
+                            style={{ width: '100%' }}
                             src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
                             alt={network.name}
                           />

@@ -15,13 +15,13 @@ export default function Notifications() {
             >
               <span>
                 <BellIcon
-                  className={`${open ? 'rotate-6' : ''}
+                  className={`${open ? '' : ''}
                 w-6 m-1 text-gray-300`}
                 />
                 <div
                   className={
                     !open
-                      ? 'w-[7px] h-[7px] bg-red-700 absolute top-1 right-1 rounded-full'
+                      ? 'w-[7px] h-[7px] bg-red-700 absolute top-1 right-1 rounded-full animate-pulse'
                       : ''
                   }
                 ></div>

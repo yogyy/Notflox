@@ -23,7 +23,7 @@ export const Paginate = ({
   return (
     <div
       {...rest}
-      className="bg-[#1c1c1c] flex justify-center items-center gap-3 mt-2"
+      className="bg-[#121212] flex justify-center items-center gap-3 mt-2"
     >
       {pages.map((page, index) => {
         const isActive = page === currentPage;

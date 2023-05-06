@@ -39,5 +39,4 @@ const links = [
   { name: 'Series', url: '/series' },
   { name: 'Movies', url: '/movies' },
   { name: 'Anime', url: '/anime' },
-  { name: 'Test', url: '/test' },
 ];

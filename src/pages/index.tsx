@@ -6,8 +6,8 @@ import { useRecoilValue } from 'recoil';
 import * as React from 'react';
 import ModalVid from '@/components/netflix1/ModalVid';
 import { modalState } from '../../atoms/modalAtom';
-import { GetServerSideProps, GetStaticProps, NextPageContext } from 'next';
-import { getSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
@@ -40,7 +40,6 @@ const Movies = () => {
     ['PopularNetflix'],
     () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
   );
-
   return (
     <RootLayout title="Netflix Clone">
       <div className="main">
@@ -54,28 +53,30 @@ const Movies = () => {
               title="Trending Now Netflix"
               movies={trendingNetflix!}
             />
-            <div className="">
-              <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-                Released Today
-              </h2>
-              <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                {airToday?.map(movie => (
-                  <div key={movie.id} className="mt-1">
-                    <ThumbnailPotrait movie={movie} />
-                  </div>
-                ))}
+            {airToday?.length !== 0 && (
+              <div className="">
+                <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+                  Released Today
+                </h2>
+                <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                  {airToday?.map(movie => (
+                    <div key={movie.id} className="mt-1">
+                      <ThumbnailPotrait movie={movie} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <RowPotrait title="Top Rated Netflix" movies={topRatedNetflix!} />
-            {/* <RowLanscape
+            <RowLanscape
               className=""
-              title="Animations"
+              title="Popular Show"
               movies={popularNetflix!}
-            /> */}
+            />
             {/* <RowPotrait title="Actions" movies={actionMovies} /> */}
           </section>
         </main>
-        {/* {showModal && <ModalVid />} */}
+        {showModal && <ModalVid />}
       </div>
     </RootLayout>
   );

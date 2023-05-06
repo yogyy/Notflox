@@ -5,6 +5,7 @@ import NavbarItem from './NavbarItem';
 import Search from './netflix1/Search';
 import Drawer from './netflix1/Drawer';
 import Notifications from './notification';
+import Link from 'next/link';
 
 const TOP_OFFSET = 66;
 
@@ -36,11 +37,13 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-">
           <Drawer />
-          <Netflix className="h-4 lg:h-7" />
+          <Link href="/">
+            <Netflix className="h-4 lg:h-7" />
+          </Link>
         </div>
         <NavbarItem className="flex-row ml-8 gap-7 hidden md:flex" />
         <div className="relative flex flex-row ml-auto gap-3 md:gap-5 items-center">
-          <div className="hidden md:block">
+          <div className="">
             <Search />
           </div>
           <Notifications />
