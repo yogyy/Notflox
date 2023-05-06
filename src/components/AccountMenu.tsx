@@ -1,31 +1,38 @@
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import Link from 'next/link';
-import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { signOut } from 'next-auth/react';
+import {
+  ArrowLeftOnRectangleIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/outline';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import useCurrentUser from '@/hooks/useCurrentUser';
+import 'react-toastify/dist/ReactToastify.css';
+import { useProfileStore } from '../../atoms/modalAtom';
 
 export default function AccountMenux() {
-  const { data: currentUser, error } = useCurrentUser();
+  const session = useSession();
+  const nonsessionProfile = useProfileStore((state: any) => state.imaged);
 
   return (
     <div className="relative w-[40px] h-[40px]">
       <Menu as="div">
         <div>
           <Menu.Button className="inline-flex w-full justify-center rounded-full bg-black bg-opacity-20 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <Image
-              width={40}
-              height={40}
-              className="rounded-full"
-              src={
-                currentUser?.image
-                  ? currentUser.image
-                  : '/images/default-slate.png'
-              }
-              alt={`${currentUser?.name}`}
-              priority
-            />
+            {
+              <Image
+                width={40}
+                height={40}
+                className="rounded-full"
+                src={
+                  session.data?.user?.image
+                    ? session.data?.user.image
+                    : nonsessionProfile
+                }
+                alt={`${session.data?.user?.name}`}
+                priority
+              />
+            }
           </Menu.Button>
         </div>
         <Transition
@@ -52,34 +59,40 @@ export default function AccountMenux() {
                       height={32}
                       className="w-8 rounded-full"
                       src={
-                        currentUser?.image
-                          ? currentUser.image
-                          : '/images/default-slate.png'
+                        session.data?.user?.image
+                          ? session.data?.user.image
+                          : nonsessionProfile
                       }
                       alt=""
                     />
                     <p className="text-white text-sm group-hover/item:underline">
-                      {currentUser?.name}
+                      {session.data?.user?.name || 'Profile'}
                     </p>
                   </Link>
                 )}
               </Menu.Item>
             </div>
+            {/* <button onClick={notify}>Notify !</button> */}
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <Link
-                    href="#"
-                    onClick={() => signOut()}
+                  <button
+                    onClick={() =>
+                      session.data !== null ? signOut() : signIn()
+                    }
                     className={`${
                       active ? 'bg-[#1c1c1c] ' : ''
                     }text-white group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2`}
                   >
                     <span className="w-8 h-8 flex justify-center">
-                      <ArrowRightOnRectangleIcon className="w-6" />
+                      {session.data !== null ? (
+                        <ArrowRightOnRectangleIcon className="w-6" />
+                      ) : (
+                        <ArrowLeftOnRectangleIcon className="w-6" />
+                      )}
                     </span>
-                    Logout
-                  </Link>
+                    {session.data !== null ? 'Logout' : 'SignIn'}
+                  </button>
                 )}
               </Menu.Item>
             </div>
