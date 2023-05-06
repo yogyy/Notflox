@@ -1,12 +1,10 @@
 import * as React from 'react';
-import axios, { AxiosError } from 'axios';
 import { getSession, signIn } from 'next-auth/react';
 import { Github, Google, Netflix } from '@/components/icons';
-import Input from '@/components/input';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { Slide, ToastContainer, Zoom, toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Auth = () => {
