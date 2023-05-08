@@ -21,9 +21,9 @@ const NavbarItem = ({ className }: NavItem) => {
           key={link.name}
           className={`${
             router.pathname == link.url
-              ? 'text-[#E50914] font-bold'
+              ? 'text-primary font-bold'
               : 'text-white '
-          } cursor-pointer hover:text-gray-300 transition-colors`}
+          } cursor-pointer hover:text-primary/60 transition-colors`}
         >
           {link.name}
         </Link>

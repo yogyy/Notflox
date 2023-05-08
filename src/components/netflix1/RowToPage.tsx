@@ -29,7 +29,7 @@ export function RowPotrait({ title, movies }: Props) {
 
   return (
     <div className="relative h-auto space-y-0.5 md:space-y-2">
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
         {title}
       </h2>
       <div className="group relative">
@@ -77,7 +77,7 @@ export function RowLanscape({ title, movies, className }: Props) {
     <div
       className={clsx('h-auto relative space-y-0.5 md:space-y-2', className)}
     >
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
         {title}
       </h2>
       <div className="group relative">

@@ -67,20 +67,3 @@ const App = () => {
 };
 
 export default App;
-
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const session = await getSession(ctx);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};

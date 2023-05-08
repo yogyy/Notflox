@@ -29,7 +29,7 @@ export function RowPotrait({ title, movies }: Props) {
 
   return (
     <div className="relative h-auto space-y-0.5 md:space-y-2">
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
         {title}
       </h2>
       <div className="group relative">
@@ -43,7 +43,7 @@ export function RowPotrait({ title, movies }: Props) {
           className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2"
           ref={rowRef}
         >
-          {movies.map(movie => (
+          {movies?.map(movie => (
             <ThumbnailPotrait key={movie.id} movie={movie} />
           ))}
         </div>
@@ -77,7 +77,7 @@ export function RowLanscape({ title, movies, className }: Props) {
     <div
       className={clsx('h-auto relative space-y-0.5 md:space-y-2 ', className)}
     >
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
+      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
         {title}
       </h2>
       <div className="group relative">
@@ -91,7 +91,7 @@ export function RowLanscape({ title, movies, className }: Props) {
           className="flex items-center space-x-2.5 overflow-x-scroll scrollbar-hide md:space-x-3.5 px-2"
           ref={rowRef}
         >
-          {movies.map(movie => (
+          {movies?.map(movie => (
             <ThumbnailLanscape key={movie.id} movie={movie} />
           ))}
         </div>

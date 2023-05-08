@@ -32,10 +32,13 @@ const AnimePage = () => {
   const { data: bannerAnime, isLoading: isLoadingBannerAnime } = useQuery<
     Movie[]
   >(['bannerAnime'], () =>
-    axios.get('/api/anime/popularanime').then(response => response.data)
+    axios
+      .get('/api/anime/popularanime')
+      .then(response => response.data.slice(0, 10))
   );
 
   const currentAiring = airingNow?.slice(firstPostIndex, lastPostIndex);
+
   const { data: session } = useSession();
   const router = useRouter();
   React.useEffect(() => {
@@ -102,7 +105,7 @@ const AnimePage = () => {
                 <span id="similar-tv-container" className="mb-5"></span>
                 <div className="mt-16 w-full lg:w-[948px] mx-auto">
                   <div className="py-1 w-full">
-                    <h1 className="text-xl font-semibold mb-5">
+                    <h1 className="text-xl font-semibold mb-5 text-primary">
                       Recent Released
                     </h1>
                   </div>
@@ -159,7 +162,7 @@ const AnimePage = () => {
                 id="popular-tv-week"
                 className="mt-20 bg-[#1C1C1C] p-2 rounded xl:mx-0 h-max"
               >
-                <h1 className="text-xl font-semibold mb-2">
+                <h1 className="text-xl font-semibold mb-2 text-primary">
                   Popular Anime Weekly
                 </h1>
                 {isLoadingBannerAnime ? (
@@ -174,30 +177,53 @@ const AnimePage = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
-                    {bannerAnime?.slice(0, 10).map((tv, index) => (
+                  <div className="flex flex-col">
+                    {bannerAnime?.map((tv, index) => (
                       <Link
                         // href={tv.animeUrl.replace(/\/{2,}/g, '/')}
                         href={`/tv/${tv.id}`}
                         target="_blank"
                         key={tv.id}
-                        className="relative flex gap-3 mb-3"
                       >
-                        <h2 className="w-5 m-3 h-5 p-5 rounded-md border flex justify-center items-center text-sm">{`${
-                          index + 1
-                        }`}</h2>
-                        <div className="relative min-w-[46px] max-h-[60px] aspect-[9:16]">
-                          <Image
-                            alt={tv.original_name}
-                            className="rounded w-12"
-                            fill
-                            src={`https://image.tmdb.org/t/p/w92/${tv.poster_path}`}
-                            sizes="auto"
-                          />
-                        </div>
-                        <h3 className="text-base text-gray-300 flex flex-wrap ">
-                          {tv.name}
-                        </h3>
+                        {index === 0 ? (
+                          <div className="relative w-full aspect-video h-full max-h-[180px] mb-3">
+                            <div className="absolute h-auto max-h-[180px] w-full aspect-video z-0">
+                              <Image
+                                alt={tv.original_name}
+                                className="rounded z-[-1] brightness-75 object-cover"
+                                fill
+                                src={`https://image.tmdb.org/t/p/w780/${tv.backdrop_path}`}
+                                sizes="auto"
+                              />
+                              <div className="absolute flex bottom-0 justify-center items-center">
+                                <h2 className="z-[2] w-5 m-3 h-5 p-5 rounded-md border flex bg-white/80 text-black justify-center items-center text-sm">{`${
+                                  index + 1
+                                }`}</h2>
+                                <h3 className="z-[2] text-base text-white flex flex-wrap ">
+                                  {tv.name}
+                                </h3>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="relative flex gap-3 mb-3">
+                            <h2 className="w-5 m-3 h-5 p-5 rounded-md border flex justify-center items-center text-sm">{`${
+                              index + 1
+                            }`}</h2>
+                            <div className="relative min-w-[46px] max-h-[60px] aspect-[9:16]">
+                              <Image
+                                alt={tv.original_name}
+                                className="rounded w-12"
+                                fill
+                                src={`https://image.tmdb.org/t/p/w92/${tv.poster_path}`}
+                                sizes="auto"
+                              />
+                            </div>
+                            <h3 className="text-base text-gray-300 flex flex-wrap ">
+                              {tv.name}
+                            </h3>
+                          </div>
+                        )}
                       </Link>
                     ))}
                   </div>

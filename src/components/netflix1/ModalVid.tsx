@@ -24,6 +24,7 @@ import ReactPlayer from 'react-player/youtube';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import LoaderBlock from '../loader/loaderblock';
+import { tanggal } from '@/lib/getDate';
 
 function ModalVid() {
   const [showModal, setShowModal] = useRecoilState(modalState);
@@ -125,14 +126,16 @@ function ModalVid() {
                   `${(movie.vote_average * 10).toString().slice(0, 2)}% Match`}
               </p>
               <p className="font-light">
-                {movie?.release_date || movie?.first_air_date}
+                {movie?.media_type === 'movie'
+                  ? tanggal(movie?.release_date)
+                  : tanggal(movie?.first_air_date)}
               </p>
               <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs">
                 HD
               </div>
             </div>
-            <div className="flex flex-col gap-x-10 gap-y-4 font-light md:flex-row justify-between">
-              <p className="w-5/6 font-semibold">
+            <div className="flex flex-col-reverse gap-x-10 gap-y-4 font-light justify-between">
+              <p className="w-5/6 text-gray-300">
                 {movie?.overview}{' '}
                 {!movie?.overview && (
                   <>
@@ -145,36 +148,32 @@ function ModalVid() {
               </p>
               <div className="flex flex-col space-y-3 text-sm">
                 <div>
-                  <span className="text-[gray]">Genres : </span>
-                  {genres.map(genre => genre.name).join(', ')}
+                  <p>
+                    Genres :&nbsp;
+                    <span className="font-semibold">
+                      {genres.map(genre => genre.name).join(', ')}
+                    </span>
+                  </p>
                 </div>
 
                 <div>
-                  <span className="text-[gray]">Original language: </span>
-                  {movie?.original_language}
-                  <span className="flex gap-3 flex-wrap mt-2">
-                    {networks.map(network => (
-                      <div key={network.id}>
-                        {network.logo_path && (
-                          <Image
-                            width={50}
-                            height={50}
-                            style={{ width: '100%' }}
-                            src={`https://image.tmdb.org/t/p/original/${network.logo_path}`}
-                            alt={network.name}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </span>
+                  <p>
+                    Original language:&nbsp;
+                    <span className="font-semibold">
+                      {movie?.original_language.toUpperCase()}
+                    </span>
+                  </p>
+                </div>
+                <div className="flex w-full">
+                  <p>
+                    Sudio :&nbsp;
+                    <span className="font-semibold">
+                      {networks.map(network => network.name).join(', ')}
+                    </span>
+                  </p>
                 </div>
 
                 <div className=""></div>
-
-                <div>
-                  <span className="text-[gray]">Total votes:</span>{' '}
-                  {movie?.vote_count}
-                </div>
               </div>
             </div>
           </div>
