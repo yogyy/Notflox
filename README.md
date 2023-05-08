@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## NOTFLOX
 
 First, run the development server:
 
@@ -12,4 +12,4 @@ yarn dev
 pnpm dev
 ```
 
-https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp
+![image](https://user-images.githubusercontent.com/62535762/236726103-5a91dc92-9088-413c-a3dd-1a34f9d071c4.png)
