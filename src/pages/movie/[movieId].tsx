@@ -82,7 +82,7 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
             />
             <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
           </div>
-          <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-white/20 lg:bg-transparent">
+          <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 lg:bg-none">
             <div className="h-full gap-3 md:flex md:flex-col relative">
               <div className="relative w-[164px] h-[255px] -mt-32 md:mt-0 rounded ">
                 <Image
