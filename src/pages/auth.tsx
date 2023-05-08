@@ -6,6 +6,7 @@ import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Image from 'next/image';
 
 const Auth = () => {
   const [email, setEmail] = React.useState('');
@@ -45,8 +46,20 @@ const Auth = () => {
       <Head>
         <title>Login First</title>
       </Head>
-      <div className="relative h-screen w-full bg-[url('/images/hero.webp')] bg-no-repeat bg-center bg-fixed bg-cover">
+      <div className="relative h-screen w-full">
         <div className="bg-black h-full lg:bg-black/40">
+          <div className="fixed w-full h-screen object-cover brightness-50 z-[-1]">
+            <Image
+              src="https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp"
+              fill
+              style={{
+                backgroundSize: 'contain',
+              }}
+              alt="hero"
+              priority
+              draggable={false}
+            />
+          </div>
           <nav className="px-12 py-5 flex">
             <Netflix className="h-6" />
           </nav>
@@ -66,7 +79,7 @@ const Auth = () => {
                       type="text"
                       disabled={variant === 'register'}
                       id="name"
-                      className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/30 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1"
+                      className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/sh-screen focus:outline-none focus:ring-0 peer invalid:border-b-1"
                       required
                     />
                     <label
@@ -141,15 +154,15 @@ const Auth = () => {
               <div className="flex flex-row items-center gap-4 mt-8 justify-center">
                 <div
                   onClick={() => signIn('google', { callbackUrl: '/profiles' })}
-                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-white/80 transition"
+                  className="w-10 h-10 bg-transparent rounded-full flex items-center justify-center cursor-pointer hover:brightness-50 transition"
                 >
                   <Google size="30px" />
                 </div>
                 <div
                   onClick={() => signIn('github', { callbackUrl: '/profiles' })}
-                  className="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:bg-white/80 transition"
+                  className="w-10 h-10 bg-transparent rounded-full flex items-center justify-center cursor-pointer hover:brightness-50 transition"
                 >
-                  <Github size="30px" className="fill-black " />
+                  <Github size="30px" className="stroke-white " />
                 </div>
               </div>
               <ToastContainer
