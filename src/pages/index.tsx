@@ -6,123 +6,100 @@ import { useRecoilValue } from 'recoil';
 import * as React from 'react';
 import ModalVid from '@/components/netflix1/ModalVid';
 import { modalState } from '../../atoms/modalAtom';
-import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
-import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-
-interface Props {
-  trendingNow: Movie[];
-  topRated: Movie[];
-  actionMovies: Movie[];
-  romanceMovies: Movie[];
-  upComing: Movie[];
-  Animation: Movie[];
-}
+import { useRouter } from 'next/router';
+import LoaderBlock from '@/components/loader/loaderblock';
 
 const Movies = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  React.useEffect(() => {
+    if (session === null) {
+      router.push('/auth');
+    }
+  }, [router, session]);
+
   const showModal = useRecoilValue(modalState);
 
-  const { data: trendingNetflix } = useQuery<Movie[] | undefined>(
-    ['TrendingNetflix'],
-    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
-  );
-  const { data: topRatedNetflix } = useQuery<Movie[] | undefined>(
-    ['TopRatedNetflix'],
-    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
-  );
-  const { data: airToday } = useQuery<Movie[] | undefined>(['AirToday'], () =>
+  const { data: trendingNetflix, isLoading: loadingNetflix } = useQuery<
+    Movie[] | undefined
+  >(['TrendingNetflix'], () =>
     axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
   );
-  const { data: popularNetflix } = useQuery<Movie[] | undefined>(
-    ['PopularNetflix'],
-    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
+  const { data: topRatedNetflix, isLoading: loadingToprated } = useQuery<
+    Movie[] | undefined
+  >(['TopRatedNetflix'], () =>
+    axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results)
   );
+  const { data: airToday, isLoading: loadingAirtdy } = useQuery<
+    Movie[] | undefined
+  >(['AirToday'], () =>
+    axios.get(requests.fetchAirToday).then(res => res.data.results)
+  );
+  const { data: popularNetflix, isLoading: loadingPopular } = useQuery<
+    Movie[] | undefined
+  >(['PopularNetflix'], () =>
+    axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
+  );
+
   return (
     <RootLayout title="Netflix Clone">
-      <div className="main">
-        <main>
-          <section>
-            <Banner banner={trendingNetflix?.slice(0, 5)} />
-          </section>
-          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
-            <RowLanscape
-              className=""
-              title="Trending Now Netflix"
-              movies={trendingNetflix!}
-            />
-            {airToday?.length !== 0 && (
-              <div className="">
-                <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-[#e5e5e5] transition duration-200 hover:text-white md:text-2xl">
-                  Released Today
-                </h2>
-                <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                  {airToday?.map(movie => (
-                    <div key={movie.id} className="mt-1">
-                      <ThumbnailPotrait movie={movie} />
+      {!session ? (
+        <LoaderBlock />
+      ) : (
+        <>
+          {loadingToprated ||
+          loadingNetflix ||
+          loadingAirtdy ||
+          loadingPopular ? (
+            <LoaderBlock />
+          ) : (
+            <div className="main">
+              <section>
+                <Banner banner={trendingNetflix?.slice(0, 5)} />
+              </section>
+              <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
+                <RowLanscape
+                  className=""
+                  title="Trending Now"
+                  movies={trendingNetflix!}
+                />
+                {airToday?.length !== 0 && (
+                  <div className="">
+                    <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
+                      Released Today
+                    </h2>
+                    <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                      {airToday?.map(movie => (
+                        <div key={movie.id} className="mt-1">
+                          <ThumbnailPotrait movie={movie} />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <RowPotrait title="Top Rated Netflix" movies={topRatedNetflix!} />
-            <RowLanscape
-              className=""
-              title="Popular Show"
-              movies={popularNetflix!}
-            />
-            {/* <RowPotrait title="Actions" movies={actionMovies} /> */}
-          </section>
-        </main>
-        {showModal && <ModalVid />}
-      </div>
+                  </div>
+                )}
+                <RowPotrait
+                  className="text-primary"
+                  title="Top Rated"
+                  movies={topRatedNetflix!}
+                />
+                <RowLanscape
+                  className=""
+                  title="Popular Show"
+                  movies={popularNetflix!}
+                />
+              </section>
+            </div>
+          )}
+          {showModal && <ModalVid />}
+        </>
+      )}
     </RootLayout>
   );
 };
 
 export default Movies;
-
-export const getServerSideProps: GetServerSideProps = async ctx => {
-  const session = await getSession(ctx);
-  const queryClient = new QueryClient();
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth',
-        permanent: false,
-      },
-    };
-  }
-
-  await Promise.all([
-    queryClient.prefetchQuery(['TrendingNetflix'], () =>
-      axios
-        .get(requests.fetchTrendingNetflix)
-        .then(res => res.data.results.slice(0, 10))
-    ),
-    queryClient.prefetchQuery(['TopRatedNetflix'], () =>
-      axios
-        .get(requests.fetchTopRatedNetflix)
-        .then(res => res.data.results.slice(0, 10))
-    ),
-    queryClient.prefetchQuery(['AirToday'], () =>
-      axios
-        .get(requests.fetchAirToday)
-        .then(res => res.data.results.slice(0, 10))
-    ),
-    queryClient.prefetchQuery(['PopularNetflix'], () =>
-      axios
-        .get(requests.fetchPopularNetflix)
-        .then(res => res.data.results.slice(0, 10))
-    ),
-  ]);
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
-};
