@@ -29,10 +29,8 @@ export function RowPotrait({ title, movies }: Props) {
 
   return (
     <div className="relative h-auto space-y-0.5 md:space-y-2">
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
-        {title}
-      </h2>
-      <div className="group relative">
+      <h2 className="w-56 ml-5 text-sm font-semibold md:text-2xl">{title}</h2>
+      <div className="relative group">
         <ChevronLeftIcon
           className={`absolute bg-black/20 top-0 bottom-0 left-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
             !isMoved && 'hidden'
@@ -77,10 +75,8 @@ export function RowLanscape({ title, movies, className }: Props) {
     <div
       className={clsx('h-auto relative space-y-0.5 md:space-y-2', className)}
     >
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
-        {title}
-      </h2>
-      <div className="group relative">
+      <h2 className="w-56 ml-5 text-sm font-semibold md:text-2xl">{title}</h2>
+      <div className="relative group">
         <ChevronLeftIcon
           className={`absolute top-0 bottom-0 left-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
             !isMoved && 'hidden'

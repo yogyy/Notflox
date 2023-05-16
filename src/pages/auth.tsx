@@ -46,26 +46,14 @@ const Auth = () => {
       <Head>
         <title>Login First</title>
       </Head>
-      <div className="relative h-screen w-full">
-        <div className="bg-black h-full lg:bg-black/40">
-          <div className="fixed w-full h-screen object-cover brightness-50 z-[-1]">
-            <Image
-              src="https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp"
-              fill
-              style={{
-                backgroundSize: 'contain',
-              }}
-              alt="hero"
-              priority
-              draggable={false}
-            />
-          </div>
-          <nav className="px-12 py-5 flex">
+      <div className="relative w-full h-screen">
+        <div className="relative h-screen bg-[url('https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp')] bg-no-repeat bg-center bg-fixed bg-cover">
+          <nav className="flex px-12 py-5">
             <Netflix className="h-6" />
           </nav>
           <div className="flex justify-center">
-            <div className="bg-black/70 px-16 py-16 self-center mt-2 lg:max-w-md rounded-md w-full">
-              <h2 className="text-white text-3xl mb-8 font-semibold">
+            <div className="self-center px-16 py-16 mt-2 rounded-md bg-black/90 md:max-w-md">
+              <h2 className="mb-8 text-3xl font-semibold text-white">
                 {variant === 'login' ? 'Sign in' : 'Create an account'}
               </h2>
               <div className="flex flex-col gap-6">
@@ -79,7 +67,7 @@ const Auth = () => {
                       type="text"
                       disabled={variant === 'register'}
                       id="name"
-                      className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/sh-screen focus:outline-none focus:ring-0 peer invalid:border-b-1"
+                      className="block w-full px-6 pt-6 pb-1 text-white rounded-md text-md bg-neutral-700/sh-screen focus:outline-none focus:ring-0 peer invalid:border-b-1"
                       required
                     />
                     <label
@@ -121,7 +109,7 @@ const Auth = () => {
                     type="password"
                     id="password"
                     disabled={variant === 'register'}
-                    className="block rounded-md px-6 pt-6 pb-1 w-full text-md text-white bg-neutral-700/30 appearance-none focus:outline-none focus:ring-0 peer invalid:border-b-1"
+                    className="block w-full px-6 pt-6 pb-1 text-white rounded-md appearance-none text-md bg-neutral-700/30 focus:outline-none focus:ring-0 peer invalid:border-b-1"
                     required
                   />
                   <label
@@ -151,16 +139,16 @@ const Auth = () => {
               >
                 {variant === 'login' ? 'Masuk' : 'Daftar'}
               </button>
-              <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+              <div className="flex flex-row items-center justify-center gap-4 mt-8">
                 <div
                   onClick={() => signIn('google', { callbackUrl: '/profiles' })}
-                  className="w-10 h-10 bg-transparent rounded-full flex items-center justify-center cursor-pointer hover:brightness-50 transition"
+                  className="flex items-center justify-center w-10 h-10 transition bg-transparent rounded-full cursor-pointer hover:brightness-50"
                 >
                   <Google size="30px" />
                 </div>
                 <div
                   onClick={() => signIn('github', { callbackUrl: '/profiles' })}
-                  className="w-10 h-10 bg-transparent rounded-full flex items-center justify-center cursor-pointer hover:brightness-50 transition"
+                  className="flex items-center justify-center w-10 h-10 transition bg-transparent rounded-full cursor-pointer hover:brightness-50"
                 >
                   <Github size="30px" className="stroke-white " />
                 </div>
@@ -175,13 +163,13 @@ const Auth = () => {
                 theme="dark"
                 limit={1}
               />
-              <p className="text-neutral-500 mt-12">
+              <p className="mt-12 text-neutral-500">
                 {variant === 'login'
                   ? 'First time using Notflox?'
                   : 'Already have an account?'}
                 <span
                   onClick={toggleVariant}
-                  className="text-white ml-1 hover:underline cursor-pointer"
+                  className="ml-1 text-white cursor-pointer hover:underline"
                 >
                   {variant === 'login' ? 'Create an account' : 'Login'}
                 </span>

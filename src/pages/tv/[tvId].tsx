@@ -25,7 +25,7 @@ interface KW {
   name: string;
 }
 
-export default function TvDetails({ tv, productions, genres }: TvProps) {
+export default function TvDetails({ tv }: TvProps) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [postPerPage, setpostPerPage] = React.useState(6);
   const lastPostIndex = currentPage * postPerPage;
@@ -57,6 +57,10 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
     }
   }, [session]);
 
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [tv.id]);
+
   return (
     <RootLayout title={tv?.name!}>
       {session ? (
@@ -78,35 +82,35 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
             )}
             <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
           </div>
-          <div className="relative bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 lg:bg-none mx-auto md:justify-center items-center md:items-start lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 pt-4 max-w-[1200px]">
-            <div className="h-full gap-3 md:flex md:flex-col relative">
-              <div className="relative w-[164px] h-[255px] -mt-32 md:mt-0 rounded ">
+          <div className="relative bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 md:bg-none mx-auto md:justify-center items-center md:items-start md:-mt-[20%] lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 pt-4 max-w-[1200px]">
+            <div className="relative h-full gap-3 md:flex md:flex-col">
+              <div className="relative w-[165px] h-[255px] -mt-32 rounded md:mt-0 ">
                 <Image
                   src={`https://image.tmdb.org/t/p/w342/${tv?.poster_path}`}
-                  className="rounded-sm object-cover md:rounded flex"
-                  width={165}
-                  height={255}
+                  className="flex object-cover rounded-sm md:rounded"
+                  fill
+                  sizes="auto"
                   alt={`Thumbnail ${tv?.name}`}
                   draggable={false}
                 />
               </div>
-              <div className="homepage">
+              <div className="flex justify-center homepage">
                 <h3 className="text-sm text-red-500 hover:text-red-600">
-                  <Link target="_blank" href="/">
+                  <Link target="_blank" href={tv.homepage}>
                     Homepage
                   </Link>
                 </h3>
               </div>
             </div>
-            <div className="md:w-7/12 w-full">
+            <div className="w-full md:w-7/12">
               <h1 className="text-xl font-semibold text-red-600">
                 {tv?.name}{' '}
                 <span className="text-gray-300">
                   ({tv?.first_air_date?.slice(0, 4)})
                 </span>
               </h1>
-              <h2 className="text- text-gray-300">{tv?.original_name}</h2>
-              <p className="text-sm lg:text-base text-gray-400">
+              <h2 className="text-gray-500 text-">{tv?.original_name}</h2>
+              <p className="text-sm text-gray-400 lg:text-base">
                 {tv?.overview}
               </p>
               <hr className="my-2 border-zinc-800" />
@@ -126,8 +130,7 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
                 </div>
                 <p className="text-gray-300">
                   <span className="">Rating :&nbsp;</span>
-                  {tv?.vote_average.toFixed(1)} / 10 from&nbsp;
-                  {tv?.vote_count.toLocaleString()}
+                  {tv?.vote_average.toFixed(1)} / 10
                 </p>
                 <div className="text-sm text-gray-300">
                   <p>
@@ -143,7 +146,7 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
           </div>
           <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
             {isLoadingKeywords ? (
-              <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center gap-2 mx-3">
+              <div className="flex flex-wrap items-center gap-2 py-2 mx-3 mt-5 xl:mb-52">
                 <h1 id="similar-tv-container" className="px-3">
                   Tags :
                 </h1>
@@ -155,14 +158,14 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+              <div className="flex flex-wrap items-center py-2 mt-5 xl:mb-52">
                 <h1 id="similar-tv-container" className="px-3">
                   Tags :
                 </h1>
                 {dataKeywords?.map((keyword: KW) => (
                   <p
                     key={keyword.id}
-                    className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
+                    className="px-2 m-1 text-gray-300 rounded-md cursor-default bg-white/5 w-max hover:bg-white/10 hover:text-gray-200"
                   >
                     {keyword.name}
                   </p>
@@ -172,7 +175,7 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
             {similarTVShows?.length !== 0 ? (
               <>
                 {isLoadingsimilarTVShows ? (
-                  <div className="mt-1 flex-col mx-4 frounded-sm">
+                  <div className="flex-col mx-4 mt-1 frounded-sm">
                     <p className="text-xl font-semibold text-[#fcfbfb]">
                       Recommendations
                     </p>
@@ -204,7 +207,7 @@ export default function TvDetails({ tv, productions, genres }: TvProps) {
               </>
             ) : (
               <div>
-                <h1 className="text-1xl">Recommendations not available</h1>
+                <h1 className="px-3 text-1xl">Recommendations not available</h1>
               </div>
             )}
           </div>
@@ -227,8 +230,6 @@ export async function getServerSideProps({ params }: any) {
     return {
       props: {
         tv: data,
-        genres: data.genres,
-        productions: data.production_companies,
       },
     };
   } catch (error: any) {

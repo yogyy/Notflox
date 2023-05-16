@@ -1,12 +1,12 @@
 import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
-import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import LoaderBlock from '@/components/loader/loaderblock';
+import { Movie } from '../../../typing';
 
 interface Props {
   trendingNow: Movie[];

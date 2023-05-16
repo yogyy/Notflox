@@ -29,10 +29,10 @@ export function RowPotrait({ title, movies }: Props) {
 
   return (
     <div className="relative h-auto space-y-0.5 md:space-y-2">
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
+      <h2 className="ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
         {title}
       </h2>
-      <div className="group relative">
+      <div className="relative group">
         <ChevronLeftIcon
           className={`absolute bg-black/20 top-0 bottom-0 left-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
             !isMoved && 'hidden'
@@ -51,6 +51,24 @@ export function RowPotrait({ title, movies }: Props) {
           className="absolute bg-black/20 top-0 bottom-0 right-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100"
           onClick={() => handleClick('right')}
         />
+      </div>
+    </div>
+  );
+}
+
+export function RowPotraitLoading() {
+  return (
+    <div className={clsx('h-auto relative space-y-0.5 md:space-y-2')}>
+      <div className="h-4 mb-1 ml-5 w-44 animate-pulse bg-zinc-800" />
+      <div className="relative">
+        <div className="flex items-center space-x-2.5 overflow-x-scroll scrollbar-hide md:space-x-3.5 px-2.5">
+          {[...Array(3)].map((_, index) => (
+            <div
+              key={index}
+              className="relative aspect-[9/14] w-[92px] lg:w-[164px] h-full rounded-sm bg-zinc-800 animate-pulse md:rounded"
+            ></div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -77,10 +95,8 @@ export function RowLanscape({ title, movies, className }: Props) {
     <div
       className={clsx('h-auto relative space-y-0.5 md:space-y-2 ', className)}
     >
-      <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
-        {title}
-      </h2>
-      <div className="group relative">
+      <h2 className="ml-5 text-sm font-semibold w-fit md:text-2xl">{title}</h2>
+      <div className="relative group">
         <ChevronLeftIcon
           className={`absolute top-0 bottom-0 left-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100 ${
             !isMoved && 'hidden'
@@ -99,6 +115,24 @@ export function RowLanscape({ title, movies, className }: Props) {
           className="absolute top-0 bottom-0 right-2 z-[15] m-auto h-9 w-9 cursor-pointer opacity-0 transition hover:scale-125 group-hover:opacity-100"
           onClick={() => handleClick('right')}
         />
+      </div>
+    </div>
+  );
+}
+
+export function RowLanscapeLoading() {
+  return (
+    <div className={clsx('h-auto relative space-y-0.5 md:space-y-2')}>
+      <div className="h-4 mb-1 ml-5 w-44 animate-pulse bg-zinc-800" />
+      <div className="relative">
+        <div className="flex grow items-center space-x-2.5 overflow-x-scroll scrollbar-hide md:space-x-3.5 px-2.5">
+          {[...Array(2)].map((_, index) => (
+            <div
+              key={index}
+              className="relative aspect-video w-[220px] lg:w-[342px] rounded-sm bg-zinc-800 animate-pulse md:rounded"
+            ></div>
+          ))}
+        </div>
       </div>
     </div>
   );

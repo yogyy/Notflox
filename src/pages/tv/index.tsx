@@ -1,12 +1,12 @@
 import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
 import { useSession } from 'next-auth/react';
-import { Movie } from '../../typing';
 import RootLayout from '@/components/layouts/layout';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LoaderBlock from '@/components/loader/loaderblock';
+import { Movie } from '../../../typing';
 
 interface Props {
   trendingNow: Movie[];
@@ -14,7 +14,7 @@ interface Props {
   fetchNowPlaying: Movie[];
 }
 
-const Series = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
+const Tv = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
   const { data: session } = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -41,7 +41,7 @@ const Series = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
   );
 };
 
-export default Series;
+export default Tv;
 
 export const getStaticProps = async () => {
   const [trendingNow, topRated, fetchNowPlaying] = await Promise.all([

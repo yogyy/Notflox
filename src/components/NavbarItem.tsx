@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
-import { Movie } from '../../typing';
 
 interface NavItem {
   className?: string;
@@ -20,9 +19,9 @@ const NavbarItem = ({ className }: NavItem) => {
           href={link.url}
           key={link.name}
           className={`${
-            router.pathname == link.url
-              ? 'text-primary font-bold'
-              : 'text-white '
+            router.pathname && baseRoute !== link.url
+              ? 'text-white'
+              : 'text-primary font-bold'
           } cursor-pointer hover:text-primary/60 transition-colors`}
         >
           {link.name}
@@ -36,7 +35,7 @@ export default NavbarItem;
 
 const links = [
   { name: 'Home', url: '/' },
-  { name: 'Series', url: '/series' },
-  { name: 'Movies', url: '/movies' },
+  { name: 'Series', url: '/tv' },
+  { name: 'Movies', url: '/movie' },
   { name: 'Anime', url: '/anime' },
 ];

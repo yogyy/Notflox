@@ -26,7 +26,7 @@ interface KW {
   name: string;
 }
 
-export default function MovieDetails({ movie, productions, genres }: Props) {
+export default function MovieDetails({ movie }: Props) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [postPerPage, setpostPerPage] = React.useState(6);
   const lastPostIndex = currentPage * postPerPage;
@@ -62,6 +62,10 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
     }
   }, [session]);
 
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [movie.id]);
+
   const similarPaginate = similarMovie?.slice(firstPostIndex, lastPostIndex);
 
   return (
@@ -82,20 +86,19 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
             />
             <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
           </div>
-          <div className="relative mx-auto md:justify-center lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 lg:bg-none">
-            <div className="h-full gap-3 md:flex md:flex-col relative">
-              <div className="relative w-[164px] h-[255px] -mt-32 md:mt-0 rounded ">
+          <div className="relative mx-auto md:justify-center md:-mt-[20%] lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 md:bg-none">
+            <div className="relative h-full gap-3 md:flex md:flex-col">
+              <div className="relative w-[165px] h-[255px] -mt-32 rounded md:mt-0 ">
                 <Image
                   src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-                  className="rounded-sm object-cover md:rounded flex"
-                  width={165}
-                  height={255}
+                  className="flex object-cover rounded-sm md:rounded"
+                  fill
+                  sizes="auto"
                   alt={`Thumbnail ${movie?.title}`}
                   draggable={false}
-                  onClick={() => console.log(movie)}
                 />
               </div>
-              <div className="homepage flex justify-center">
+              <div className="flex justify-center homepage">
                 <h3 className="text-sm text-red-500 hover:text-red-600">
                   <Link target="_blank" href={movie.homepage}>
                     Homepage
@@ -103,15 +106,15 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
                 </h3>
               </div>
             </div>
-            <div className="md:w-7/12 w-full">
-              <h1 className="text-xl font-semibold text-red-600 w-fit ">
+            <div className="w-full md:w-7/12">
+              <h1 className="text-xl font-semibold text-red-600 w-fit">
                 {movie.title}{' '}
                 <span className="text-gray-300">
                   ({movie.release_date?.slice(0, 4)})
                 </span>
               </h1>
-              <h2 className="text- text-gray-400">{movie?.original_title}</h2>
-              <p className="text-gray-300 text-sm lg:text-base">
+              <h2 className="text-gray-500 text-">{movie?.original_title}</h2>
+              <p className="text-sm text-gray-400 lg:text-base">
                 {movie.overview}
               </p>
               <hr className="my-2 border-zinc-800" />
@@ -122,19 +125,20 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
                   <p>
                     Genre :&nbsp;
                     <span className="text-red-300">
-                      {genres.map(genre => genre.name).join(', ')}
+                      {movie.genres.map(genre => genre.name).join(', ')}
                     </span>
                   </p>
                 </div>
                 <p className="text-gray-300">
                   <span className="">Rating :&nbsp;</span>
-                  {movie.vote_average.toFixed(1)} / 10 from&nbsp;
-                  {movie.vote_count.toLocaleString()}
+                  {movie.vote_average.toFixed(1)} / 10
                 </p>
                 <div className="text-sm text-gray-300">
                   <p>
                     Studio :{' '}
-                    {productions?.map(studio => studio.name).join(', ')}
+                    {movie.production_companies
+                      ?.map(studio => studio.name)
+                      .join(', ')}
                   </p>
                 </div>
               </div>
@@ -144,7 +148,7 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
           <div>
             <div className="space-y-12 md:space-y-10 mx-auto relative max-w-[1300px]">
               {isLoadingKeywords ? (
-                <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center gap-2 mx-3">
+                <div className="flex flex-wrap items-center gap-2 py-2 mx-3 mt-5 xl:mb-52">
                   <h1 id="similar-tv-container" className="px-3">
                     Tags :
                   </h1>
@@ -156,52 +160,60 @@ export default function MovieDetails({ movie, productions, genres }: Props) {
                   ))}
                 </div>
               ) : (
-                <div className="flex flex-wrap py-2 mt-5 xl:mb-52 items-center">
+                <div className="flex flex-wrap items-center py-2 mt-5 xl:mb-52">
                   <h1 id="similar-tv-container" className="px-3">
                     Tags :
                   </h1>
                   {dataKeywords?.map((keyword: KW) => (
                     <p
                       key={keyword.id}
-                      className="bg-white/5 text-gray-300 w-max px-2 rounded-md m-1 cursor-default hover:bg-white/10 hover:text-gray-200"
+                      className="px-2 m-1 text-gray-300 rounded-md cursor-default bg-white/5 w-max hover:bg-white/10 hover:text-gray-200"
                     >
                       {keyword.name}
                     </p>
                   ))}
                 </div>
               )}
-              <>
-                {isLoadingSimilar ? (
-                  <div className="mt-1 flex-col mx-4 frounded-sm">
-                    <p className="text-xl font-semibold text-[#fcfbfb]">
-                      Recommendations
-                    </p>
-                    <div className="w-32 h-4 bg-[#1c1c1c] animate-pulse mb-3 mt-2"></div>
-                    <div className="flex">
-                      <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-3 animate-pulse"></div>
-                      <div className="w-full">
-                        <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
-                        <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
-                        <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+              {similarMovie?.length !== 0 ? (
+                <>
+                  {isLoadingSimilar ? (
+                    <div className="flex-col mx-4 mt-1 frounded-sm">
+                      <p className="text-xl font-semibold text-[#fcfbfb]">
+                        Recommendations
+                      </p>
+                      <div className="w-32 h-4 bg-[#1c1c1c] animate-pulse mb-3 mt-2"></div>
+                      <div className="flex">
+                        <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-3 animate-pulse"></div>
+                        <div className="w-full">
+                          <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                          <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                          <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="">
-                    <Recomend
-                      className=""
-                      title="Recommendations"
-                      movies={similarPaginate}
-                    />
-                    <Paginate
-                      currentPage={currentPage}
-                      postPerPage={postPerPage}
-                      setCurrentPage={setCurrentPage}
-                      totalPost={similarMovie?.length}
-                    />
-                  </div>
-                )}
-              </>
+                  ) : (
+                    <div className="">
+                      <Recomend
+                        className=""
+                        title="Recommendations"
+                        movies={similarPaginate}
+                      />
+                      <Paginate
+                        currentPage={currentPage}
+                        postPerPage={postPerPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPost={similarMovie?.length}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div>
+                  <h1 className="px-3 text-1xl">
+                    Recommendations not available
+                  </h1>
+                </div>
+              )}
             </div>
           </div>
         </>
@@ -223,8 +235,6 @@ export async function getServerSideProps({ params }: { params: any }) {
     return {
       props: {
         movie: data,
-        productions: data.production_companies,
-        genres: data.genres,
       },
     };
   } catch (error: any) {

@@ -80,8 +80,8 @@ const Search = () => {
         leaveTo="opacity-0"
       >
         <input
-          type="text"
-          placeholder="Search"
+          type="search"
+          placeholder="Search movie.."
           value={query}
           onChange={handleInputChange}
           onClick={() => setShowResults(true)}
@@ -95,7 +95,7 @@ const Search = () => {
         onClick={() => {
           session ? setShowInput(!showInput) : error();
         }}
-        className="text-gray-200 ml-4 hover:text-gray-300 cursor-pointer transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 rounded-full"
+        className="ml-4 text-gray-200 transition rounded-full cursor-pointer hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       >
         <MagnifyingGlassIcon
           className={`${
@@ -136,7 +136,7 @@ const Search = () => {
                         }}
                         // href="#"
 
-                        className="mx-2 flex justify-between"
+                        className="flex justify-between mx-2"
                       >
                         <span>
                           {result.title || result.name}
@@ -149,7 +149,7 @@ const Search = () => {
                             )}
                           </span>
                         </span>
-                        <span className="bg-gray-800 h-fit px-1 rounded-md">
+                        <span className="px-1 bg-gray-800 rounded-md h-fit">
                           {result.media_type}
                         </span>
                       </Link>

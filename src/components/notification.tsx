@@ -36,9 +36,9 @@ export default function Notifications() {
               leaveFrom="opacity-100 translate-y-1"
               leaveTo="opacity-0 translate-y-0"
             >
-              <Popover.Panel className="absolute z-10 mt-8 md:mt-10 w-max max-w-sm -right-2 px-3 sm:px-0 lg:max-w-3xl">
+              <Popover.Panel className="absolute z-10 max-w-sm px-3 mt-8 md:mt-10 w-max -right-2 sm:px-0 lg:max-w-3xl">
                 <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                  <div className="bg-zinc-800 p-4">
+                  <div className="p-4 bg-zinc-800">
                     <span className="flex items-center">
                       <span className="text-sm font-medium text-gray-200">
                         Greetings!
