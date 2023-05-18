@@ -47,12 +47,12 @@ const Auth = () => {
         <title>Login First</title>
       </Head>
       <div className="relative w-full h-screen">
-        <div className="relative h-screen bg-[url('https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp')] bg-no-repeat bg-center bg-fixed bg-cover">
+        <div className="relative h-screen bg-black sm:bg-[url('https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.webp')] bg-no-repeat bg-center bg-fixed bg-cover">
           <nav className="flex px-12 py-5">
             <Netflix className="h-6" />
           </nav>
           <div className="flex justify-center">
-            <div className="self-center px-16 py-16 mt-2 rounded-md bg-black/90 md:max-w-md">
+            <div className="self-center h-full px-16 py-16 mt-2 rounded-md bg-black/90 md:max-w-md">
               <h2 className="mb-8 text-3xl font-semibold text-white">
                 {variant === 'login' ? 'Sign in' : 'Create an account'}
               </h2>

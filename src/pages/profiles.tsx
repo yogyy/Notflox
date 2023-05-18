@@ -8,6 +8,9 @@ import RootLayout from '@/components/layouts/layout';
 import { useProfileStore } from '../../atoms/modalAtom';
 import 'react-toastify/dist/ReactToastify.css';
 import Footer from '@/components/footer';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { Movie } from '../../typing';
 interface UserCardProps {
   name: string;
   imeg: string;
@@ -15,6 +18,7 @@ interface UserCardProps {
 
 export const UserCard: React.FC<UserCardProps> = ({ name, imeg }) => {
   const nonsessionProfile = useProfileStore((state: any) => state.imaged);
+  const { data: session } = useSession();
 
   return (
     <div className="flex-row mx-auto group w-44">

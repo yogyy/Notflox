@@ -13,6 +13,10 @@ import { useQuery } from '@tanstack/react-query';
 import router from 'next/router';
 import { useSession } from 'next-auth/react';
 import LoaderBlock from '@/components/loader/loaderblock';
+import ModalVid from '@/components/netflix1/ModalVid';
+import { useAtom } from 'jotai';
+import { modalState, movieState } from '../../../atoms/jotaiAtoms';
+import { HomeIcon, PlayIcon } from '@heroicons/react/24/outline';
 
 interface TvProps {
   tv: Movie;
@@ -26,6 +30,8 @@ interface KW {
 }
 
 export default function TvDetails({ tv }: TvProps) {
+  const [currentMovie, setCurrentMovie] = useAtom(movieState);
+  const [showModal, setShowModal] = useAtom(modalState);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [postPerPage, setpostPerPage] = React.useState(6);
   const lastPostIndex = currentPage * postPerPage;
@@ -34,20 +40,12 @@ export default function TvDetails({ tv }: TvProps) {
 
   const { data: similarTVShows, isLoading: isLoadingsimilarTVShows } = useQuery(
     ['similarTv', tv.id],
-    () => axios.get(`/api/tv/recommend/${tv.id}`).then(res => res.data.results),
-    {
-      cacheTime: 60 * 3000,
-      staleTime: 60 * 2000,
-    }
+    () => axios.get(`/api/tv/recommend/${tv.id}`).then(res => res.data.results)
   );
 
   const { data: dataKeywords, isLoading: isLoadingKeywords } = useQuery(
     ['keywordsTv', tv.id],
-    () => axios.get(`/api/tv/keyword/${tv.id}`).then(res => res.data.results),
-    {
-      cacheTime: 60 * 3000,
-      staleTime: 60 * 2000,
-    }
+    () => axios.get(`/api/tv/keyword/${tv.id}`).then(res => res.data.results)
   );
   const similarPaginate = similarTVShows?.slice(firstPostIndex, lastPostIndex);
 
@@ -58,6 +56,7 @@ export default function TvDetails({ tv }: TvProps) {
   }, [session]);
 
   React.useEffect(() => {
+    setShowModal(false);
     setCurrentPage(1);
   }, [tv.id]);
 
@@ -72,6 +71,7 @@ export default function TvDetails({ tv }: TvProps) {
             {tv?.backdrop_path !== null ? (
               <Image
                 src={`${baseUrl}${tv?.backdrop_path || ''}`}
+                className="bg-black/25"
                 fill
                 alt={`banner ${tv?.name}`}
                 priority
@@ -94,17 +94,53 @@ export default function TvDetails({ tv }: TvProps) {
                   draggable={false}
                 />
               </div>
-              <div className="flex justify-center homepage">
-                <h3 className="text-sm text-red-500 hover:text-red-600">
-                  <Link target="_blank" href={tv.homepage}>
-                    Homepage
-                  </Link>
-                </h3>
+              <div className="flex w-full gap-3 mt-3 text-sm md:flex-col">
+                <Link
+                  target="_blank"
+                  href={tv.homepage}
+                  title={`To ${tv.name} Homepage`}
+                  className="flex items-center transition-colors duration-300 group justify-center md:justify-between px-3 py-1.5 w-full hover:font-semibold text-gray-300 border rounded hover:shadow-red-600 shadow-sm hover:bg-[#121212]/20 bg-black/25 hover:border-red-600"
+                >
+                  <span className="hidden md:block">Homepage&nbsp;</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-5 text-gray-300 transition-colors duration-300 group-hover:text-red-600"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 11h-1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-6H3a1 1 0 01-.707-1.707l7-7z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+
+                  {/* <HomeIcon className="w-5 text-gray-300 transition-colors duration-300 group-hover:text-red-600" /> */}
+                </Link>
+                <button
+                  className="flex items-center transition-colors duration-300 group justify-center md:justify-between px-3 py-1.5 w-full hover:font-semibold text-gray-300 border rounded hover:shadow-red-600 shadow-sm hover:bg-[#121212]/20 bg-black/25 hover:border-red-600"
+                  onClick={() => {
+                    setCurrentMovie(tv);
+                    setShowModal(true);
+                  }}
+                  title={`Play ${tv.name} Trailer`}
+                >
+                  <span className="hidden md:block">Trailer&nbsp;</span>
+                  {/* <PlayIcon className="w-5 text-gray-300 transition-colors duration-300 group-hover:text-red-600" /> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-5 text-gray-300 transition-colors duration-300 group-hover:text-red-600"
+                  >
+                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                  </svg>
+                </button>
               </div>
             </div>
             <div className="w-full md:w-7/12">
               <h1 className="text-xl font-semibold text-red-600">
-                {tv?.name}{' '}
+                {tv?.name}&nbsp;
                 <span className="text-gray-300">
                   ({tv?.first_air_date?.slice(0, 4)})
                 </span>
@@ -134,7 +170,7 @@ export default function TvDetails({ tv }: TvProps) {
                 </p>
                 <div className="text-sm text-gray-300">
                   <p>
-                    Studio :{' '}
+                    Studio :&nbsp;
                     {tv?.production_companies
                       .map((studio: ProductionCompany) => studio.name)
                       .join(', ')}
@@ -215,6 +251,7 @@ export default function TvDetails({ tv }: TvProps) {
       ) : (
         <LoaderBlock />
       )}
+      {showModal && <ModalVid showDetail={false} />}
     </RootLayout>
   );
 }

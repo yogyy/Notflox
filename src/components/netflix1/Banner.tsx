@@ -4,13 +4,12 @@ import * as React from 'react';
 import { baseUrl } from '../../../constants/movie';
 import { Movie } from '../../../typing';
 import LongText from './ReadMore';
-import { useRecoilState } from 'recoil';
-import { modalState, movieState } from '../../../atoms/modalAtom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, EffectFade } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import Link from 'next/link';
 
 interface Props {
   banner: Movie[] | undefined;
@@ -38,13 +37,14 @@ export default function Banner({ banner }: Props) {
         >
           {banner?.map((anime, index) => (
             <SwiperSlide key={anime.id}>
-              <div className="relative w-screen h-[56.25vw] object-cover brightness-50">
+              <div className="relative w-screen h-[56.25vw] bg-[#121212] object-cover brightness-50">
                 <Image
                   src={`${baseUrl}${
                     anime?.backdrop_path || anime?.poster_path
                   }`}
                   fill
                   alt="banner"
+                  className="bg-[#121212]"
                   priority
                   draggable={false}
                 />
@@ -55,7 +55,15 @@ export default function Banner({ banner }: Props) {
                   {anime?.title || anime?.name || anime?.original_name}
                 </h1>
                 <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
-                  <LongText text={anime?.overview} maxLength={150} />
+                  <LongText
+                    href={
+                      anime.media_type === 'tv'
+                        ? `/tv/${anime.id}`
+                        : `/movie/${anime.id}`
+                    }
+                    text={anime?.overview}
+                    maxLength={120}
+                  />
                 </p>
               </div>
             </SwiperSlide>
