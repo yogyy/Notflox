@@ -2,16 +2,16 @@ import Banner from '@/components/netflix1/Banner';
 import { RowLanscape, RowPotrait } from '@/components/netflix1/Row';
 import requests, { API_KEY, BASE_URL } from '@/utils/request';
 import { Movie } from '../../typing';
-import { useRecoilValue } from 'recoil';
 import * as React from 'react';
 import ModalVid from '@/components/netflix1/ModalVid';
-import { modalState } from '../../atoms/modalAtom';
 import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useAtom } from 'jotai';
+import { modalState } from '../../atoms/jotaiAtoms';
 
 interface Props {
   trendingNow: Movie[];
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const HomeSsr = () => {
-  const showModal = useRecoilValue(modalState);
+  const showModal = useAtom(modalState);
 
   const { data: trendingNetflix } = useQuery<Movie[] | undefined>(
     ['TrendingNetflix'],
@@ -55,7 +55,7 @@ const HomeSsr = () => {
             />
             {airToday?.length !== 0 && (
               <div className="">
-                <h2 className="w-56 ml-5 cursor-pointer text-sm font-semibold text-primary transition duration-200 hover:text-primary/60 md:text-2xl">
+                <h2 className="w-56 ml-5 text-sm font-semibold transition duration-200 cursor-pointer text-primary hover:text-primary/60 md:text-2xl">
                   Released Today
                 </h2>
                 <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">

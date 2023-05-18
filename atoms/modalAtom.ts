@@ -1,24 +1,23 @@
-import { atom } from 'recoil';
 import { Movie } from '../typing';
 import { create } from 'zustand';
 import { ImageProps } from 'next/image';
 
-export const modalState = atom({
-  key: 'modalState',
-  default: false,
-});
+// export const modalState = atom({
+//   key: 'modalState',
+//   default: false,
+// });
 
-export const movieState = atom<Movie | null>({
-  key: 'movieState',
-  default: null,
-});
+// export const movieState = atom<Movie | null>({
+//   key: 'movieState',
+//   default: null,
+// });
 
-const images = [
-  '/images/default-blue.png',
-  '/images/default-red.png',
-  '/images/default-slate.png',
-  '/images/default-green.png',
-];
+// const images = [
+//   '/images/default-blue.png',
+//   '/images/default-red.png',
+//   '/images/default-slate.png',
+//   '/images/default-green.png',
+// ];
 
 interface AppState {
   showModal: boolean;

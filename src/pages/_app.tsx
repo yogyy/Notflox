@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
-import { RecoilRoot } from 'recoil';
 
 import '@/styles/nprogress.css';
 import { Router } from 'next/router';
@@ -13,6 +12,7 @@ import {
 } from '@tanstack/react-query';
 import * as React from 'react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Provider } from 'jotai';
 
 Router.events.on('routeChangeStart', nProgress.start);
 Router.events.on('routeChangeError', nProgress.done);
@@ -24,8 +24,8 @@ export default function App({ Component, pageProps }: AppProps) {
       new QueryClient({
         defaultOptions: {
           queries: {
-            cacheTime: 3600000, // 1 hour
-            staleTime: 600000, // 10 minutes
+            cacheTime: 1800000,
+            staleTime: 600000,
             refetchOnWindowFocus: false,
           },
         },
@@ -33,14 +33,14 @@ export default function App({ Component, pageProps }: AppProps) {
   );
   return (
     <SessionProvider session={pageProps.session}>
-      <RecoilRoot>
+      <Provider>
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
         </QueryClientProvider>
-      </RecoilRoot>
+      </Provider>
     </SessionProvider>
   );
 }
