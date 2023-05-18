@@ -20,9 +20,9 @@ const NavbarItem = ({ className }: NavItem) => {
           key={link.name}
           className={`${
             router.pathname && baseRoute !== link.url
-              ? 'text-white'
-              : 'text-primary font-bold'
-          } cursor-pointer hover:text-primary/60 transition-colors`}
+              ? 'text-white focus-visible:ring-red-600'
+              : 'text-primary font-bold focus-visible:ring-white'
+          } cursor-pointer hover:text-primary/60 transition-colors px-1 focus:outline-none focus-visible:ring-2  rounded`}
         >
           {link.name}
         </Link>
@@ -35,7 +35,7 @@ export default NavbarItem;
 
 const links = [
   { name: 'Home', url: '/' },
-  { name: 'Series', url: '/tv' },
+  { name: 'Tv Show', url: '/tv' },
   { name: 'Movies', url: '/movie' },
   { name: 'Anime', url: '/anime' },
 ];

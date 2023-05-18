@@ -29,7 +29,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="w-full fixed z-20">
+    <nav className="fixed z-20 w-full">
       <div
         className={`pr-4 pl-3 lg:px-4 py-3 lg:py-6 flex flex-row items-center transition duration-500 ${
           showBackground ? 'bg-zinc-900/90' : ''
@@ -37,12 +37,16 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-">
           <Drawer />
-          <Link href="/">
+          <Link
+            href="/"
+            className="focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus:py-1"
+            title="beranda Notflox"
+          >
             <Netflix className="h-4 lg:h-7" />
           </Link>
         </div>
-        <NavbarItem className="flex-row ml-8 gap-7 hidden md:flex" />
-        <div className="relative flex flex-row ml-auto gap-3 md:gap-5 items-center">
+        <NavbarItem className="flex-row hidden ml-8 gap-7 md:flex" />
+        <div className="relative flex flex-row items-center gap-3 ml-auto md:gap-5">
           <div className="">
             <Search />
           </div>

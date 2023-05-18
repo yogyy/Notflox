@@ -95,7 +95,8 @@ const Search = () => {
         onClick={() => {
           session ? setShowInput(!showInput) : error();
         }}
-        className="ml-4 text-gray-200 transition rounded-full cursor-pointer hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+        title="Search Movie"
+        className="ml-4 text-gray-200 transition rounded-full cursor-pointer hover:text-gray-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
       >
         <MagnifyingGlassIcon
           className={`${

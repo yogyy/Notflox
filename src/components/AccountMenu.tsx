@@ -18,7 +18,7 @@ export default function AccountMenux() {
     <div className="relative w-[40px] h-[40px]">
       <Menu as="div">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center rounded-full bg-black bg-opacity-20 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <Menu.Button className="inline-flex justify-center w-full text-sm font-medium text-white bg-black rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
             {
               <Image
                 width={40}
@@ -44,7 +44,7 @@ export default function AccountMenux() {
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt- w-56 origin-top-right rounded-md bg-zinc-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Menu.Items className="absolute right-0 w-56 origin-top-right rounded-md shadow-lg mt- bg-zinc-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1 ">
               <Menu.Item>
                 {({ active }) => (
@@ -65,7 +65,7 @@ export default function AccountMenux() {
                       }
                       alt=""
                     />
-                    <p className="text-white text-sm group-hover/item:underline">
+                    <p className="text-sm text-white group-hover/item:underline">
                       {session.data?.user?.name || 'Profile'}
                     </p>
                   </Link>
@@ -84,7 +84,7 @@ export default function AccountMenux() {
                       active ? 'bg-[#1c1c1c] ' : ''
                     }text-white group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2`}
                   >
-                    <span className="w-8 h-8 flex justify-center">
+                    <span className="flex justify-center w-8 h-8">
                       {session.data !== null ? (
                         <ArrowRightOnRectangleIcon className="w-6" />
                       ) : (
