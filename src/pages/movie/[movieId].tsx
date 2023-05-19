@@ -183,7 +183,7 @@ export default function MovieDetails({ movie }: Props) {
               {isLoadingKeywords ? (
                 <div className="flex flex-wrap items-center gap-2 py-2 mx-3 mt-5 xl:mb-52">
                   <h1 id="similar-tv-container" className="px-3">
-                    Tags :
+                    Keywords :
                   </h1>
                   {[...Array(12)].map((_, index) => (
                     <div
@@ -195,7 +195,7 @@ export default function MovieDetails({ movie }: Props) {
               ) : (
                 <div className="flex flex-wrap items-center py-2 mt-5 xl:mb-52">
                   <h1 id="similar-tv-container" className="px-3">
-                    Tags :
+                    Keywords :
                   </h1>
                   {dataKeywords?.map((keyword: KW) => (
                     <p
