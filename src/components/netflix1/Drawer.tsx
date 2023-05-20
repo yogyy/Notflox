@@ -31,18 +31,18 @@ export default function TemporaryDrawer() {
     };
 
   return (
-    <div className="md:hidden flex items-center">
+    <div className="sm:hidden flex items-center">
       <button className="text-red-600" onClick={toggleDrawer('left', true)}>
-        <Bars3BottomLeftIcon className="w-8" />
+        <Bars3BottomLeftIcon className="w-5" />
       </button>
       <Drawer
         anchor="left"
         open={state['left']}
         onClose={toggleDrawer('left', false)}
         disableEnforceFocus
-        className="z-50"
+        className="z-30"
       >
-        <div className="w-[60vw] sm:w-[200px] bg-[#131313] h-full px-4 py-2">
+        <div className="w-[200px] sm:hidden bg-[#131313] h-full px-4 py-2">
           {/* <div className="flex md:hidden justify-end mt-2 mr-2 p-1 text-white">
             <Search />
           </div> */}

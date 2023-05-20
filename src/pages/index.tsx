@@ -19,43 +19,44 @@ import LoaderBlock from '@/components/loader/loaderblock';
 import Loading from '@/components/loader/loading';
 import { useAtom } from 'jotai';
 import { modalState } from '../../atoms/jotaiAtoms';
+import { GetServerSidePropsContext } from 'next';
 
-interface Props {
-  trendingNetflix: Movie[];
+interface User {
+  id: string;
+  name: string;
+  email: string;
 }
 
-const Movies = ({ trendingNetflix }: Props) => {
+interface Session {
+  user: User;
+  expires: string;
+}
+
+const Movies = (session: Session) => {
   const [showModal, setShowModal] = useAtom(modalState);
-  const { data: session } = useSession();
-  const router = useRouter();
-  React.useEffect(() => {
-    if (session === null) {
-      router.push('/auth');
-    }
-  }, [router, session]);
 
   React.useEffect(() => {
     setShowModal(false);
   }, []);
 
-  // const { data: topRatedNetflix, isLoading: loadingToprated } = useQuery<
-  //   Movie[] | undefined
-  // >(['TopRatedNetflix'], () =>
-  //   axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results));
-  // const { data: airToday, isLoading: loadingAirtdy } = useQuery<
-  //   Movie[] | undefined
-  // >(['AirToday'], () =>
-  //   axios.get(requests.fetchAirToday).then(res => res.data.results)
-  // );
-  // const { data: popularNetflix, isLoading: loadingPopular } = useQuery<
-  //   Movie[] | undefined
-  // >(['PopularNetflix'], () =>
-  //   axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
-  // );
-
-  const { data: notflox, isLoading: LoadingNotflox } = useQuery(
-    ['fetchNotflox'],
-    () => axios.get('/api/notflox').then(res => res.data)
+  const { data: trendingNetflix, isLoading: loadingTrending } = useQuery(
+    ['fetchTrending'],
+    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
+  );
+  const { data: topRatedNetflix, isLoading: loadingToprated } = useQuery<
+    Movie[] | undefined
+  >(['TopRatedNetflix'], () =>
+    axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results)
+  );
+  const { data: airToday, isLoading: loadingAirtdy } = useQuery<
+    Movie[] | undefined
+  >(['AirToday'], () =>
+    axios.get(requests.fetchAirToday).then(res => res.data.results)
+  );
+  const { data: popularNetflix, isLoading: loadingPopular } = useQuery<
+    Movie[] | undefined
+  >(['PopularNetflix'], () =>
+    axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
   );
 
   return (
@@ -64,7 +65,7 @@ const Movies = ({ trendingNetflix }: Props) => {
         <>
           <div className="main">
             <section>
-              {LoadingNotflox ? (
+              {loadingTrending ? (
                 <div className="relative h-[56.25vw] mb-10">
                   <Loading />
                 </div>
@@ -73,8 +74,8 @@ const Movies = ({ trendingNetflix }: Props) => {
               )}
             </section>
             <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
-              {LoadingNotflox ? (
-                <RowPotraitLoading />
+              {loadingTrending ? (
+                <RowLanscapeLoading />
               ) : (
                 <RowLanscape
                   className=""
@@ -82,17 +83,17 @@ const Movies = ({ trendingNetflix }: Props) => {
                   movies={trendingNetflix!}
                 />
               )}
-              {LoadingNotflox ? (
+              {loadingAirtdy ? (
                 <RowPotraitLoading />
               ) : (
                 <div className="">
-                  {notflox.airToday?.length !== 0 && (
+                  {airToday?.length !== 0 && (
                     <div className="">
                       <h2 className="ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
                         Released Today
                       </h2>
                       <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                        {notflox.airToday?.map((movie: Movie) => (
+                        {airToday?.map((movie: Movie) => (
                           <div key={movie.id} className="mt-1">
                             <ThumbnailPotrait movie={movie} />
                           </div>
@@ -102,22 +103,22 @@ const Movies = ({ trendingNetflix }: Props) => {
                   )}
                 </div>
               )}
-              {LoadingNotflox ? (
+              {loadingToprated ? (
                 <RowPotraitLoading />
               ) : (
                 <RowPotrait
                   className="text-primary"
                   title="Top Rated"
-                  movies={notflox.topRatedNetflix}
+                  movies={topRatedNetflix!}
                 />
               )}
-              {LoadingNotflox ? (
+              {loadingPopular ? (
                 <RowLanscapeLoading />
               ) : (
                 <RowLanscape
                   className=""
                   title="Popular Show"
-                  movies={notflox.popularNetflix}
+                  movies={popularNetflix!}
                 />
               )}
             </section>
@@ -133,14 +134,21 @@ const Movies = ({ trendingNetflix }: Props) => {
 
 export default Movies;
 
-export const getStaticProps = async () => {
-  const trendingNetflix = await fetch(requests.fetchTrendingNetflix).then(res =>
-    res.json()
-  );
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/auth',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
-      trendingNetflix: trendingNetflix.results,
+      session,
     },
-    revalidate: 3600,
   };
-};
+}

@@ -53,7 +53,7 @@ const AnimePage = () => {
         <>
           <div className="mx-3 main">
             <div className="flex flex-col justify-center xl:flex-row max-w-[1300px] mx-auto gap-5">
-              <section className="flex flex-col pt-20">
+              <section className="flex flex-col pt-16">
                 <div className="flex">
                   <div className="w-full relative lg:px-0 m-auto lg:w-[948px]">
                     {isLoadingBannerAnime ? (
@@ -163,7 +163,7 @@ const AnimePage = () => {
               </section>
               <section
                 id="popular-tv-week"
-                className="mt-20 bg-[#1C1C1C] p-2 rounded xl:mx-0 h-max"
+                className="mt-16 bg-[#1C1C1C] p-2 rounded xl:mx-0 h-max"
               >
                 <h1 className="mb-2 text-xl font-semibold text-primary">
                   Popular Anime Weekly

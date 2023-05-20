@@ -18,8 +18,8 @@ const RootLayout = ({
       <Head>
         <title>{`${title} | NOTFLOX`}</title>
       </Head>
-      <div className="bgpattern">
-        <header>
+      <div className="bgpattern relative">
+        <header className="sticky top-0 z-20">
           <Navbar />
         </header>
         <main className={poppins.className}>{children}</main>
