@@ -2,14 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  @apply h-full;
-  scroll-behavior: smooth !important;
-}
-
+html,
 body {
-  @apply h-full;
+  width: 100%;
   overflow-x: hidden;
+  scroll-behavior: smooth !important;
 }
 
 #_next {
