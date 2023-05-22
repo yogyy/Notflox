@@ -74,7 +74,7 @@ function ModalVid({ showDetail }: modalProps) {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
+            <div className="fixed inset-0 bg-black bg-opacity-60" />
           </Transition.Child>
           <div
             className={clsx(
@@ -92,9 +92,9 @@ function ModalVid({ showDetail }: modalProps) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="max-w-5xl w-[64rem] transform rounded-2xl text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="max-w-5xl w-[64rem] transform rounded-2xl text-left align-middle shadow-xl transition-all bg-[#121212]/95">
                   <div className="text-lg font-medium leading-6 text-gray-300">
-                    <div className="relative max-w-5xl w-full h-auto aspect-video">
+                    <button className="relative max-w-5xl w-full h-auto aspect-video focus:outline-none">
                       {trailer && !videoError ? (
                         <ReactPlayer
                           url={`https://www.youtube.com/watch?v=${trailer}`}
@@ -131,13 +131,22 @@ function ModalVid({ showDetail }: modalProps) {
                           draggable={false}
                         />
                       )}
-                    </div>
+                    </button>
                     {showDetail === true && (
-                      <div className="flex space-x-16 rounded-b-md bg-[#121212]/95 px-10 py-8">
+                      <div className="flex space-x-16 rounded-b-md  px-10 py-8">
                         <div className="space-y-6 text-lg">
-                          <h1 className="text-xl font-bold">
-                            {movie?.title || movie?.name}
-                          </h1>
+                          <div className="flex justify-between">
+                            <h1 className="text-xl font-bold">
+                              {movie?.title || movie?.name}
+                            </h1>
+                            <button
+                              title="close"
+                              onClick={handleClose}
+                              className="bg-black p-1.5 rounded-full"
+                            >
+                              <XMarkIcon className="w-5 font-bold" />
+                            </button>
+                          </div>
                           <div className="flex items-center space-x-2 text-sm ">
                             <p className="text-sm font-semibold text-green-400">
                               {movie &&
