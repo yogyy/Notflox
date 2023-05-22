@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Movie } from '../../../typing';
 import Image from 'next/image';
-import { API_KEY } from '@/utils/request';
 import Link from 'next/link';
 import { ClockIcon, FolderIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
@@ -22,7 +21,7 @@ export default function Recomend({ movies, title, className }: reccomend) {
       )}
     >
       <h2 className="text-xl font-semibold text-[#fcfbfb]">{title}</h2>
-      <div className="group relative">
+      <div className="relative group">
         <div className="">
           {movies &&
             movies.map(movie => <Thumbnail key={movie.id} movie={movie} />)}
@@ -66,14 +65,14 @@ function Thumbnail({ movie }: Props) {
             >
               <Image
                 src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-                className="rounded-sm object-cover md:rounded float-left hover:brightness-50 skeleton"
+                className="float-left object-cover rounded-sm md:rounded hover:brightness-50 skeleton"
                 fill
                 sizes="100%"
-                alt={`Thumbnail ${movie?.name}`}
+                alt={`Thumbnail ${movie.name || movie.title}`}
                 draggable={false}
               />
             </Link>
-            <p className="flex-1 text-gray-400 text-sm">
+            <p className="flex-1 text-gray-400 text-sm max-h-[150px] md:max-h-[249px] overflow-y-scroll scrollbar-hide">
               {movie.overview} <br />
             </p>
           </div>

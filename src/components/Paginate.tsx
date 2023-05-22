@@ -28,7 +28,8 @@ export const Paginate = ({
       {pages.map((page, index) => {
         const isActive = page === currentPage;
         return (
-          <button
+          <Link
+            href="#similar-tv-container"
             className={`w-3 h-3 p-3 text-xs flex my-2 justify-center items-center bg-red-600 rounded-full ${
               isActive ? 'border-2' : ''
             }`}
@@ -37,8 +38,8 @@ export const Paginate = ({
               setCurrentPage(page);
             }}
           >
-            <Link href="#similar-tv-container">{page}</Link>
-          </button>
+            {page}
+          </Link>
         );
       })}
     </div>
