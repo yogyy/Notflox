@@ -4,7 +4,7 @@ import { Netflix } from './icons';
 
 export default function Footer() {
   return (
-    <footer className="bg-base-100 transition-colors">
+    <footer className="bg-[#121212] transition-colors">
       <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
       <div className="pb-4 max-w-[1300px] mx-auto ml-0 sm:ml-4 relative">
         <div className="">

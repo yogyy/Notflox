@@ -1,10 +1,7 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import NavbarItem from '../NavbarItem';
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline';
-import Search from './Search';
 import { Netflix } from '../icons';
 
 type Anchor = 'left';

@@ -12,7 +12,7 @@ import ModalVid from '@/components/netflix1/ModalVid';
 import { getSession, useSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
-import { useQuery } from '@tanstack/react-query';
+import { QueryClient, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import LoaderBlock from '@/components/loader/loaderblock';
@@ -41,22 +41,43 @@ const Movies = (session: Session) => {
 
   const { data: trendingNetflix, isLoading: loadingTrending } = useQuery(
     ['fetchTrending'],
-    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
+    () =>
+      axios.get(requests.fetchTrendingNetflix).then(res => res.data.results),
+    {
+      cacheTime: 1800000,
+      staleTime: 600000,
+    }
   );
   const { data: topRatedNetflix, isLoading: loadingToprated } = useQuery<
     Movie[] | undefined
-  >(['TopRatedNetflix'], () =>
-    axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results)
+  >(
+    ['TopRatedNetflix'],
+    () =>
+      axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results),
+    {
+      cacheTime: 1800000,
+      staleTime: 600000,
+    }
   );
   const { data: airToday, isLoading: loadingAirtdy } = useQuery<
     Movie[] | undefined
-  >(['AirToday'], () =>
-    axios.get(requests.fetchAirToday).then(res => res.data.results)
+  >(
+    ['AirToday'],
+    () => axios.get(requests.fetchAirToday).then(res => res.data.results),
+    {
+      cacheTime: 1800000,
+      staleTime: 600000,
+    }
   );
   const { data: popularNetflix, isLoading: loadingPopular } = useQuery<
     Movie[] | undefined
-  >(['PopularNetflix'], () =>
-    axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
+  >(
+    ['PopularNetflix'],
+    () => axios.get(requests.fetchPopularNetflix).then(res => res.data.results),
+    {
+      cacheTime: 1800000,
+      staleTime: 600000,
+    }
   );
 
   return (
