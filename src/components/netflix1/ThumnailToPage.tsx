@@ -12,15 +12,15 @@ export function ThumbnailPotrait({ movie }: Props) {
     <Link
       href={`/${movie?.release_date ? 'movie' : 'tv'}/${movie?.id}`}
       title={movie.name || movie.title}
-      className="cursor-pointer transition duration-200 ease-out hover:brightness-75 w-full h-full p-0.5"
+      className="focus:opacity-70 hover:opacity-70"
     >
-      <div className="relative aspect-[9/14] w-[92px] md:w-[164px] h-full bg-zinc-900 rounded">
+      <div className="relative aspect-[9/14] min-w-full w-[92px] h-full bg-zinc-900 rounded">
         <Image
           src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
           className="object-cover rounded-sm md:rounded"
           fill
           sizes="100%"
-          alt={`Thumbnail ${movie?.name}`}
+          alt={`Thumbnail ${movie.name || movie.title}`}
           draggable={false}
         />
       </div>
@@ -30,20 +30,23 @@ export function ThumbnailPotrait({ movie }: Props) {
 
 export function ThumbnailLanscape({ movie }: Props) {
   return (
-    <Link
-      href={`/${movie?.media_type === 'movie' ? 'movie' : 'tv'}/${movie?.id}`}
-      title={movie.name || movie.title}
-    >
-      <div className="relative aspect-video h-[150px] xl:h-[225px]">
-        <Image
-          src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
-          className="object-cover rounded-sm md:rounded"
-          fill
-          sizes="100%"
-          alt={`Thumbnail ${movie?.name}`}
-          draggable={false}
-        />
-      </div>
-    </Link>
+    <div className="">
+      <Link
+        href={`/${movie?.media_type === 'movie' ? 'movie' : 'tv'}/${movie?.id}`}
+        title={movie.name || movie.title}
+        className="w-full focus:opacity-70 hover:opacity-70"
+      >
+        <div className="relative aspect-video min-w-full w-[96.43px] bg-zinc-900 rounded">
+          <Image
+            src={`https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`}
+            className="object-cover rounded-sm md:rounded"
+            fill
+            sizes="100%"
+            alt={`Thumbnail ${movie.name || movie.title}`}
+            draggable={false}
+          />
+        </div>
+      </Link>
+    </div>
   );
 }

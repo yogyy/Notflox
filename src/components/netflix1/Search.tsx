@@ -20,6 +20,7 @@ const Search = () => {
   function closeModal() {
     setOpen(false);
     setShowInput(false);
+    setQuery('');
   }
 
   function openModal() {
@@ -76,6 +77,7 @@ const Search = () => {
     document.addEventListener('keydown', down);
 
     return () => document.removeEventListener('keydown', down);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const error = () =>
@@ -182,16 +184,11 @@ const Search = () => {
                               >
                                 <Link
                                   onClick={closeModal}
-                                  href={{
-                                    pathname: `/${
-                                      result.media_type == 'movie'
-                                        ? 'movie'
-                                        : 'tv'
-                                    }/${result.id}`,
-                                    query: {
-                                      title: `${result.name || result.title}`,
-                                    },
-                                  }}
+                                  href={`/${
+                                    result.media_type == 'movie'
+                                      ? 'movie'
+                                      : 'tv'
+                                  }/${result.id}`}
                                   // href="#"
                                   className={clsx(
                                     'w-full px-2 py-2 flex justify-between outline-none',

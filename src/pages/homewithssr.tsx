@@ -1,17 +1,21 @@
 import Banner from '@/components/netflix1/Banner';
-import { RowLanscape, RowPotrait } from '@/components/netflix1/Row';
-import requests, { API_KEY, BASE_URL } from '@/utils/request';
+
+import requests from '@/utils/request';
 import { Movie } from '../../typing';
 import * as React from 'react';
 import ModalVid from '@/components/netflix1/ModalVid';
 import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAtom } from 'jotai';
 import { modalState } from '../../atoms/jotaiAtoms';
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/netflix1/SwiperPlayTrailer';
 
 interface Props {
   trendingNow: Movie[];
@@ -48,27 +52,37 @@ const HomeSsr = () => {
             <Banner banner={trendingNetflix?.slice(0, 5)} />
           </section>
           <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
-            <RowLanscape
+            <SwiperLanscape
               className=""
               title="Trending Now Netflix"
               movies={trendingNetflix!}
             />
             {airToday?.length !== 0 && (
               <div className="">
-                <h2 className="w-56 ml-5 text-sm font-semibold transition duration-200 cursor-pointer text-primary hover:text-primary/60 md:text-2xl">
-                  Released Today
-                </h2>
-                <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
-                  {airToday?.map(movie => (
-                    <div key={movie.id} className="mt-1">
-                      <ThumbnailPotrait movie={movie} />
+                {airToday?.length !== 0 && (
+                  <div className="">
+                    <h2 className="ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
+                      Released Today
+                    </h2>
+                    <div className="flex items-center gap-2 px-2 space-x-3 w-fit containermoviecard">
+                      {airToday?.map((movie: Movie) => (
+                        <div key={movie.id} className="mt-1 moviecard">
+                          <ThumbnailPotrait
+                            className="md:w-[158.63px]"
+                            movie={movie}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             )}
-            <RowPotrait title="Top Rated Netflix" movies={topRatedNetflix!} />
-            <RowLanscape
+            <SwiperPotrait
+              title="Top Rated Netflix"
+              movies={topRatedNetflix!}
+            />
+            <SwiperLanscape
               className=""
               title="Popular Show"
               movies={popularNetflix!}

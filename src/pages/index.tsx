@@ -1,25 +1,26 @@
 import Banner from '@/components/netflix1/Banner';
 import {
-  RowLanscapeLoading,
-  RowLanscape,
-  RowPotrait,
-  RowPotraitLoading,
-} from '@/components/netflix1/Row';
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/netflix1/SwiperPlayTrailer';
 import requests from '@/utils/request';
 import { Movie } from '../../typing';
 import * as React from 'react';
 import ModalVid from '@/components/netflix1/ModalVid';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import { ThumbnailPotrait } from '@/components/netflix1/Thumbnail';
 import RootLayout from '@/components/layouts/layout';
-import { QueryClient, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import LoaderBlock from '@/components/loader/loaderblock';
 import Loading from '@/components/loader/loading';
 import { useAtom } from 'jotai';
 import { modalState } from '../../atoms/jotaiAtoms';
 import { GetServerSidePropsContext } from 'next';
+import {
+  SwiperLanscapeLoading,
+  SwiperPotraitLoading,
+} from '@/components/loader/swiperloader';
 
 interface User {
   id: string;
@@ -37,6 +38,7 @@ const Movies = (session: Session) => {
 
   React.useEffect(() => {
     setShowModal(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { data: trendingNetflix, isLoading: loadingTrending } = useQuery(
@@ -94,18 +96,18 @@ const Movies = (session: Session) => {
                 <Banner banner={trendingNetflix?.slice(0, 5)} />
               )}
             </section>
-            <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
+            <section className="space-y-7 mx-auto relative xl:-mt-72 max-w-[1300px] z-[2]">
               {loadingTrending ? (
-                <RowLanscapeLoading />
+                <SwiperLanscapeLoading />
               ) : (
-                <RowLanscape
+                <SwiperLanscape
                   className=""
                   title="Trending Now"
                   movies={trendingNetflix!}
                 />
               )}
               {loadingAirtdy ? (
-                <RowPotraitLoading />
+                <SwiperPotraitLoading />
               ) : (
                 <div className="">
                   {airToday?.length !== 0 && (
@@ -113,10 +115,13 @@ const Movies = (session: Session) => {
                       <h2 className="ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
                         Released Today
                       </h2>
-                      <div className="flex items-center space-x-2 overflow-x-scroll scrollbar-hide md:space-x-2.5 px-2">
+                      <div className="flex items-center gap-2 px-2 space-x-3 w-fit containermoviecard">
                         {airToday?.map((movie: Movie) => (
-                          <div key={movie.id} className="mt-1">
-                            <ThumbnailPotrait movie={movie} />
+                          <div key={movie.id} className="mt-1 moviecard">
+                            <ThumbnailPotrait
+                              className="md:w-[158.63px]"
+                              movie={movie}
+                            />
                           </div>
                         ))}
                       </div>
@@ -125,18 +130,14 @@ const Movies = (session: Session) => {
                 </div>
               )}
               {loadingToprated ? (
-                <RowPotraitLoading />
+                <SwiperPotraitLoading />
               ) : (
-                <RowPotrait
-                  className="text-primary"
-                  title="Top Rated"
-                  movies={topRatedNetflix!}
-                />
+                <SwiperPotrait title="Top Rated" movies={topRatedNetflix!} />
               )}
               {loadingPopular ? (
-                <RowLanscapeLoading />
+                <SwiperLanscapeLoading />
               ) : (
-                <RowLanscape
+                <SwiperLanscape
                   className=""
                   title="Popular Show"
                   movies={popularNetflix!}

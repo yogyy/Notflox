@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { baseUrl } from '../../../constants/movie';
 import { ProductionCompany } from '../../../typing';
 import { tanggal } from '@/lib/getDate';
-import router from 'next/router';
 import { useSession } from 'next-auth/react';
 import LoaderBlock from '@/components/loader/loaderblock';
 import ModalVid from '@/components/netflix1/ModalVid';
@@ -15,6 +14,12 @@ import { useAtom } from 'jotai';
 import { modalState, movieState } from '../../../atoms/jotaiAtoms';
 import Keywords from '@/components/keywords';
 import Similars from '@/components/similars';
+import { useRouter } from 'next/router';
+import { kebabCase } from 'lodash';
+import nProgress from 'nprogress';
+import { PlayIcon } from '@/components/icons/play';
+import ButtonTrailer from '@/components/UI/ButtonTrailer';
+import clsx from 'clsx';
 
 interface Props {
   movie: Movie;
@@ -24,6 +29,7 @@ interface Props {
 export default function MovieDetails({ movie }: Props) {
   const [currentMovie, setCurrentMovie] = useAtom(movieState);
   const [showModal, setShowModal] = useAtom(modalState);
+  const router = useRouter();
 
   const { data: session } = useSession();
 
@@ -31,11 +37,18 @@ export default function MovieDetails({ movie }: Props) {
     if (session === null) {
       router.push('/auth');
     }
-  }, [session]);
+  }, [router, session]);
 
   React.useEffect(() => {
+    router.replace(`${movie.id}?${kebabCase(movie.title)}`);
     setShowModal(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movie.id]);
+
+  const playTrailer = () => {
+    setCurrentMovie(movie);
+    setShowModal(true);
+  };
 
   return (
     <RootLayout title={movie.title}>
@@ -55,7 +68,13 @@ export default function MovieDetails({ movie }: Props) {
             />
             <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
           </div>
-          <div className="relative mx-auto md:justify-center md:-mt-[20%] lg:-mt-[40%] flex gap-5 flex-col md:flex-row px-5 items-center md:items-start pt-4 bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20 md:bg-none">
+          <div
+            className={clsx(
+              'relative mx-auto flex gap-5 flex-col px-5 items-center pt-4',
+              'md:justify-center md:flex-row md:items-start md:bg-none md:-mt-[20%] lg:-mt-[40%]',
+              'bg-gradient-to-b from-[#5f5f5f]/20 to-[#121212]/20'
+            )}
+          >
             <div className="relative h-full gap-3 md:flex md:flex-col">
               <div className="relative w-[165px] h-[255px] -mt-32 rounded md:mt-0 ">
                 <Image
@@ -68,45 +87,26 @@ export default function MovieDetails({ movie }: Props) {
                 />
               </div>
               <div className="flex w-full gap-2 mt-2 text-sm md:flex-col">
-                <button
-                  className="flex items-center transition-colors duration-300 group justify-center md:justify-between px-3 py-1.5 w-full hover:font-semibold text-gray-300 border rounded hover:shadow-red-600 shadow-sm hover:bg-[#121212]/20 bg-black/25 hover:border-red-600"
-                  onClick={() => {
-                    setCurrentMovie(movie);
-                    setShowModal(true);
-                  }}
+                <ButtonTrailer
+                  onClick={playTrailer}
                   title={`Play ${movie?.title} Trailer`}
-                >
-                  <span className="hidden md:block">Trailer&nbsp;</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    className="w-5 text-gray-300 transition-colors duration-300 group-hover:text-red-600"
-                  >
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </button>
+                />
               </div>
             </div>
             <div className="w-full md:w-7/12">
-              <h1 className="text-xl font-semibold text-red-600 w-fit">
-                {movie.title}&nbsp;
-                <span className="text-gray-300">
-                  ({movie.release_date?.slice(0, 4)})
-                </span>
-              </h1>
-              <h2 className="text-gray-500">{movie?.original_title}</h2>
-              <p className="text-sm text-gray-400 lg:text-base">
-                {movie.overview}
-              </p>
-              <hr className="my-2 border-zinc-800" />
-              <div className="text-sm text-gray-300">
+              <div className="pb-2 border-b border-zinc-800">
+                <h1 className="text-xl font-semibold text-red-600 w-fit">
+                  {movie.title}&nbsp;
+                  <span className="text-gray-300">
+                    ({movie.release_date?.slice(0, 4)})
+                  </span>
+                </h1>
+                <h2 className="text-gray-500">{movie?.original_title}</h2>
+                <p className="text-sm text-gray-400 lg:text-base">
+                  {movie.overview}
+                </p>
+              </div>
+              <div className="pb-2 mt-3 text-sm text-gray-300 border-b border-zinc-800">
                 <p>Aired : {tanggal(movie.release_date)}</p>
                 <p>Status : {movie.status}</p>
                 <div className="text-gray-300">
@@ -130,7 +130,6 @@ export default function MovieDetails({ movie }: Props) {
                   </p>
                 </div>
               </div>
-              <hr className="mt-2 mb-12 border-zinc-800" />
             </div>
           </div>
           <div>

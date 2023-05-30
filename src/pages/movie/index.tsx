@@ -1,7 +1,10 @@
 import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
 import RootLayout from '@/components/layouts/layout';
-import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/netflix1/SwiperToPage';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -30,14 +33,14 @@ const Movies = ({ trendingNow, topRated, newRelease }: Props) => {
           <div className="">
             <Banner banner={trendingNow.slice(0, 5)} />
           </div>
-          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-            <RowLanscape
+          <section className="space-y-7 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
+            <SwiperLanscape
               className=""
               title="Trending Now"
-              movies={trendingNow}
+              movies={trendingNow.slice(0, 10)}
             />
-            <RowPotrait title="New Release" movies={newRelease} />
-            <RowPotrait title="Top Rated" movies={topRated} />
+            <SwiperPotrait title="New Release" movies={newRelease} />
+            <SwiperPotrait title="Top Rated" movies={topRated.slice(0, 10)} />
           </section>
         </>
       ) : (

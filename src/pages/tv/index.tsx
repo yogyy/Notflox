@@ -2,7 +2,10 @@ import Banner from '@/components/netflix1/Banner';
 import requests from '@/utils/request';
 import { useSession } from 'next-auth/react';
 import RootLayout from '@/components/layouts/layout';
-import { RowLanscape, RowPotrait } from '@/components/netflix1/RowToPage';
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/netflix1/SwiperToPage';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import LoaderBlock from '@/components/loader/loaderblock';
@@ -28,10 +31,16 @@ const Tv = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
       {session ? (
         <>
           <Banner banner={trendingNow.slice(0, 5)} />
-          <section className="space-y-12 md:space-y-10 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-            <RowLanscape title="Tv Show Trending" movies={trendingNow} />
-            <RowPotrait title="Now Playing" movies={fetchNowPlaying} />
-            <RowPotrait title="Top Rated Tv" movies={topRated} />
+          <section className="space-y-7 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
+            <SwiperLanscape
+              title="Tv Show Trending"
+              movies={trendingNow.slice(0, 10)}
+            />
+            <SwiperPotrait title="Now Playing" movies={fetchNowPlaying} />
+            <SwiperPotrait
+              title="Top Rated Tv"
+              movies={topRated.slice(0, 10)}
+            />
           </section>
         </>
       ) : (
