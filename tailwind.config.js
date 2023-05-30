@@ -6,6 +6,9 @@ module.exports = {
       colors: {
         primary: '#E50914',
       },
+      screens: {
+        xs: '340px',
+      },
     },
   },
   plugins: [require('tailwind-scrollbar-hide')],

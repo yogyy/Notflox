@@ -23,9 +23,7 @@ const Keywords = ({ keyword, type }: KEYWORDS) => {
     <>
       {isLoading ? (
         <div className="flex flex-wrap items-center gap-2 py-2 mx-3 mt-5 xl:mb-52">
-          <h1 id="similar-tv-container" className="px-3">
-            Keywords :
-          </h1>
+          <h1 id="similar-tv-container">Keywords :</h1>
           {[...Array(12)].map((_, index) => (
             <div
               key={index}
@@ -34,7 +32,7 @@ const Keywords = ({ keyword, type }: KEYWORDS) => {
           ))}
         </div>
       ) : (
-        <div className="flex flex-wrap items-center py-2 mt-5 xl:mb-52">
+        <div className="flex flex-wrap items-center px-3 py-2 mt-5 xl:mb-52">
           <h1 id="similar-tv-container" className="px-3">
             Keywords :
           </h1>

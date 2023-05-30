@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { SvgProps } from '.';
 
-export const Play: React.FC<SvgProps> = ({ className }) => {
+export const PlayIcon: React.FC<SvgProps> = ({ className }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,7 @@ export const Play: React.FC<SvgProps> = ({ className }) => {
       strokeWidth="1.5"
       stroke="currentColor"
       aria-hidden="true"
-      className={`${className} w-6 h-6`}
+      className={`${className} text-gray-300 transition-colors duration-300 group-hover:text-red-600 border-none outline-none group-focus:text-red-600`}
     >
       <path
         strokeLinecap="round"
