@@ -12,4 +12,4 @@ yarn dev
 pnpm dev
 ```
 
-![image](https://user-images.githubusercontent.com/62535762/236726103-5a91dc92-9088-413c-a3dd-1a34f9d071c4.png)
+![Web capture_7-6-2023_183236_yogyy-notflox netlify app](https://github.com/yogyy/Netflix-Movie-App/assets/62535762/196ac50a-1fc0-4173-a1ec-136b75b0f2bc)
