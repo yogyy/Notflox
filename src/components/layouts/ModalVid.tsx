@@ -2,16 +2,15 @@ import * as React from 'react';
 import Image from 'next/image';
 import ReactPlayer from 'react-player/youtube';
 import axios from 'axios';
-import { StarIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { Element, Genre, Movie, ProductionCompany } from '~/typing';
+import { Movie } from '~/typing';
 import { API_KEY, BASE_URL } from '@/utils/request';
 import { useQuery } from '@tanstack/react-query';
 import { modalState, movieState } from '~/atoms/jotaiAtoms';
 import { useAtom } from 'jotai';
-import { tanggal } from '@/lib/getDate';
-import { toast } from 'react-toastify';
 import { Dialog, Transition } from '@headlessui/react';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/components/UI/use-toast';
+import ModalVidDetails from './ModalVidDetails';
 
 interface modalProps {
   showDetail?: boolean;
@@ -21,15 +20,16 @@ function ModalVid({ showDetail }: modalProps) {
   const [showModal, setShowModal] = useAtom(modalState);
   const [movie, setMovie] = useAtom(movieState);
   const [trailer, setTrailer] = React.useState('');
-  const [genres, setGenres] = React.useState<Genre[]>([]);
-  const [networks, setNetworks] = React.useState<ProductionCompany[]>([]);
+  const [videoError, setVideoError] = React.useState(false);
+  const { toast } = useToast();
 
   const handleClose = () => {
     setShowModal(false);
     setMovie(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
-  const [videoError, setVideoError] = React.useState(false);
-  const { data } = useQuery(
+
+  const { data } = useQuery<Movie>(
     ['movie', movie?.id],
     async () => {
       const response = await axios.get(
@@ -48,29 +48,21 @@ function ModalVid({ showDetail }: modalProps) {
   React.useEffect(() => {
     if (data?.videos) {
       const index = data.videos.results.findIndex(
-        (element: Element) => element.type === 'Trailer'
+        element => element.type === 'Trailer'
       );
       setTrailer(data.videos?.results[index]?.key);
-      if (index) {
-        toast.error('Trailer not available', {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        });
-      }
-    }
-    if (data?.genres) {
-      setGenres(data.genres);
-    }
-    if (data?.production_companies) {
-      setNetworks(data.production_companies);
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (data?.videos.results.length === 0 || videoError) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Trailer not available',
+      });
+    }
+  }, [data, toast, videoError]);
 
   return (
     <>
@@ -108,7 +100,11 @@ function ModalVid({ showDetail }: modalProps) {
                   <div className="text-lg font-medium text-gray-300">
                     <button
                       type="button"
-                      className="relative w-full h-auto max-w-5xl aspect-video focus:outline-none">
+                      className="sr-only"
+                      onClick={handleClose}>
+                      close modal
+                    </button>
+                    <div className="relative w-full h-auto max-w-5xl aspect-video focus:outline-none">
                       {trailer && !videoError ? (
                         <ReactPlayer
                           url={`https://www.youtube.com/watch?v=${trailer}`}
@@ -129,94 +125,14 @@ function ModalVid({ showDetail }: modalProps) {
                           }`}
                           className="object-cover rounded-t-sm md:rounded-t"
                           fill
-                          sizes="100%"
+                          sizes="90%"
                           alt={`Thumbnail ${movie?.name || movie?.title}`}
                           draggable={false}
                         />
                       )}
-                    </button>
+                    </div>
                     {showDetail === true && (
-                      <div className="flex px-10 py-8 space-x-16 rounded-b-md">
-                        <div className="w-full space-y-6 text-lg">
-                          <div className="flex justify-between">
-                            <h1 className="text-xl font-bold">
-                              {movie?.title || movie?.name}
-                            </h1>
-                            <button
-                              title="close"
-                              onClick={handleClose}
-                              type="button"
-                              className="bg-black p-1.5 rounded-full">
-                              <XMarkIcon className="w-5 font-bold" />
-                            </button>
-                          </div>
-                          <div className="flex items-center space-x-2 text-sm ">
-                            <p
-                              className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-green-400"
-                              title="average vote">
-                              <span>
-                                <StarIcon className="w-4 h-4" />
-                              </span>
-                              {movie &&
-                                `${movie.vote_average
-                                  .toString()
-                                  .slice(0, 3)}/10`}
-                            </p>
-                            <p className="font-light">
-                              {movie?.media_type === 'movie'
-                                ? tanggal(movie?.release_date)
-                                : tanggal(movie?.first_air_date)}
-                            </p>
-                            <div className="flex h-4 items-center justify-center rounded border border-white/40 px-1.5 text-xs text-green-400">
-                              HD
-                            </div>
-                          </div>
-                          <div className="flex flex-col-reverse justify-between font-light gap-x-10 gap-y-4">
-                            <p className="w-5/6 text-gray-300">
-                              {movie?.overview}{' '}
-                              {!movie?.overview && (
-                                <>
-                                  <span className="text-red-500">
-                                    overview not avaiable.
-                                  </span>{' '}
-                                  Lorem ipsum dolor sit amet consectetur
-                                  adipisicing elit. Cumque at illo vero eius
-                                  doloremque, ut magnam nobis minima, officia
-                                  odit quia?
-                                </>
-                              )}
-                            </p>
-                            <div className="flex flex-col space-y-3 text-sm">
-                              <div>
-                                <p>
-                                  Genres :&nbsp;
-                                  <span className="font-semibold">
-                                    {genres.map(genre => genre.name).join(', ')}
-                                  </span>
-                                </p>
-                              </div>
-                              <div>
-                                <p>
-                                  Original language:&nbsp;
-                                  <span className="font-semibold">
-                                    {movie?.original_language.toUpperCase()}
-                                  </span>
-                                </p>
-                              </div>
-                              <div className="flex w-full">
-                                <p>
-                                  Sudio :&nbsp;
-                                  <span className="font-semibold">
-                                    {networks
-                                      .map(network => network.name)
-                                      .join(', ')}
-                                  </span>
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <ModalVidDetails movie={data} closeModal={handleClose} />
                     )}
                   </div>
                 </Dialog.Panel>
