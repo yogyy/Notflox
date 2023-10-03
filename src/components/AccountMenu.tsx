@@ -1,104 +1,78 @@
-import { Menu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
-import Link from 'next/link';
+import React from 'react';
 import {
   ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import 'react-toastify/dist/ReactToastify.css';
-import { useProfileStore } from '../../atoms/modalAtom';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/UI/popover';
+import { useRouter } from 'next/router';
+import { useAtom } from 'jotai';
+import { nonUser } from '~/atoms/jotaiAtoms';
 
 export default function AccountMenux() {
   const session = useSession();
-  const nonsessionProfile = useProfileStore((state: any) => state.imaged);
+  const { push } = useRouter();
+  const [open, setOpen] = React.useState(false);
+  const [userPic] = useAtom(nonUser);
 
   return (
-    <div className="relative w-[40px] h-[40px]">
-      <Menu as="div">
-        <div>
-          <Menu.Button className="inline-flex justify-center w-full text-sm font-medium text-white bg-black rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
-            {
-              <Image
-                width={40}
-                height={40}
-                className="rounded-full"
-                src={
-                  session.data?.user?.image
-                    ? session.data?.user.image
-                    : nonsessionProfile
-                }
-                alt={`${session.data?.user?.name}`}
-                priority
-              />
-            }
-          </Menu.Button>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger className="relative rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
+        <Image
+          width={40}
+          height={40}
+          className="rounded-full"
+          src={session.data?.user?.image ? session.data?.user.image : userPic}
+          alt={`${session.data?.user?.name}`}
+          priority
+        />
+      </PopoverTrigger>
+      <PopoverContent
+        sideOffset={10}
+        align="end"
+        className="flex flex-col gap-1 shadow-sm w-60 bg-ireng shadow-white/60">
+        <button className="sr-only" onClick={() => setOpen(!open)}>
+          close popover
+        </button>
+        <div className="rounded-md group hover:bg-black/70 focus-within:bg-black/70">
+          <button
+            onClick={() => push('/profiles')}
+            type="button"
+            className={` flex w-full items-center rounded-md px-2 py-2 text-sm gap-2 outline-none`}>
+            <Image
+              width={32}
+              height={32}
+              className="w-8 rounded-full"
+              src={
+                session.data?.user?.image ? session.data?.user.image : userPic
+              }
+              alt={session.data?.user?.name || 'Anonymous User'}
+            />
+            <p className="text-sm text-white group-hover/item:underline text-start">
+              {session.data?.user?.name || 'Profile'}
+            </p>
+          </button>
         </div>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 w-56 origin-top-right rounded-md shadow-lg mt- bg-zinc-800 ring-1 ring-black ring-opacity-5 focus:outline-none">
-            <div className="px-1 py-1 ">
-              <Menu.Item>
-                {({ active }) => (
-                  <Link
-                    href="/profiles"
-                    className={`${
-                      active ? 'bg-[#1c1c1c] text-white' : ''
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2`}
-                  >
-                    <Image
-                      width={32}
-                      height={32}
-                      className="w-8 rounded-full"
-                      src={
-                        session.data?.user?.image
-                          ? session.data?.user.image
-                          : nonsessionProfile
-                      }
-                      alt=""
-                    />
-                    <p className="text-sm text-white group-hover/item:underline">
-                      {session.data?.user?.name || 'Profile'}
-                    </p>
-                  </Link>
-                )}
-              </Menu.Item>
-            </div>
-            {/* <button onClick={notify}>Notify !</button> */}
-            <div className="px-1 py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    onClick={() =>
-                      session.data !== null ? signOut() : signIn()
-                    }
-                    className={`${
-                      active ? 'bg-[#1c1c1c] ' : ''
-                    }text-white group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2`}
-                  >
-                    <span className="flex justify-center w-8 h-8">
-                      {session.data !== null ? (
-                        <ArrowRightOnRectangleIcon className="w-6" />
-                      ) : (
-                        <ArrowLeftOnRectangleIcon className="w-6" />
-                      )}
-                    </span>
-                    {session.data !== null ? 'Logout' : 'SignIn'}
-                  </button>
-                )}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    </div>
+        <div className="px-1 py-1 rounded-md hover:bg-black/70 focus-within:bg-black/70">
+          <button
+            onClick={() => (session.data !== null ? signOut() : signIn())}
+            className={`text-white group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2 outline-none`}>
+            <span className="flex justify-center w-8 h-8">
+              {session.data !== null ? (
+                <ArrowRightOnRectangleIcon className="w-6" />
+              ) : (
+                <ArrowLeftOnRectangleIcon className="w-6" />
+              )}
+            </span>
+            {session.data !== null ? 'Logout' : 'SignIn'}
+          </button>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
