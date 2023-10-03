@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import React from 'react';
-import Recomend from './netflix1/recomend';
-import { Paginate } from './Paginate';
+import { Paginate } from '../Paginate';
+import Recomend from './Recomend';
 
 interface SIMILAR {
   similar: number;
@@ -38,30 +38,26 @@ const Similars = ({ similar, type }: SIMILAR) => {
               <div className="flex">
                 <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-3 animate-pulse"></div>
                 <div className="w-full">
-                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
-                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
-                  <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3"></div>
+                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3" />
+                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3" />
+                  <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3" />
                 </div>
               </div>
             </div>
           ) : (
-            <div className="">
-              <Recomend
-                className=""
-                title="Recommendations"
-                movies={similarPaginate}
-              />
+            <>
+              <Recomend title="Recommendations" movies={similarPaginate} />
               <Paginate
                 currentPage={currentPage}
                 postPerPage={postPerPage}
                 setCurrentPage={setCurrentPage}
                 totalPost={data?.length}
               />
-            </div>
+            </>
           )}
         </>
       ) : (
-        <div>
+        <div className="h-40">
           <h1 className="px-3 text-1xl">Recommendations not available</h1>
         </div>
       )}
