@@ -16,13 +16,20 @@ export interface ProductionCompany {
   origin_country: string;
 }
 
+export type SearchMovie = {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
+};
+
 export interface Movie {
   homepage: Url;
   tagline: string;
   production_companies: ProductionCompany[];
   title: string;
   backdrop_path: string;
-  media_type: string;
+  media_type: 'movie' | 'tv';
   release_date?: string;
   first_air_date?: string | undefined;
   last_air_date?: string | undefined;
@@ -37,21 +44,35 @@ export interface Movie {
   overview: string;
   popularity: number;
   poster_path: string;
+  videos: VideoInfo;
   vote_average: number;
   vote_count: number;
   status?: string;
 }
 
-export interface Element {
-  type:
-    | 'Bloopers'
-    | 'Featurette'
-    | 'Behind the Scenes'
-    | 'Clip'
-    | 'Trailer'
-    | 'Teaser'
-    | 'Opening Credits';
-}
+type VideoInfo = {
+  results: {
+    iso_639_1: string;
+    iso_3166_1: string;
+    name: string;
+    key: string;
+    site: string;
+    size: number;
+    type: TypeTrailer;
+    official: boolean;
+    published_at: string;
+    id: string;
+  }[];
+};
+
+export type TypeTrailer =
+  | 'Bloopers'
+  | 'Featurette'
+  | 'Behind the Scenes'
+  | 'Clip'
+  | 'Trailer'
+  | 'Teaser'
+  | 'Opening Credits';
 
 export interface Anime {
   episodeNum?: string;
