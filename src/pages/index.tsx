@@ -62,13 +62,13 @@ const Notflox = () => {
             />
             <SwiperPotrait
               title="Top Picks for You"
-              movies={topRatedNetflix!.slice(0, 10)}
+              movies={topRatedNetflix?.slice(0, 10)}
               loading={loadingToprated}
               type="play"
             />
             <SwiperLanscape
               title="Popular on Netflix"
-              movies={popularNetflix!}
+              movies={popularNetflix}
               loading={loadingPopular}
               type="play"
             />
