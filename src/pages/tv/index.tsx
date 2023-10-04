@@ -1,45 +1,56 @@
-import Banner from '@/components/netflix1/Banner';
+import axios from 'axios';
+import Banner from '@/components/layouts/Banner';
 import requests from '@/utils/request';
-import { useSession } from 'next-auth/react';
 import RootLayout from '@/components/layouts/layout';
-import {
-  SwiperLanscape,
-  SwiperPotrait,
-} from '@/components/netflix1/SwiperToPage';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import LoaderBlock from '@/components/loader/loaderblock';
-import { Movie } from '../../../typing';
+import { useSession } from 'next-auth/react';
+import { SwiperLanscape, SwiperPotrait } from '@/components/layouts/Swipe';
+import { Movie } from '~/typing';
+import { useQuery } from '@tanstack/react-query';
 
-interface Props {
-  trendingNow: Movie[];
-  topRated: Movie[];
-  fetchNowPlaying: Movie[];
-}
-
-const Tv = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
+const Tv = () => {
   const { data: session } = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    if (session === null) {
-      router.push('/auth');
-    }
-  }, [router, session]);
+
+  const { data: trendingNow, isLoading: loadingTrending } = useQuery<Movie[]>(
+    ['fetchTrending'],
+    () => axios.get(requests.fetchTrendingTv).then(res => res.data.results)
+  );
+  const { data: fetchNowPlaying, isLoading: loadingNowPlay } = useQuery<
+    Movie[]
+  >(['tv-nowplaying'], () =>
+    axios.get(requests.fetchNowPlayingTv).then(res => res.data.results)
+  );
+  const { data: topRated, isLoading: loadingTopRated } = useQuery<Movie[]>(
+    ['tv-toprated'],
+    () => axios.get(requests.fetchTopRatedTv).then(res => res.data.results)
+  );
 
   return (
     <RootLayout title={'TV Show'}>
       {session ? (
         <>
-          <Banner banner={trendingNow.slice(0, 5)} />
-          <section className="space-y-7 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-            <SwiperLanscape
-              title="Tv Show Trending"
-              movies={trendingNow.slice(0, 10)}
-            />
-            <SwiperPotrait title="Now Playing" movies={fetchNowPlaying} />
+          <Banner
+            banner={trendingNow?.slice(0, 10)}
+            loading={loadingTrending}
+          />
+          <section className="space-y-7 mx-auto relative mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
             <SwiperPotrait
-              title="Top Rated Tv"
-              movies={topRated.slice(0, 10)}
+              title="TV Shows Trending"
+              movies={trendingNow?.slice(0, 10)}
+              loading={loadingTrending}
+              type="to-page"
+            />
+            <SwiperPotrait
+              title="TV Shows Now Playing"
+              movies={fetchNowPlaying}
+              loading={loadingNowPlay}
+              type="to-page"
+            />
+            <SwiperLanscape
+              title="TV Shows Top Rated"
+              movies={topRated?.slice(0, 10)}
+              loading={loadingTopRated}
+              type="to-page"
             />
           </section>
         </>
@@ -51,20 +62,3 @@ const Tv = ({ topRated, trendingNow, fetchNowPlaying }: Props) => {
 };
 
 export default Tv;
-
-export const getStaticProps = async () => {
-  const [trendingNow, topRated, fetchNowPlaying] = await Promise.all([
-    fetch(requests.fetchTrendingTv).then(res => res.json()),
-    fetch(requests.fetchTopRatedTv).then(res => res.json()),
-    fetch(requests.fetchNowPlayingTv).then(res => res.json()),
-  ]);
-
-  return {
-    props: {
-      trendingNow: trendingNow.results,
-      topRated: topRated.results,
-      fetchNowPlaying: fetchNowPlaying.results,
-    },
-    revalidate: 3600,
-  };
-};

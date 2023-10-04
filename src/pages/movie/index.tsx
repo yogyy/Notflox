@@ -1,15 +1,12 @@
-import Banner from '@/components/netflix1/Banner';
+import axios from 'axios';
+import Banner from '@/components/layouts/Banner';
+import LoaderBlock from '@/components/loader/loaderblock';
 import requests from '@/utils/request';
 import RootLayout from '@/components/layouts/layout';
-import {
-  SwiperLanscape,
-  SwiperPotrait,
-} from '@/components/netflix1/SwiperToPage';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { SwiperLanscape, SwiperPotrait } from '@/components/layouts/Swipe';
 import { useSession } from 'next-auth/react';
-import LoaderBlock from '@/components/loader/loaderblock';
-import { Movie } from '../../../typing';
+import { Movie } from '~/typing';
+import { useQuery } from '@tanstack/react-query';
 
 interface Props {
   trendingNow: Movie[];
@@ -17,30 +14,49 @@ interface Props {
   newRelease: Movie[];
 }
 
-const Movies = ({ trendingNow, topRated, newRelease }: Props) => {
+const Movies = () => {
   const { data: session } = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    if (session === null) {
-      router.push('/auth');
-    }
-  }, [router, session]);
+
+  const { data: trendingNow, isLoading: loadingTrending } = useQuery<Movie[]>(
+    ['movie-trending'],
+    () => axios.get(requests.fetchTrending).then(res => res.data.results)
+  );
+  const { data: topRated, isLoading: loadingTopRated } = useQuery<Movie[]>(
+    ['movie-toprated'],
+    () => axios.get(requests.fetchTopRated).then(res => res.data.results)
+  );
+  const { data: newRelease, isLoading: loadingNewRelease } = useQuery<Movie[]>(
+    ['movie-newreleased'],
+    () => axios.get(requests.fetchNowPlaying).then(res => res.data.results)
+  );
 
   return (
-    <RootLayout title="Movies">
+    <RootLayout title="Movies" className="">
       {session ? (
         <>
-          <div className="">
-            <Banner banner={trendingNow.slice(0, 5)} />
-          </div>
-          <section className="space-y-7 mx-auto relative xl:-mt-64 max-w-[1300px] z-[2]">
-            <SwiperLanscape
-              className=""
-              title="Trending Now"
-              movies={trendingNow.slice(0, 10)}
+          <Banner
+            banner={trendingNow?.slice(0, 10)}
+            loading={loadingTrending}
+          />
+          <section className="space-y-7 mx-auto relative mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
+            <SwiperPotrait
+              type="to-page"
+              title="Trending Movies"
+              movies={trendingNow?.slice(0, 10)}
+              loading={loadingTrending}
             />
-            <SwiperPotrait title="New Release" movies={newRelease} />
-            <SwiperPotrait title="Top Rated" movies={topRated.slice(0, 10)} />
+            <SwiperPotrait
+              type="to-page"
+              title="Newly Released Movies"
+              movies={newRelease}
+              loading={loadingNewRelease}
+            />
+            <SwiperLanscape
+              type="to-page"
+              title="Top Rated Movies"
+              movies={topRated?.slice(0, 10)}
+              loading={loadingTopRated}
+            />
           </section>
         </>
       ) : (
@@ -51,20 +67,3 @@ const Movies = ({ trendingNow, topRated, newRelease }: Props) => {
 };
 
 export default Movies;
-
-export const getStaticProps = async () => {
-  const [trendingNow, topRated, newRelease] = await Promise.all([
-    fetch(requests.fetchTrending).then(res => res.json()),
-    fetch(requests.fetchTopRated).then(res => res.json()),
-    fetch(requests.fetchNowPlaying).then(res => res.json()),
-  ]);
-
-  return {
-    props: {
-      trendingNow: trendingNow.results,
-      topRated: topRated.results,
-      newRelease: newRelease.results,
-    },
-    revalidate: 3600,
-  };
-};
