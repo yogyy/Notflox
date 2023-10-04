@@ -10,6 +10,7 @@ import { cn } from '@/lib/utils';
 
 import 'swiper/css';
 import 'swiper/css/effect-fade';
+import LoaderBlock from '../loader/loaderblock';
 
 interface Props {
   banner: Movie[] | undefined;
@@ -17,13 +18,10 @@ interface Props {
 }
 
 export default function Banner({ banner, loading }: Props) {
+  if (loading) return <LoaderBlock className="h-[56.25vw] bg-ireng" />;
   return (
     <section className="relative">
-      <div
-        className={cn(
-          'relative h-[56.25vw] z-[1]',
-          loading && 'animate-pulse bg-zinc-800'
-        )}>
+      <div className={cn('relative h-[56.25vw] z-[1]')}>
         <Swiper
           effect={'fade'}
           loop={true}
