@@ -1,5 +1,5 @@
+import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import * as React from 'react';
 
 interface Props {
   totalPost: number;
@@ -23,21 +23,20 @@ export const Paginate = ({
   return (
     <div
       {...rest}
-      className="bg-[#121212] flex justify-center items-center gap-3 mt-2"
-    >
+      className="bg-ireng/5 flex justify-center items-center gap-3 mt-2 pb-5">
       {pages.map((page, index) => {
         const isActive = page === currentPage;
         return (
           <Link
-            href="#similar-tv-container"
-            className={`w-3 h-3 p-3 text-xs flex my-2 justify-center items-center bg-red-600 rounded-full ${
+            href="#similar-container"
+            className={cn(
+              'w-3 h-3 p-3 text-xs flex my-2 justify-center items-center bg-red-600 rounded-full',
               isActive ? 'border-2' : ''
-            }`}
+            )}
             key={index}
             onClick={() => {
               setCurrentPage(page);
-            }}
-          >
+            }}>
             {page}
           </Link>
         );

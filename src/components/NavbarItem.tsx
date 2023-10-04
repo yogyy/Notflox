@@ -1,7 +1,7 @@
+import * as React from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import * as React from 'react';
 
 interface NavItem {
   className?: string;
@@ -19,11 +19,12 @@ const NavbarItem = ({ className }: NavItem) => {
           <li key={link.name}>
             <Link
               href={link.url}
-              className={`${
+              className={cn(
+                'font-bold hover:text-primary/80 transition-colors px-1 focus:outline-none focus-visible:ring-2 rounded',
                 router.pathname && baseRoute !== link.url
                   ? 'text-white focus-visible:ring-primary'
-                  : 'text-primary font-bold focus-visible:ring-white'
-              } cursor-pointer hover:text-primary/80 transition-colors px-1 focus:outline-none focus-visible:ring-2 rounded`}>
+                  : 'text-primary focus-visible:ring-white'
+              )}>
               {link.name}
             </Link>
           </li>
