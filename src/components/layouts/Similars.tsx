@@ -15,7 +15,7 @@ const Similars = ({ similar, type }: SIMILAR) => {
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
 
-  const { data, isLoading } = useQuery(['similar', similar], () =>
+  const { data, isLoading } = useQuery([`similar ${type}`, similar], () =>
     axios.get(`/api/${type}/recommend/${similar}`).then(res => res.data.results)
   );
 

@@ -12,7 +12,7 @@ interface KEYWORDS {
 }
 
 const Keywords = ({ keyword, type }: KEYWORDS) => {
-  const { data, isLoading } = useQuery(['keywords', keyword], () =>
+  const { data, isLoading } = useQuery([`keywords ${type}`, keyword], () =>
     axios
       .get(`/api/${type}/keyword/${keyword}`)
       .then(res => res.data.results || res.data.keywords)
