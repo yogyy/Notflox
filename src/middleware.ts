@@ -1,24 +1,23 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const token =
+  process.env.NODE_ENV === 'production'
+    ? '__Secure-next-auth.session-token'
+    : 'next-auth.session-token';
+
 export function middleware(req: NextRequest) {
-  const session = req.cookies.get('next-auth.session-token');
+  const session = req.cookies.get(token);
   // const session = await getServerSession
 
   const redirect = (url: string, reqUrl: string) => {
     return NextResponse.redirect(new URL(url, reqUrl));
   };
 
-  const startsWith = (url: string) => {
-    return req.nextUrl.pathname.startsWith(url);
-  };
-
   // Checks if no session exists
   if (!session) {
     return redirect('/auth', req.url);
   }
-
-  if (session && startsWith('/auth')) return redirect('/profiles', req.url);
 }
 
 export const config = {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import { Github, Google, Netflix } from '@/components/icons';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
@@ -9,6 +9,8 @@ import { HeadMetaData } from '@/components/layouts/HeadMetaTag';
 import { useToast } from '@/components/UI/use-toast';
 import { Toaster } from '@/components/UI/toaster';
 import Link from 'next/link';
+import { GetServerSidePropsContext } from 'next';
+import { auth } from '~/auth';
 
 type Variant = 'login' | 'register';
 
@@ -200,3 +202,15 @@ const Auth = () => {
 };
 
 export default Auth;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await auth(context.req, context.res);
+  if (session) {
+    return {
+      redirect: {
+        destination: '/profiles',
+        permanent: false,
+      },
+    };
+  }
+}

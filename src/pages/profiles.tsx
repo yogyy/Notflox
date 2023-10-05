@@ -15,6 +15,7 @@ const Profiles = () => {
     <RootLayout title={`${user ? user.name : 'Anonymous'}`}>
       <div className="h-[calc(100vh_-_145px)] grid place-content-center">
         <div className="flex flex-col">
+          <Link href="/auth"> ke auth</Link>
           <h1 className="text-3xl text-center text-white md:text-6xl">
             Who&#39;s watching?
           </h1>
