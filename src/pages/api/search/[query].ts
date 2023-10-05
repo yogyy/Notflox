@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Movie } from '../../../../typing';
+import { Movie } from '~/typing';
 import { API_KEY } from '@/utils/request';
 import { getSession } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { query } = req.query;
-  const session = getSession({ req });
+  const session = await getServerSession(req, res, authOptions);
 
   if (!query) {
     return res.status(400).json({ error: 'Missing query parameter' });
@@ -14,9 +16,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).end();
   }
 
-  if (req.method === 'GET' && (await session)) {
+  if (req.method === 'GET' && session) {
     try {
-      if (query.length >= 3) {
+      if (query.length >= 1) {
         const response = await axios.get(
           `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${query}`
         );
