@@ -51,6 +51,9 @@ function ModalVid({ showDetail }: modalProps) {
         element => element.type === 'Trailer'
       );
       setTrailer(data.videos?.results[index]?.key);
+      if (!data.videos?.results[index]?.key) {
+        setVideoError(true);
+      }
     }
   }, [data]);
 
@@ -62,7 +65,8 @@ function ModalVid({ showDetail }: modalProps) {
         description: 'Trailer not available',
       });
     }
-  }, [data, toast, videoError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoError]);
 
   return (
     <>

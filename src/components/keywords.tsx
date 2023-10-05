@@ -40,6 +40,7 @@ const Keywords = ({ keyword, type }: KEYWORDS) => {
               {keyword.name}
             </p>
           ))}
+          {data.length === 0 && <p>keywords no available</p>}
         </div>
       )}
     </>

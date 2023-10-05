@@ -1,5 +1,5 @@
 import * as React from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useSession } from 'next-auth/react';
 import {
   FilmIcon,
@@ -25,31 +25,29 @@ const Search = () => {
   const [searchResults, setSearchResults] = React.useState<Movie[]>([]);
   const [open, setOpen] = React.useState(false);
   const encodedQuery = encodeURIComponent(query);
+  const debouncedQuery = useDebounce<string>(encodedQuery, 500);
   const { data: session } = useSession();
-  const debouncedQuery = useDebounce<string>(encodedQuery, 700);
   const { toast } = useToast();
-
-  function openModal() {
-    setOpen(open => !open);
-  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
-  const searchMovies = async (query: string) => {
-    if (query.trim() === '') {
+  const searchMovies = async (title: string) => {
+    if (title.trim() === '') {
       setSearchResults([]);
       return;
     }
-    if (query.length >= 1) {
+    if (title.length >= 1) {
       try {
-        const response = await axios.get(`/api/search/${query}`);
+        const response = await axios.get(`/api/search/${title}`);
         setSearchResults(response.data);
-      } catch (error) {
+      } catch (err) {
+        const error = err as AxiosError<Error>;
         toast({
-          title: 'Error fetching data',
-          description: `${error}`,
+          title: `${error.message}`,
+          description: `${error.response?.statusText}`,
+          variant: 'destructive',
         });
       }
     } else {
@@ -58,9 +56,7 @@ const Search = () => {
   };
 
   React.useEffect(() => {
-    if (debouncedQuery) {
-      searchMovies(debouncedQuery);
-    }
+    searchMovies(debouncedQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQuery]);
 
@@ -68,27 +64,12 @@ const Search = () => {
     const down = (e: KeyboardEvent) => {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        if (session !== null) {
-          setOpen(open => !open);
-          setSearchResults([]);
-        } else {
-          error();
-        }
+        setOpen(open => !open);
       }
     };
-
     document.addEventListener('keydown', down);
-
     return () => document.removeEventListener('keydown', down);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const error = () => {
-    toast({
-      description: 'Must Login to access this',
-      className: 'font-semibold bg-[#ffcc00] text-[#cc3300]',
-    });
-  };
 
   return (
     <>
@@ -102,23 +83,17 @@ const Search = () => {
             <span className="inline-flex items-center text-xs">⌘</span>K
           </kbd>
         </DialogTrigger>
-        <DialogContent className="p-2 border-none bg-black/90 data-[state=closed]:zoom-out-50">
+        <DialogContent className="p-2 border-none bg-black/90 data-[state=closed]:zoom-out-75">
           <DialogHeader>
-            <DialogTitle>
-              <div
-                className={cn('flex items-center p-3 border-b border-black')}>
-                <MagnifyingGlassIcon className="w-5 h-5" />
-                <input
-                  type="text"
-                  placeholder="Search movie.."
-                  value={query}
-                  onChange={handleInputChange}
-                  className={cn(
-                    'bg-transparent',
-                    'px-3 py-1 transition-all w-full rounded outline-none'
-                  )}
-                />
-              </div>
+            <DialogTitle className="flex items-center p-3 border-b border-accent-foreground">
+              <MagnifyingGlassIcon className="w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search movie..."
+                value={query}
+                onChange={handleInputChange}
+                className="px-3 py-1 transition-all w-full rounded outline-none bg-transparent"
+              />
             </DialogTitle>
             <DialogDescription asChild>
               <div className="h-full overflow-y-auto transition-transform">
@@ -129,12 +104,6 @@ const Search = () => {
                         <Link
                           onClick={() => {
                             setOpen(!open);
-                            setSearchResults([]);
-                            // router.push(
-                            //   `/${
-                            //     result.media_type == 'movie' ? 'movie' : 'tv'
-                            //   }/${result.id}`
-                            // ); <== using button
                           }}
                           href={`/${
                             result.media_type == 'movie' ? 'movie' : 'tv'
@@ -159,7 +128,6 @@ const Search = () => {
                               </span>
                             </p>
                           </div>
-
                           <span>
                             {result.media_type === 'movie' ? (
                               <FilmIcon

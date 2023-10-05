@@ -18,7 +18,11 @@ export default function Recomend({ movies, title, className }: reccomend) {
         'relative h-auto space-y-0.5 md:space-y-2 mx-4',
         className
       )}>
-      <h2 className="text-xl font-semibold text-[#fcfbfb]">{title}</h2>
+      <h2
+        className="text-xl font-semibold text-[#fcfbfb] pt-16 mb-5"
+        id="similar-container">
+        {title}
+      </h2>
       <div className="relative grid grid-cols-1 gap-3 md:grid-cols-2">
         <>
           {movies.map(movie => (

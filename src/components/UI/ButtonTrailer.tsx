@@ -1,29 +1,33 @@
-import React, { ButtonHTMLAttributes, ComponentProps } from 'react';
-import { PlayIcon } from '../icons/play';
-import clsx from 'clsx';
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import { PlayIcon } from '@heroicons/react/24/outline';
 
-interface ButtonProps extends ComponentProps<'button'> {
-  onClick: () => void;
-  title: string;
-  className?: string;
-}
-
-const ButtonTrailer: React.FC<ButtonProps> = ({ className, ...rest }) => {
-  return (
-    <button
-      {...rest}
-      className={clsx(
-        'flex items-center group justify-center md:justify-between px-3 py-1.5 w-full',
-        'text-gray-300 border rounded shadow-sm bg-black/25 outline-none transition-colors duration-300',
-        'hover:font-semibold hover:shadow-red-600 hover:border-red-600 hover:bg-[#121212]/20',
-        'focus:font-semibold focus:shadow-red-600 focus:border-red-600 focus:bg-[#121212]/20',
-        className
-      )}
-    >
-      <span className="hidden md:block">Trailer&nbsp;</span>
-      <PlayIcon className="w-5" />
-    </button>
-  );
-};
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+const ButtonTrailer = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          'inline-flex items-center group justify-between px-3 py-1.5 w-full font-semibold',
+          'text-gray-300 border rounded shadow-sm bg-black/25 outline-none transition-colors duration-300',
+          'hover:text-red-50 hover:shadow-red-600 hover:border-red-600 hover:bg-[#121212]/20',
+          'focus:text-red-50 focus:shadow-red-600 focus:border-red-600 focus:bg-[#121212]/20',
+          className
+        )}
+        {...props}>
+        Play Trailer
+        <PlayIcon
+          className={cn(
+            'w-5 transition-colors duration-500',
+            'group-hover:fill-primary/90 group-focus:fill-primary/90'
+          )}
+        />
+      </button>
+    );
+  }
+);
+ButtonTrailer.displayName = 'ButtonTrailer';
 
 export default ButtonTrailer;

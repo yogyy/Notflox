@@ -45,7 +45,7 @@ const Navbar = () => {
       )}>
       <div
         className={cn(
-          'h-16 flex flex-row items-center justify-between px-5 w-full min-w-[300px] max-w-7xl mx-auto'
+          'h-16 flex flex-row items-center justify-between px-5 w-full min-w-fit max-w-7xl mx-auto'
         )}>
         <div className="flex items-center justify-center">
           <Sheet>
