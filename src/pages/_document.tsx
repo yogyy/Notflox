@@ -5,10 +5,9 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <script
-          defer
+          async
           src="https://analytics.umami.is/script.js"
-          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''}
-        ></script>
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}></script>
       </Head>
       <body>
         <Main />

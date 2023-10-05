@@ -1,74 +1,42 @@
-import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import * as React from 'react';
 import RootLayout from '@/components/layouts/layout';
-import { useProfileStore } from '../../atoms/modalAtom';
-import 'react-toastify/dist/ReactToastify.css';
-import Footer from '@/components/footer';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { Movie } from '../../typing';
-interface UserCardProps {
-  name: string;
-  imeg: string;
-}
+import Link from 'next/link';
+import { useAtom } from 'jotai';
+import { nonUser } from '~/atoms/jotaiAtoms';
 
-export const UserCard: React.FC<UserCardProps> = ({ name, imeg }) => {
-  const nonsessionProfile = useProfileStore((state: any) => state.imaged);
+const Profiles = () => {
   const { data: session } = useSession();
 
+  const user = session?.user;
+  const [userPic] = useAtom(nonUser);
   return (
-    <div className="flex-row mx-auto group w-44">
-      <div className="relative flex items-center justify-center overflow-hidden border-2 border-transparent rounded-md group-hover:cursor-pointer">
-        <Image
-          width={170}
-          height={170}
-          draggable={false}
-          className=""
-          src={imeg ? imeg : nonsessionProfile}
-          alt="profile"
-        />
-      </div>
-      <div className="mt-4 text-2xl text-center text-gray-400 group-hover:text-white">
-        {name || 'Anonymous'}
-      </div>
-      <p></p>
-    </div>
-  );
-};
-
-const App = () => {
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  const selectProfile = useCallback(() => {
-    router.push('/');
-  }, [router]);
-
-  return (
-    <RootLayout title={`${session?.user ? session?.user.name : 'Anonymous'}`}>
-      <div className="h-screen">
-        <div className="flex items-center justify-center pt-20">
-          <div className="flex flex-col">
-            <h1 className="text-3xl text-center text-white md:text-6xl">
-              Who&#39;s watching?
-            </h1>
-            <div className="flex items-center justify-center gap-8 mt-10">
-              <div onClick={() => selectProfile()}>
-                <UserCard
-                  name={session?.user?.name!}
-                  imeg={session?.user?.image!}
-                />
-              </div>
+    <RootLayout title={`${user ? user.name : 'Anonymous'}`}>
+      <div className="h-[calc(100vh_-_145px)] grid place-content-center">
+        <div className="flex flex-col">
+          <h1 className="text-3xl text-center text-white md:text-6xl">
+            Who&#39;s watching?
+          </h1>
+          <Link href="/" className="flex-col w-full px-10 mx-auto mt-10 group">
+            <div className="relative flex flex-col items-center justify-center overflow-hidden border-2 border-transparent rounded-md group-hover:cursor-pointer">
+              <Image
+                width={170}
+                height={170}
+                draggable={false}
+                className="w-32 md:w-44"
+                src={user?.image! || userPic}
+                alt="profile"
+              />
+              <p className="mt-4 text-[clamp(16px,10vw,_2rem)] text-center text-gray-400 group-hover:text-white">
+                {user?.name || 'Anonymous'}
+              </p>
             </div>
-          </div>
+          </Link>
         </div>
       </div>
     </RootLayout>
   );
 };
 
-export default App;
+export default Profiles;

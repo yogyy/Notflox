@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-query';
 import * as React from 'react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Provider } from 'jotai';
+import { Provider as JotaiProvider } from 'jotai';
 
 Router.events.on('routeChangeStart', nProgress.start);
 Router.events.on('routeChangeError', nProgress.done);
@@ -31,14 +31,14 @@ export default function App({ Component, pageProps }: AppProps) {
   );
   return (
     <SessionProvider session={pageProps.session}>
-      <Provider>
+      <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
           </Hydrate>
         </QueryClientProvider>
-      </Provider>
+      </JotaiProvider>
     </SessionProvider>
   );
 }
