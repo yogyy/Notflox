@@ -11,10 +11,11 @@ import { Toaster } from '@/components/UI/toaster';
 import Link from 'next/link';
 import { GetServerSidePropsContext } from 'next';
 import { auth } from '~/auth';
+import { Session } from 'next-auth';
 
 type Variant = 'login' | 'register';
 
-const Auth = () => {
+const Auth = ({ user }: Session) => {
   const [email, setEmail] = React.useState('');
   const [name, setName] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -205,6 +206,7 @@ export default Auth;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await auth(context.req, context.res);
+
   if (session) {
     return {
       redirect: {
@@ -213,4 +215,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+
+  return {
+    props: { user: session },
+  };
 }
