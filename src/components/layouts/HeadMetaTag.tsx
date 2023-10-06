@@ -18,7 +18,7 @@ export const HeadMetaData: React.FC<{
   const pageUrl =
     process.env.NODE_ENV === 'development'
       ? `localhost:3000${asPath}`
-      : `https://yogyy-notflox.netlify.app${asPath}`;
+      : `https://notflox.vercel.app${asPath}`;
 
   return (
     <Head>
@@ -41,7 +41,7 @@ export const HeadMetaData: React.FC<{
       <meta property="twitter:description" content={metaDescription} />
       <meta
         name="google-site-verification"
-        content="UYBRWTquNOoD7KtiFgrFhPFC-c_ODgDE20PJaaID1y8"
+        content="i4B2HfZkJ5OMpMb2g_Wl_f1FhG20vVeosG16Pd3jBqU"
       />
     </Head>
   );
