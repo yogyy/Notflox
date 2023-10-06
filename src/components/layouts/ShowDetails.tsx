@@ -35,6 +35,12 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
           <span className="font-mono text-base md:text-3xl sm:hidden">
             {show.tagline}
           </span>
+          <ButtonTrailer
+            onClick={playFunc}
+            title={`Play ${show.name || show.title} Trailer`}
+            className="w-32 sm:w-40"
+            type="button"
+          />
         </div>
       </div>
       <div className="w-full">
