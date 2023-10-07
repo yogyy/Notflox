@@ -16,22 +16,18 @@ import {
 import { Bars3BottomLeftIcon } from '@heroicons/react/24/outline';
 import { cn } from '@/lib/utils';
 
-const TOP_OFFSET = 100;
-
 const Navbar = () => {
   const [showBackground, setShowBackground] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY >= TOP_OFFSET) {
+      if (window.scrollY >= 100) {
         setShowBackground(true);
       } else {
         setShowBackground(false);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
-
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
@@ -40,7 +36,7 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        'flex justify-center w-full -mt-16 transition-colors duration-500',
+        'flex justify-center w-full bg-ireng sm:bg-transparent sm:-mt-16 transition-colors duration-500',
         showBackground ? 'bg-ireng/90 backdrop-blur-sm' : ''
       )}>
       <div
@@ -49,7 +45,7 @@ const Navbar = () => {
         )}>
         <div className="flex items-center justify-center">
           <Sheet>
-            <SheetTrigger className="block sm:hidden px-2 py-1 hover:bg-primary/60 rounded-md">
+            <SheetTrigger className="block sm:hidden px-2 py-1 hover:bg-primary/10 rounded-md">
               <Bars3BottomLeftIcon className="w-7 text-red-500" />
               <span className="sr-only">open drawer</span>
             </SheetTrigger>
