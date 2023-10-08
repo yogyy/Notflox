@@ -6,3 +6,7 @@ export function tanggal(dateStr: any) {
     day: 'numeric',
   });
 }
+
+export const today = () => {
+  return new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+};
