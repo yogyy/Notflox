@@ -7,6 +7,4 @@ export function tanggal(dateStr: any) {
   });
 }
 
-export const today = () => {
-  return new Date().toJSON().slice(0, 10).replace(/-/g, '-');
-};
+export const today = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
