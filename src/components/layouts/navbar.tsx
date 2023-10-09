@@ -1,8 +1,8 @@
 import * as React from 'react';
 import AccountMenu from '../AccountMenu';
 import { Netflix } from '../icons';
-import NavbarItem from '../NavbarItem';
-import Search from '../Search';
+import NavbarItem from '../navbar-item';
+import Search from '../search';
 import Notifications from '../notification';
 import Link from 'next/link';
 import {
@@ -36,8 +36,8 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        'flex justify-center w-full bg-ireng sm:bg-transparent sm:-mt-16 transition-colors duration-500',
-        showBackground ? 'bg-ireng/90 backdrop-blur-sm' : ''
+        'flex justify-center w-full bg-ireng sm:bg-transparent sm:-mt-16 transition duration-300',
+        showBackground ? 'sm:bg-ireng/90 sm:backdrop-blur-sm' : ''
       )}>
       <div
         className={cn(
@@ -49,12 +49,12 @@ const Navbar = () => {
               <Bars3BottomLeftIcon className="w-7 text-red-500" />
               <span className="sr-only">open drawer</span>
             </SheetTrigger>
-            <SheetContent side="left" className="bg-zinc-900/90 w-full">
+            <SheetContent side="top" className="bg-zinc-900/90 w-full">
               <SheetHeader>
                 <SheetTitle className="mb-4">
                   <Netflix className="h-4" />
                 </SheetTitle>
-                <SheetDescription>
+                <SheetDescription asChild>
                   <NavbarItem className="flex flex-col items-start gap-3" />
                 </SheetDescription>
               </SheetHeader>
