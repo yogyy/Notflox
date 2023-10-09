@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
 import { nonUser } from '~/atoms/jotaiAtoms';
 
-export default function AccountMenux() {
+export default function AccountMenu() {
   const session = useSession();
   const { push } = useRouter();
   const [open, setOpen] = React.useState(false);

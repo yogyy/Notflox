@@ -1,5 +1,5 @@
 import * as React from 'react';
-import AccountMenu from '../AccountMenu';
+import AccountMenu from '../account-menu';
 import { Netflix } from '../icons';
 import NavbarItem from '../navbar-item';
 import Search from '../search';
