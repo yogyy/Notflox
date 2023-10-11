@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Movie } from '~/typing';
 import NextImage from '../next-image';
+import { imgUrl } from '~/constants/movie';
 
 const AnimeWeekly = ({ bannerAnime }: { bannerAnime: Movie[] | undefined }) => {
   return (
@@ -26,9 +27,7 @@ const AnimeWeekly = ({ bannerAnime }: { bannerAnime: Movie[] | undefined }) => {
                       'rounded z-[-1] brightness-75 object-center',
                       tv.backdrop_path === null && 'object-contain'
                     )}
-                    src={`https://image.tmdb.org/t/p/w500/${
-                      tv.backdrop_path || tv.poster_path
-                    }`}
+                    src={`${imgUrl}/w500/${tv.backdrop_path || tv.poster_path}`}
                   />
                   <div className="absolute bottom-0 flex items-center justify-center">
                     <h2 className="flex items-center justify-center w-5 h-5 p-5 m-3 text-sm font-semibold text-black border rounded-md bg-white/80">
@@ -48,7 +47,7 @@ const AnimeWeekly = ({ bannerAnime }: { bannerAnime: Movie[] | undefined }) => {
                 <div className="relative min-w-[46px] max-h-[60px] aspect-poster">
                   <NextImage
                     alt={tv.original_name}
-                    src={`https://image.tmdb.org/t/p/w92${tv.poster_path}`}
+                    src={`${imgUrl}/w92${tv.poster_path}`}
                     className="rounded"
                   />
                 </div>

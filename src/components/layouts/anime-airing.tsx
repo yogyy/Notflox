@@ -4,21 +4,20 @@ import Paginate from '../paginate';
 import fetcher from '@/lib/fetcher';
 import NextImage from '../next-image';
 import { MovieResponse } from '~/typing';
-import { BASE_URL } from '@/utils/request';
 import { useQueries } from '@tanstack/react-query';
+import { baseUrl, imgUrl } from '~/constants/movie';
 import AnimeAiringLoading from '../loader/anime-airing-loading';
-import { getImageUrl } from '@/lib/utils';
 
 const AnimeAiring = () => {
   const queryConfigurations = Array.from({ length: 4 }, (_, page) => ({
     queryKey: ['anime-airing', page + 1],
     queryFn: () =>
       fetcher<MovieResponse>(
-        `${BASE_URL}/tv/on_the_air?page=${
+        `${baseUrl}/tv/on_the_air?page=${
           page + 1
         }&with_genres=16&with_original_language=ja&with_keywords=210024`
       ),
-    cacheTime: 60 * 60 * 1000,
+    cacheTime: 30 * 60 * 1000,
   }));
   const queryResults = useQueries({ queries: queryConfigurations });
 
@@ -59,7 +58,7 @@ const AnimeAiring = () => {
                 </span>
                 <div className="relative w-full h-auto aspect-poster">
                   <NextImage
-                    src={`https://image.tmdb.org/t/p/w220_and_h330_bestv2${tv?.poster_path}`}
+                    src={`${imgUrl}/w220_and_h330_bestv2${tv?.poster_path}`}
                     alt={`thumbnail ${tv?.name}`}
                   />
                 </div>
