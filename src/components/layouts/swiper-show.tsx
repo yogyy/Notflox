@@ -28,14 +28,14 @@ export function SwiperPotrait({
 
   return (
     <div className={cn('relative h-auto space-y-0.5', className)}>
-      <h2 className="ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
+      <h2 className="mb-2 ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
         {title}
       </h2>
       <Swiper
         freeMode={true}
         modules={[FreeMode]}
         slidesPerView={1.5}
-        spaceBetween={0}
+        wrapperClass="moviecard-container"
         breakpoints={{
           220: {
             slidesPerView: 2.4,
@@ -60,9 +60,7 @@ export function SwiperPotrait({
           },
         }}>
         {movies?.map(movie => (
-          <SwiperSlide
-            className="px-1.5 py-5 moviecard first:hover:scale-110 first:hover:translate-x-2"
-            key={movie.id}>
+          <SwiperSlide className="px-1.5 pt-1 moviecard" key={movie.id}>
             {type === 'play' ? (
               <ThumbnailTrailer variant="portrait" movie={movie} />
             ) : (
@@ -86,13 +84,15 @@ export function SwiperLanscape({
 
   return (
     <div className={cn('h-auto relative', className)}>
-      <h2 className="ml-5 text-sm font-semibold w-fit md:text-2xl">{title}</h2>
+      <h2 className="mb-2 ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
+        {title}
+      </h2>
       <Swiper
         slidesPerView={1.3}
-        spaceBetween={4}
         freeMode={true}
         modules={[FreeMode]}
         keyboard={true}
+        wrapperClass="moviecard-container"
         breakpoints={{
           400: {
             slidesPerView: 1.7,
@@ -111,9 +111,7 @@ export function SwiperLanscape({
           },
         }}>
         {movies?.map(movie => (
-          <SwiperSlide
-            className="px-1.5 first:hover:px-2 py-5 moviecard first:hover:scale-110 first:hover:translate-x-3"
-            key={movie.id}>
+          <SwiperSlide className="px-1.5 pt-1 moviecard" key={movie.id}>
             {type === 'play' ? (
               <ThumbnailTrailer variant="landscape" movie={movie} />
             ) : (
