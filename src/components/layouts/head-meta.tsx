@@ -24,7 +24,6 @@ export const HeadMetaData: React.FC<{
     <Head>
       <title>{title + ' | ' + defaultTitle}</title>
 
-      {/* metadata */}
       <meta name="title" content={title + ' | ' + defaultTitle} />
       <meta name="description" content={metaDescription} />
 
