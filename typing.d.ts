@@ -16,7 +16,7 @@ export interface ProductionCompany {
   origin_country: string;
 }
 
-export type SearchMovie = {
+export type MovieResponse = {
   page: number;
   results: Movie[];
   total_pages: number;
@@ -24,6 +24,8 @@ export type SearchMovie = {
 };
 
 export interface Movie {
+  adult: boolean;
+  backdrop_path: string | null;
   homepage: Url;
   tagline: string;
   production_companies: ProductionCompany[];
@@ -47,7 +49,7 @@ export interface Movie {
   videos: VideoInfo;
   vote_average: number;
   vote_count: number;
-  status?: string;
+  status: string;
 }
 
 type VideoInfo = {
