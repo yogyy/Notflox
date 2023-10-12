@@ -1,4 +1,5 @@
-const baseUrl = 'https://image.tmdb.org/t/p/original';
+const baseUrl = 'https://api.themoviedb.org/3';
+const imgUrl = 'https://image.tmdb.org/t/p';
 const imageOg = 'https://image.tmdb.org/t/p/w1280';
 
 const genreTv = [
@@ -42,4 +43,4 @@ const genreMovie = [
   { id: 37, name: 'Western' },
 ];
 
-export { baseUrl, genreMovie, genreTv, imageOg };
+export { baseUrl, imgUrl, genreMovie, genreTv, imageOg };
