@@ -1,25 +1,26 @@
 import * as React from 'react';
-import Keywords from '@/components/keywords';
-import Similars from '@/components/layouts/Similars';
-import RootLayout from '@/components/layouts/layout';
-import Image from 'next/image';
-import LoaderBlock from '@/components/loader/loaderblock';
-import ModalVid from '@/components/layouts/ModalVid';
-import kebabCase from 'lodash.kebabcase';
-import ShowDetails from '@/components/layouts/ShowDetails';
-import axios, { AxiosError } from 'axios';
-import { API_KEY } from '@/utils/request';
-import { Movie } from '~/typing';
 import { useAtom } from 'jotai';
-import { changeMovieState, modalState } from '~/atoms/jotaiAtoms';
-import { baseUrl, imageOg } from '~/constants/movie';
+import { Movie } from '~/typing';
+import { AxiosError } from 'axios';
+import dynamic from 'next/dynamic';
+import fetcher from '@/lib/fetcher';
 import { useRouter } from 'next/router';
+import kebabCase from 'lodash.kebabcase';
+import Keywords from '@/components/keywords';
+import NextImage from '@/components/next-image';
+import { imgUrl, imageOg } from '~/constants/movie';
+import RootLayout from '@/components/layouts/layout';
+import Similars from '@/components/layouts/similar-show';
+import LoaderBlock from '@/components/loader/loaderblock';
+import ShowDetails from '@/components/layouts/show-details';
+import { changeMovieState, modalState } from '~/atoms/jotaiAtoms';
 
-interface MovieProps {
-  movie: Movie;
-}
+const DynamicModalVideo = dynamic(
+  () => import('@/components/layouts/modal-video'),
+  { ssr: false }
+);
 
-export default function MovieDetails({ movie }: MovieProps) {
+export default function MovieDetails({ movie }: { movie: Movie }) {
   const [, setCurrentMovie] = useAtom(changeMovieState);
   const [showModal, setShowModal] = useAtom(modalState);
   const { replace } = useRouter();
@@ -41,49 +42,44 @@ export default function MovieDetails({ movie }: MovieProps) {
         title={movie.title}
         image={`${imageOg}${movie.backdrop_path}`}
         description={movie.overview}>
-        <>
-          <div className="relative w-full sm:h-[56.25vw] object-cover aspect-video brightness-50">
-            <span className="absolute top-[14%] left-[20%] text-xl md:text-[2vw] font-mono z-10 hidden sm:block cursor-default">
-              {movie.tagline}
-            </span>
-            <Image
-              src={`${baseUrl}${movie.backdrop_path || movie.poster_path}`}
-              className="bg-black/25"
-              fill
-              alt={`Banner ${movie.title}`}
-              priority
-              draggable={false}
-            />
-            <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
+        <div className="relative w-full sm:h-[56.25vw] object-cover aspect-video brightness-50">
+          <span className="absolute top-[14%] left-[20%] text-xl md:text-[2vw] font-mono z-10 hidden sm:block cursor-default">
+            {movie.tagline}
+          </span>
+          <NextImage
+            src={`${imgUrl}/original${
+              movie.backdrop_path || movie.poster_path
+            }`}
+            className="bg-black/25"
+            alt={`Banner ${movie.title}`}
+            priority
+          />
+          <div className="absolute bg-gradient-to-b from-transparent h-full to-[#5f5f5f] bottom-0 w-full" />
+        </div>
+        <ShowDetails show={movie} playFunc={playTrailer} />
+        <div>
+          <div className="relative mx-auto space-y-12 md:space-y-10 max-w-7xl">
+            <Keywords type="movie" keyword={movie.id} />
+            <Similars type="movie" similar={movie.id} />
           </div>
-          <ShowDetails show={movie} playFunc={playTrailer} />
-          <div>
-            <div className="space-y-12 md:space-y-10 mx-auto relative max-w-7xl">
-              <Keywords type="movie" keyword={movie.id} />
-              <Similars type="movie" similar={movie.id} />
-            </div>
-          </div>
-        </>
-        {showModal && <ModalVid showDetail={false} />}
+        </div>
+        {showModal && <DynamicModalVideo showDetail={false} />}
       </RootLayout>
     </React.Suspense>
   );
 }
 
-type Params = {
+export async function getServerSideProps(ctx: {
   params: {
     movieId: number;
   };
-};
-
-export const getServerSideProps = async ({ params }: Params) => {
-  const movieId = Number(params.movieId);
+}) {
+  const movieId = Number(ctx.params.movieId);
 
   try {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`
+    const data = await fetcher<Movie>(
+      `https://api.themoviedb.org/3/movie/${movieId}`
     );
-
     return {
       props: {
         movie: data,
@@ -97,4 +93,4 @@ export const getServerSideProps = async ({ params }: Params) => {
       };
     }
   }
-};
+}
