@@ -45,11 +45,13 @@ const Navbar = () => {
         )}>
         <div className="flex items-center justify-center">
           <Sheet>
-            <SheetTrigger className="block sm:hidden px-2 py-1 hover:bg-primary/10 rounded-md">
-              <Bars3BottomLeftIcon className="w-7 text-red-500" />
+            <SheetTrigger className="block px-2 py-1 rounded-md sm:hidden hover:bg-primary/10">
+              <Bars3BottomLeftIcon className="text-red-500 w-7" />
               <span className="sr-only">open drawer</span>
             </SheetTrigger>
-            <SheetContent side="top" className="bg-zinc-900/90 w-full">
+            <SheetContent
+              side="top"
+              className="w-full bg-gradient-to-r from-black to-ireng">
               <SheetHeader>
                 <SheetTitle className="mb-4">
                   <Netflix className="h-4" />
@@ -64,7 +66,7 @@ const Navbar = () => {
             href="/"
             className="flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus:py-1"
             title="beranda Notflox">
-            <Netflix className="h-4 mt-1 lg:h-7 w-fit hidden sm:block" />
+            <Netflix className="hidden h-4 mt-1 lg:h-7 w-fit sm:block" />
           </Link>
           <NavbarItem className="flex-row hidden ml-4 sm:gap-3 md:gap-7 sm:flex" />
         </div>
