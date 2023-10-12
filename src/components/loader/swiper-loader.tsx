@@ -1,15 +1,14 @@
-import { cn } from '@/lib/utils';
-import { ThumbnailProps } from '../layouts/Thumbnail';
-import { type VariantProps, cva } from 'class-variance-authority';
 import React from 'react';
+import { cn } from '@/lib/utils';
+import { type VariantProps, cva } from 'class-variance-authority';
 
 const thumbnailLoading = cva(
   'rounded-sm bg-zinc-800 animate-pulse md:rounded',
   {
     variants: {
       variant: {
-        portrait: 'aspect-[27/40] w-[92px] lg:w-[164px]',
-        landscape: 'aspect-video w-[220px] lg:w-[342px]',
+        portrait: 'aspect-poster w-[164px]',
+        landscape: 'aspect-video w-[342px]',
       },
     },
     defaultVariants: {
