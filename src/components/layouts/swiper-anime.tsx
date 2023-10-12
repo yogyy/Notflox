@@ -4,6 +4,7 @@ import Link from 'next/link';
 import 'swiper/css/effect-fade';
 import { Movie } from '~/typing';
 import NextImage from '../next-image';
+import { imgUrl } from '~/constants/movie';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, EffectFade } from 'swiper';
 
@@ -39,9 +40,7 @@ const SwiperAnime = ({
           <Link href={`/tv/${tv.id}`} aria-label={tv.name || tv.title}>
             <div className="relative w-full h-full aspect-video">
               <NextImage
-                src={`https://image.tmdb.org/t/p/w1280${
-                  tv?.backdrop_path || tv.poster_path
-                }`}
+                src={`${imgUrl}/w1280${tv?.backdrop_path || tv.poster_path}`}
                 className="object-contain w-auto h-auto bg-ireng rounded-t-md"
                 alt={`banner ${tv.name || tv.title}`}
                 priority

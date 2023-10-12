@@ -1,12 +1,12 @@
-import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
 import { Movie } from '~/typing';
-import { ThumbnailToPage, ThumbnailTrailer } from './Thumbnail';
 import { FreeMode } from 'swiper';
 import { cn } from '@/lib/utils';
 import { HTMLAttributes } from 'react';
-import SwiperLoading from '../loader/swiperloader';
-import 'swiper/css';
-import 'swiper/css/free-mode';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperLoading from '../loader/swiper-loader';
+import { ThumbnailToPage, ThumbnailTrailer } from './thumbnail';
 
 type SwiperType = 'to-page' | 'play';
 

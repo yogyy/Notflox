@@ -64,7 +64,7 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
               <span>&nbsp;to {tanggal(show?.last_air_date || '?')}</span>
             )}
           </p>
-          <p>Status : {show?.status}</p>
+          <p className="text-inherit">Status : {show?.status}</p>
           <p className="text-inherit">
             Genre :&nbsp;
             <span className="text-red-300">
