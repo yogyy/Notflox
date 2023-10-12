@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import React from 'react';
-import { Paginate } from '../Paginate';
-import Recomend from './Recomend';
+import Paginate from '../paginate';
+import Recommendation from './recommendation';
+import { useQuery } from '@tanstack/react-query';
 
 interface SIMILAR {
   similar: number;
@@ -30,23 +30,32 @@ const Similars = ({ similar, type }: SIMILAR) => {
       {data?.length !== 0 ? (
         <>
           {isLoading ? (
-            <div className="flex-col mx-4 mt-1 frounded-sm">
-              <p className="text-xl font-semibold text-[#fcfbfb]">
+            <div className="pb-5">
+              <p className="text-xl font-semibold text-[#fcfbfb] pt-16 mb-5 mx-4">
                 Recommendations
               </p>
-              <div className="w-32 h-4 bg-[#1c1c1c] animate-pulse mb-3 mt-2"></div>
-              <div className="flex">
-                <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-3 animate-pulse"></div>
-                <div className="w-full">
-                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3" />
-                  <div className="w-full h-4 bg-[#1c1c1c] animate-pulse mb-3" />
-                  <div className="w-5/6 h-4 bg-[#1c1c1c] animate-pulse mb-3" />
-                </div>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {[...Array(6)].map((_, index) => (
+                  <div key={index} className="flex-col mx-4 mt-1 frounded-sm">
+                    <div className="w-32 h-4 bg-[#1c1c1c] animate-pulse mb-3 mt-2"></div>
+                    <div className="flex">
+                      <div className="relative aspect-[9/14] h-[150px] md:h-[249px] w-24 md:w-40 bg-[#1c1c1c] rounded mr-1.5 animate-pulse"></div>
+                      <div className="flex flex-col w-full gap-2">
+                        <div className="w-full h-3 bg-[#1c1c1c] animate-pulse" />
+                        <div className="w-full h-3 bg-[#1c1c1c] animate-pulse" />
+                        <div className="w-5/6 h-3 bg-[#1c1c1c] animate-pulse" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
             <>
-              <Recomend title="Recommendations" movies={similarPaginate} />
+              <Recommendation
+                title="Recommendations"
+                movies={similarPaginate}
+              />
               <Paginate
                 currentPage={currentPage}
                 postPerPage={postPerPage}
