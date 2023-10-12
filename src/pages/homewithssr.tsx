@@ -1,35 +1,37 @@
-import Banner from '@/components/layouts/Banner';
-
+import Banner from '@/components/layouts/banner';
 import requests from '@/utils/request';
-import { Movie } from '../../typing';
+import { Movie } from '~/typing';
 import * as React from 'react';
-import ModalVid from '@/components/layouts/ModalVid';
+import ModalVid from '@/components/layouts/modal-video';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import RootLayout from '@/components/layouts/layout';
 import { QueryClient, dehydrate, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAtom } from 'jotai';
-import { modalState } from '../../atoms/jotaiAtoms';
-import { SwiperLanscape, SwiperPotrait } from '@/components/layouts/Swipe';
+import { modalState } from '~/atoms/jotaiAtoms';
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/layouts/swiper-show';
 
 const HomeSsr = () => {
   const showModal = useAtom(modalState);
 
   const { data: trendingNetflix } = useQuery<Movie[] | undefined>(
     ['TrendingNetflix'],
-    () => axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
+    () => axios.get(requests.TrendingNetflix).then(res => res.data.results)
   );
   const { data: topRatedNetflix } = useQuery<Movie[] | undefined>(
     ['TopRatedNetflix'],
-    () => axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results)
+    () => axios.get(requests.TopRatedNetflix).then(res => res.data.results)
   );
   const { data: airToday } = useQuery<Movie[] | undefined>(['AirToday'], () =>
-    axios.get(requests.fetchAirToday).then(res => res.data.results)
+    axios.get(requests.NetflixAirToday).then(res => res.data.results)
   );
   const { data: popularNetflix } = useQuery<Movie[] | undefined>(
     ['PopularNetflix'],
-    () => axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
+    () => axios.get(requests.PopularNetflix).then(res => res.data.results)
   );
   return (
     <RootLayout title="Netflix Clone">
@@ -75,22 +77,22 @@ export const getServerSideProps: GetServerSideProps = async ctx => {
   await Promise.all([
     queryClient.prefetchQuery(['TrendingNetflix'], () =>
       axios
-        .get(requests.fetchTrendingNetflix)
+        .get(requests.TrendingNetflix)
         .then(res => res.data.results.slice(0, 10))
     ),
     queryClient.prefetchQuery(['TopRatedNetflix'], () =>
       axios
-        .get(requests.fetchTopRatedNetflix)
+        .get(requests.TopRatedNetflix)
         .then(res => res.data.results.slice(0, 10))
     ),
     queryClient.prefetchQuery(['AirToday'], () =>
       axios
-        .get(requests.fetchAirToday)
+        .get(requests.NetflixAirToday)
         .then(res => res.data.results.slice(0, 10))
     ),
     queryClient.prefetchQuery(['PopularNetflix'], () =>
       axios
-        .get(requests.fetchPopularNetflix)
+        .get(requests.PopularNetflix)
         .then(res => res.data.results.slice(0, 10))
     ),
   ]);

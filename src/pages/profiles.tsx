@@ -1,10 +1,9 @@
-import { signOut, useSession } from 'next-auth/react';
-import Image from 'next/image';
-import * as React from 'react';
-import RootLayout from '@/components/layouts/layout';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAtom } from 'jotai';
 import { nonUser } from '~/atoms/jotaiAtoms';
+import { useSession } from 'next-auth/react';
+import RootLayout from '@/components/layouts/layout';
 
 const Profiles = () => {
   const { data: session } = useSession();

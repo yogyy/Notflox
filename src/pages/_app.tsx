@@ -1,18 +1,17 @@
+import * as React from 'react';
+import nProgress from 'nprogress';
 import '@/styles/globals.css';
-import { SessionProvider } from 'next-auth/react';
-import type { AppProps } from 'next/app';
-
 import '@/styles/nprogress.css';
 import { Router } from 'next/router';
-import nProgress from 'nprogress';
 import {
   Hydrate,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
-import * as React from 'react';
+import { SessionProvider } from 'next-auth/react';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Provider as JotaiProvider } from 'jotai';
+import { type AppProps } from 'next/app';
 
 Router.events.on('routeChangeStart', nProgress.start);
 Router.events.on('routeChangeError', nProgress.done);
@@ -30,7 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
       })
   );
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={pageProps.session} refetchOnWindowFocus={false}>
       <JotaiProvider>
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
