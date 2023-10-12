@@ -13,6 +13,7 @@ import {
 import { useRouter } from 'next/router';
 import { useAtom } from 'jotai';
 import { nonUser } from '~/atoms/jotaiAtoms';
+import { Avatar, AvatarFallback, AvatarImage } from './UI/avatar';
 
 export default function AccountMenu() {
   const session = useSession();
@@ -23,14 +24,13 @@ export default function AccountMenu() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className="relative rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
-        <Image
-          width={40}
-          height={40}
-          className="rounded-full"
-          src={session.data?.user?.image ? session.data?.user.image : userPic}
-          alt={`${session.data?.user?.name}`}
-          priority
-        />
+        <Avatar className="w-10 h-10">
+          <AvatarImage
+            src={session.data?.user?.image ? session.data?.user.image : userPic}
+            alt={session.data?.user?.name || 'user'}
+          />
+          <AvatarFallback>YOU</AvatarFallback>
+        </Avatar>
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}
