@@ -1,7 +1,4 @@
-import { BASE_URL } from '@/utils/request';
 import axios, { AxiosRequestConfig } from 'axios';
-import type { RequestInit } from 'next/dist/server/web/spec-extension/request';
-import { MovieResponse } from '~/typing';
 
 export default async function fetcher<T>(
   endpoint: string,
