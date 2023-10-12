@@ -1,11 +1,12 @@
 import React from 'react';
-import { Movie } from '~/typing';
-import Image from 'next/image';
 import Link from 'next/link';
-import { ClockIcon, FolderIcon } from '@heroicons/react/24/outline';
-import { tanggal } from '@/lib/getDate';
+import { Movie } from '~/typing';
 import { cn } from '@/lib/utils';
+import NextImage from '../next-image';
+import { tanggal } from '@/lib/getDate';
+import { imgUrl } from '~/constants/movie';
 import convertGenreIdsToNames from '@/utils/genreToName';
+import { ClockIcon, FolderIcon } from '@heroicons/react/24/outline';
 
 interface ReccomendationProps extends React.HTMLAttributes<HTMLElement> {
   movies: Movie[];
@@ -35,7 +36,7 @@ const Recommendation: React.FC<ReccomendationProps> = ({
                   movie.id
                 }`}
                 className="w-fit">
-                <h1 className="text-xl group-hover:text-red-400 transition duration-200">
+                <h1 className="text-xl transition duration-200 group-hover:text-red-400">
                   {movie.title || movie.name}
                 </h1>
               </Link>
@@ -55,14 +56,11 @@ const Recommendation: React.FC<ReccomendationProps> = ({
                     href={`/${movie.media_type == 'movie' ? 'movie' : 'tv'}/${
                       movie.id
                     }`}
-                    className="relative aspect-[27/40] w-28 md:w-40 bg-[#1c1c1c] rounded">
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w342/${movie.poster_path}`}
-                      className="object-cover rounded-sm md:rounded brightness-90 group-hover:brightness-100 transition duration-200"
-                      fill
-                      sizes="auto"
-                      alt={`Thumbnail ${movie.name || movie.title}`}
-                      draggable={false}
+                    className="relative aspect-poster w-24 md:w-40 bg-[#1c1c1c] rounded brightness-75 group-hover:brightness-100 transition duration-300">
+                    <NextImage
+                      src={`${imgUrl}/w342/${movie.poster_path}`}
+                      className="object-cover rounded-sm md:rounded"
+                      alt={`poster ${movie.name || movie.title}`}
                     />
                   </Link>
                   <p className="flex-1 text-gray-400 text-sm max-h-[150px] md:max-h-[249px] overflow-y-scroll scrollbar-hide">

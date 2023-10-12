@@ -1,15 +1,13 @@
-import * as React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import LongText from './ReadMore';
-import { baseUrl } from '~/constants/movie';
-import { Movie } from '~/typing';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade } from 'swiper';
-import { cn } from '@/lib/utils';
-
 import 'swiper/css';
+import Link from 'next/link';
 import 'swiper/css/effect-fade';
+import LongText from '../read-more';
+import { Movie } from '~/typing';
+import { cn } from '@/lib/utils';
+import NextImage from '../next-image';
+import { imgUrl } from '~/constants/movie';
+import { Autoplay, EffectFade } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import LoaderBlock from '../loader/loaderblock';
 
 interface Props {
@@ -31,8 +29,7 @@ export default function Banner({ banner, loading }: Props) {
             disableOnInteraction: false,
           }}
           allowTouchMove={false}
-          modules={[Autoplay, EffectFade]}
-          className="mySwiper">
+          modules={[Autoplay, EffectFade]}>
           {banner?.map(bann => (
             <SwiperSlide key={bann.id}>
               <div
@@ -40,17 +37,17 @@ export default function Banner({ banner, loading }: Props) {
                   'relative w-full sm:h-[56.25vw] object-cover aspect-video bg-ireng brightness-50',
                   loading ? 'hidden' : 'block'
                 )}>
-                <Image
-                  src={`${baseUrl}${bann?.backdrop_path || bann?.poster_path}`}
-                  fill
-                  alt="banner"
+                <NextImage
+                  src={`${imgUrl}/original${
+                    bann?.backdrop_path || bann?.poster_path
+                  }`}
+                  alt={`banner ${bann?.title || bann?.name}`}
                   className="bg-ireng"
                   priority
-                  draggable={false}
                 />
-                <div className="absolute bg-gradient-to-b from-transparent h-3/4 to-ireng bottom-0 w-full" />
+                <div className="absolute bottom-0 w-full bg-gradient-to-b from-transparent h-3/4 to-ireng" />
               </div>
-              <div className="hidden absolute top-[50%] xl:top-[20%] ml-4 md:ml-16 xs:flex flex-col gap-3 min-w-[300px] drop-shadow-lg z-10">
+              <div className="hidden absolute top-[50%] xl:top-[20%] ml-4 md:ml-16 xs:flex flex-col gap-3 min-w-[300px] drop-shadow-lg z-20">
                 <Link
                   className="w-fit"
                   href={
