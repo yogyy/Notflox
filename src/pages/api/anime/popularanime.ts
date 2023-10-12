@@ -1,7 +1,8 @@
-import { BASE_URL, API_KEY } from '@/utils/request';
 import axios from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { API_KEY } from '@/utils/request';
+import { baseUrl } from '~/constants/movie';
 import { getSession } from 'next-auth/react';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const currentDate = new Date();
@@ -18,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET' && (await session)) {
     try {
       const response = await axios.get(
-        `${BASE_URL}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&air_date.gte=${today}&first_air_date_year=2023&with_genres=16&with_original_language=ja`
+        `${baseUrl}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&air_date.gte=${today}&first_air_date_year=2023&with_genres=16&with_original_language=ja`
       );
       res.setHeader(
         'Cache-Control',

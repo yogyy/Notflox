@@ -1,7 +1,8 @@
-import { API_KEY, BASE_URL } from '@/utils/request';
 import axios from 'axios';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { API_KEY } from '@/utils/request';
+import { baseUrl } from '~/constants/movie';
 import { getSession } from 'next-auth/react';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { movieId } = req.query;
@@ -13,7 +14,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET' && (await session)) {
     try {
       const response = await axios.get(
-        `${BASE_URL}/movie/${movieId}/keywords?api_key=${API_KEY}`
+        `${baseUrl}/movie/${movieId}/keywords?api_key=${API_KEY}`
       );
       let data = response.data;
       res.status(200).json(data);

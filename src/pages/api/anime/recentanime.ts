@@ -1,7 +1,8 @@
-import { BASE_URL, API_KEY } from '@/utils/request';
 import axios from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { API_KEY } from '@/utils/request';
+import { baseUrl } from '~/constants/movie';
 import { getSession } from 'next-auth/react';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = getSession({ req });
@@ -11,18 +12,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
   if (req.method === 'GET' && (await session)) {
     try {
-      const pages = 1;
-      const baseUrl = `${BASE_URL}/tv/on_the_air`;
       const apiKey = API_KEY;
-      const timezone = 'Japan/Tokyo';
-      const genre = 16;
-      const language = 'ja';
-      const keywords = 'anime';
       const totalPages = 4;
       const requests = [];
 
       for (let page = 1; page <= totalPages; page++) {
-        const url = `${baseUrl}?api_key=${apiKey}&page=${page}&timezone=${timezone}&with_genres=${genre}&with_original_language=${language}&with_keywords=${keywords}`;
+        const url = `${baseUrl}/tv/on_the_air?api_key=${apiKey}&page=${page}&with_genres=16&with_original_language=ja&with_keywords=210024`;
         requests.push(axios.get(url));
       }
       const responses = await Promise.all(requests);
