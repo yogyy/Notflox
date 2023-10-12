@@ -1,83 +1,81 @@
-import axios from 'axios';
-import Banner from '@/components/layouts/Banner';
-import LoaderBlock from '@/components/loader/loaderblock';
-import ModalVid from '@/components/layouts/ModalVid';
-import requests from '@/utils/request';
-import RootLayout from '@/components/layouts/layout';
-import { useEffect } from 'react';
-import { SwiperLanscape, SwiperPotrait } from '@/components/layouts/Swipe';
-import { Movie } from '~/typing';
-import { useSession } from 'next-auth/react';
-import { useQuery } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
+import req from '@/utils/request';
+import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/layouts/swiper-show';
+import useMovies from '@/hooks/useCustomQuery';
 import { modalState } from '~/atoms/jotaiAtoms';
+import Banner from '@/components/layouts/banner';
+import RootLayout from '@/components/layouts/layout';
+
+const LazyModalVideo = dynamic(
+  () => import('@/components/layouts/modal-video'),
+  { ssr: false }
+);
 
 const Notflox = () => {
   const [showModal, setShowModal] = useAtom(modalState);
-  const { data: session } = useSession();
 
   useEffect(() => {
     setShowModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { data: trendingNetflix, isLoading: loadingTrending } = useQuery<
-    Movie[]
-  >(['fetchTrending'], () =>
-    axios.get(requests.fetchTrendingNetflix).then(res => res.data.results)
+  const { data: trendingNetflix, isLoading: loadingTrending } = useMovies(
+    ['netflix-trending'],
+    req.TrendingNetflix
   );
-  const { data: topRatedNetflix, isLoading: loadingToprated } = useQuery<
-    Movie[]
-  >(['TopRatedNetflix'], () =>
-    axios.get(requests.fetchTopRatedNetflix).then(res => res.data.results)
+  const { data: topRatedNetflix, isLoading: loadingToprated } = useMovies(
+    ['netflix-top-rated'],
+    req.TopRatedNetflix
   );
-  const { data: airToday, isLoading: loadingAirtdy } = useQuery<Movie[]>(
-    ['AirToday'],
-    () => axios.get(requests.fetchAirToday).then(res => res.data.results)
+  const { data: airToday, isLoading: loadingAirtdy } = useMovies(
+    ['air-today-netflix'],
+    req.NetflixAirToday
   );
-  const { data: popularNetflix, isLoading: loadingPopular } = useQuery<Movie[]>(
-    ['PopularNetflix'],
-    () => axios.get(requests.fetchPopularNetflix).then(res => res.data.results)
+  const { data: popularNetflix, isLoading: loadingPopular } = useMovies(
+    ['popular-netflix'],
+    req.PopularNetflix
   );
 
-  const allLoading =
-    loadingTrending || loadingToprated || loadingAirtdy || loadingPopular;
   return (
     <RootLayout title="Home">
-      {session ? (
-        <>
-          <Banner loading={allLoading} banner={trendingNetflix?.slice(0, 10)} />
-          <section className="space-y-7 mx-auto relative mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
-            <SwiperPotrait
-              title="Trending Now"
-              movies={trendingNetflix}
-              loading={loadingTrending}
-              type="play"
-            />
-            <SwiperPotrait
-              title="New Releases"
-              movies={airToday}
-              loading={loadingAirtdy}
-              type="play"
-            />
-            <SwiperPotrait
-              title="Top Picks for You"
-              movies={topRatedNetflix?.slice(0, 10)}
-              loading={loadingToprated}
-              type="play"
-            />
-            <SwiperLanscape
-              title="Popular on Netflix"
-              movies={popularNetflix}
-              loading={loadingPopular}
-              type="play"
-            />
-          </section>
-        </>
-      ) : (
-        <LoaderBlock />
-      )}
-      {showModal && <ModalVid showDetail={true} />}
+      <Banner
+        loading={
+          loadingTrending || loadingToprated || loadingAirtdy || loadingPopular
+        }
+        banner={trendingNetflix?.slice(0, 5)}
+      />
+      <section className="space-y-7 mx-auto relative mt-5 md:mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
+        <SwiperPotrait
+          title="Trending Now"
+          movies={trendingNetflix}
+          loading={loadingTrending}
+          type="play"
+        />
+        <SwiperPotrait
+          title="New Releases"
+          movies={airToday}
+          loading={loadingAirtdy}
+          type="play"
+        />
+        <SwiperPotrait
+          title="Top Picks for You"
+          movies={topRatedNetflix?.slice(0, 10)}
+          loading={loadingToprated}
+          type="play"
+        />
+        <SwiperLanscape
+          title="Popular on Netflix"
+          movies={popularNetflix}
+          loading={loadingPopular}
+          type="play"
+        />
+      </section>
+      {showModal && <LazyModalVideo showDetail={true} />}
     </RootLayout>
   );
 };

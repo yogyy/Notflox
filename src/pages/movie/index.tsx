@@ -1,67 +1,49 @@
-import axios from 'axios';
-import Banner from '@/components/layouts/Banner';
-import LoaderBlock from '@/components/loader/loaderblock';
-import requests from '@/utils/request';
+import req from '@/utils/request';
+import Banner from '@/components/layouts/banner';
 import RootLayout from '@/components/layouts/layout';
-import { SwiperLanscape, SwiperPotrait } from '@/components/layouts/Swipe';
-import { useSession } from 'next-auth/react';
-import { Movie } from '~/typing';
-import { useQuery } from '@tanstack/react-query';
-
-interface Props {
-  trendingNow: Movie[];
-  topRated: Movie[];
-  newRelease: Movie[];
-}
+import {
+  SwiperLanscape,
+  SwiperPotrait,
+} from '@/components/layouts/swiper-show';
+import useMovies from '@/hooks/useCustomQuery';
 
 const Movies = () => {
-  const { data: session } = useSession();
-
-  const { data: trendingNow, isLoading: loadingTrending } = useQuery<Movie[]>(
+  const { data: trendingNow, isLoading: loadingTrending } = useMovies(
     ['movie-trending'],
-    () => axios.get(requests.fetchTrending).then(res => res.data.results)
+    req.TrendingMovies
   );
-  const { data: topRated, isLoading: loadingTopRated } = useQuery<Movie[]>(
+  const { data: topRated, isLoading: loadingTopRated } = useMovies(
     ['movie-toprated'],
-    () => axios.get(requests.fetchTopRated).then(res => res.data.results)
+    req.TopRatedMovies
   );
-  const { data: newRelease, isLoading: loadingNewRelease } = useQuery<Movie[]>(
+  const { data: newRelease, isLoading: loadingNewRelease } = useMovies(
     ['movie-newreleased'],
-    () => axios.get(requests.fetchNowPlaying).then(res => res.data.results)
+    req.NowPlayingMovies
   );
 
   return (
     <RootLayout title="Movies" className="">
-      {session ? (
-        <>
-          <Banner
-            banner={trendingNow?.slice(0, 10)}
-            loading={loadingTrending}
-          />
-          <section className="space-y-7 mx-auto relative mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
-            <SwiperPotrait
-              type="to-page"
-              title="Trending Movies"
-              movies={trendingNow?.slice(0, 10)}
-              loading={loadingTrending}
-            />
-            <SwiperPotrait
-              type="to-page"
-              title="Newly Released Movies"
-              movies={newRelease}
-              loading={loadingNewRelease}
-            />
-            <SwiperLanscape
-              type="to-page"
-              title="Top Rated Movies"
-              movies={topRated?.slice(0, 10)}
-              loading={loadingTopRated}
-            />
-          </section>
-        </>
-      ) : (
-        <LoaderBlock />
-      )}
+      <Banner banner={trendingNow?.slice(0, 10)} loading={loadingTrending} />
+      <section className="space-y-7 mx-auto relative mt-5 md:mt-10 xl:-mt-64 max-w-7xl z-[2] pb-16">
+        <SwiperPotrait
+          type="to-page"
+          title="Trending Movies"
+          movies={trendingNow?.slice(0, 10)}
+          loading={loadingTrending}
+        />
+        <SwiperPotrait
+          type="to-page"
+          title="Newly Released Movies"
+          movies={newRelease}
+          loading={loadingNewRelease}
+        />
+        <SwiperLanscape
+          type="to-page"
+          title="Top Rated Movies"
+          movies={topRated?.slice(0, 10)}
+          loading={loadingTopRated}
+        />
+      </section>
     </RootLayout>
   );
 };
