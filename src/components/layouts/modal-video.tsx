@@ -1,16 +1,16 @@
 import * as React from 'react';
-import Image from 'next/image';
-import ReactPlayer from 'react-player/youtube';
-import axios from 'axios';
-import { Movie } from '~/typing';
-import { API_KEY, BASE_URL } from '@/utils/request';
-import { useQuery } from '@tanstack/react-query';
-import { modalState, movieState } from '~/atoms/jotaiAtoms';
 import { useAtom } from 'jotai';
-import { Dialog, Transition } from '@headlessui/react';
 import { cn } from '@/lib/utils';
+import { Movie } from '~/typing';
+import fetcher from '@/lib/fetcher';
+import NextImage from '../next-image';
+import ReactPlayer from 'react-player/youtube';
+import { useQuery } from '@tanstack/react-query';
+import { baseUrl, imgUrl } from '~/constants/movie';
+import ModalVidDetails from './modal-video-details';
 import { useToast } from '@/components/UI/use-toast';
-import ModalVidDetails from './ModalVidDetails';
+import { Dialog, Transition } from '@headlessui/react';
+import { modalState, movieState } from '~/atoms/jotaiAtoms';
 
 interface modalProps {
   showDetail?: boolean;
@@ -29,20 +29,12 @@ function ModalVid({ showDetail }: modalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
-  const { data } = useQuery<Movie>(
-    ['movie', movie?.id],
-    async () => {
-      const response = await axios.get(
-        `${BASE_URL}/${movie?.first_air_date ? '/tv' : '/movie'}/${
-          movie?.id
-        }?api_key=${API_KEY}&language=en-US&append_to_response=videos`
-      );
-      return response.data;
-    },
-    {
-      cacheTime: 0,
-      staleTime: 0,
-    }
+  const { data, isLoading } = useQuery(['movie', movie?.id], () =>
+    fetcher<Movie>(
+      `${baseUrl}/${movie?.first_air_date ? '/tv' : '/movie'}/${
+        movie?.id
+      }?language=en-US&append_to_response=videos`
+    )
   );
 
   React.useEffect(() => {
@@ -123,20 +115,21 @@ function ModalVid({ showDetail }: modalProps) {
                           }}
                         />
                       ) : (
-                        <Image
-                          src={`https://image.tmdb.org/t/p/original/${
+                        <NextImage
+                          src={`${imgUrl}/w1280/${
                             movie?.backdrop_path || movie?.poster_path
                           }`}
-                          className="object-cover rounded-t-sm md:rounded-t"
-                          fill
-                          sizes="90%"
-                          alt={`Thumbnail ${movie?.name || movie?.title}`}
-                          draggable={false}
+                          className="rounded-t-sm md:rounded-t"
+                          alt={`${movie?.name || movie?.title} thumbnail`}
                         />
                       )}
                     </div>
-                    {showDetail === true && (
-                      <ModalVidDetails movie={data} closeModal={handleClose} />
+                    {showDetail && (
+                      <ModalVidDetails
+                        loading={isLoading}
+                        movie={data}
+                        closeModal={handleClose}
+                      />
                     )}
                   </div>
                 </Dialog.Panel>
