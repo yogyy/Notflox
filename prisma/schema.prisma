@@ -59,24 +59,3 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
-
-model Movie {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
-  title        String
-  description  String
-  videoUrl     String
-  thumbnailUrl String
-  genre        String
-  duration     String
-}
-
-model TmdbMovie {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  title         String
-  description   String?
-  release_date  DateTime?
-  poster_path   String?
-  backdrop_path String?
-  vote_average  Float?
-  genres        String[]
-}
