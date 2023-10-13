@@ -29,7 +29,7 @@ export default function AccountMenu() {
             src={session.data?.user?.image ? session.data?.user.image : userPic}
             alt={session.data?.user?.name || 'user'}
           />
-          <AvatarFallback>YOU</AvatarFallback>
+          <AvatarFallback className="bg-black">YOU</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
       <PopoverContent

@@ -9,6 +9,7 @@ const nextConfig = {
       'gogocdn.net',
       'res.cloudinary.com',
     ],
+    unoptimized: true,
   },
 };
 

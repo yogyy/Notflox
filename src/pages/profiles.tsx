@@ -27,7 +27,6 @@ const Profiles = () => {
               className="flex-col w-full px-10 mx-auto mt-10 group">
               <div className="relative flex flex-col items-center justify-center overflow-hidden border-2 border-transparent rounded-md group-hover:cursor-pointer">
                 <Image
-                  unoptimized
                   width={170}
                   height={170}
                   draggable={false}
