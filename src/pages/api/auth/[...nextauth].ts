@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Email and password required');
         }
 
-        const user = await prismadb.user.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
           },
@@ -66,6 +66,15 @@ export const authOptions: NextAuthOptions = {
 
   pages: {
     signIn: '/auth',
+  },
+  callbacks: {
+    async jwt({ token, user, account }) {
+      return { ...token, ...user };
+    },
+    async session({ session, token, user }) {
+      session.user = token as any;
+      return session;
+    },
   },
   debug: process.env.NODE_ENV === 'development',
   session: { strategy: 'jwt', maxAge: 3600 * 24 * 7 },
