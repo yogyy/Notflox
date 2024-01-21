@@ -1,12 +1,16 @@
 import { cn } from '@/lib/utils';
 import React, { HTMLAttributes } from 'react';
 
-const LoaderBlock: React.FC<HTMLAttributes<HTMLDivElement>> = ({
+interface LoaderBlockType extends HTMLAttributes<HTMLDivElement> {}
+
+export const LoaderBlock: React.FC<LoaderBlockType> = ({
   className,
+  ...props
 }) => {
   return (
     <div
-      className={cn('grid place-content-center w-screen h-screen', className)}>
+      className={cn('grid place-content-center w-screen h-screen', className)}
+      {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -21,5 +25,3 @@ const LoaderBlock: React.FC<HTMLAttributes<HTMLDivElement>> = ({
     </div>
   );
 };
-
-export default LoaderBlock;
