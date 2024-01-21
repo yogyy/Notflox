@@ -1,16 +1,15 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { auth } from '~/auth';
-import Image from 'next/image';
-import * as React from 'react';
-import { Session } from 'next-auth';
-import { Netflix } from '@/components/icons';
-import { GetServerSidePropsContext } from 'next';
-import { Toaster } from '@/components/UI/toaster';
-import LoginForm from '@/components/auth/login-form';
-import { HeadMetaData } from '@/components/layouts/head-meta';
+import Head from "next/head";
+import Link from "next/link";
+import { auth } from "~/auth";
+import Image from "next/image";
+import * as React from "react";
+import { Netflix } from "@/components/icons";
+import { GetServerSidePropsContext } from "next";
+import { Toaster } from "@/components/ui/toaster";
+import { LoginForm } from "@/components/auth";
+import { HeadMetaData } from "@/components/layouts/head-meta";
 
-const Auth = ({ user }: Session) => {
+const Auth = () => {
   return (
     <>
       <HeadMetaData />
@@ -18,13 +17,13 @@ const Auth = ({ user }: Session) => {
         <title>Login</title>
       </Head>
       <div className="relative w-full">
-        <div className="relative grid h-[100dvh] bg-black md:bg-black/70 place-content-center w-full">
+        <div className="relative grid h-dvh w-full place-content-center bg-black md:bg-black/70">
           <Image
             src="/images/auth-background.webp"
             alt="background"
             width={1920}
             height={1080}
-            className="absolute object-cover lg:bg-cover w-full h-full z-[-1] hidden md:block"
+            className="absolute z-[-1] hidden h-full w-full object-cover md:block lg:bg-cover"
             priority
           />
           <nav className="absolute top-0 flex w-full px-12 py-5">
@@ -48,7 +47,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (session) {
     return {
       redirect: {
-        destination: '/profiles',
+        destination: "/profiles",
         permanent: false,
       },
     };
