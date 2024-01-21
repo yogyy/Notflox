@@ -56,12 +56,17 @@ const Recommendation: React.FC<ReccomendationProps> = ({
                     href={`/${movie.media_type == 'movie' ? 'movie' : 'tv'}/${
                       movie.id
                     }`}
-                    className="relative aspect-poster w-24 md:w-40 bg-[#1c1c1c] rounded brightness-75 group-hover:brightness-100 transition duration-300">
-                    <NextImage
-                      src={`${imgUrl}/w342/${movie.poster_path}`}
-                      className="object-cover rounded-sm md:rounded"
-                      alt={`poster ${movie.name || movie.title}`}
-                    />
+                    className="relative flex aspect-poster w-24 items-center justify-center rounded bg-[#1c1c1c] brightness-75 transition duration-300 group-hover:brightness-100 md:w-40"
+                  >
+                    {movie.poster_path ? (
+                      <NextImage
+                        src={`${imgUrl}/w342/${movie.poster_path}`}
+                        className="rounded-sm object-cover md:rounded"
+                        alt={`poster ${movie.name || movie.title}`}
+                      />
+                    ) : (
+                      <ImageNotFound />
+                    )}
                   </Link>
                   <p className="flex-1 text-gray-400 text-sm max-h-[150px] md:max-h-[249px] overflow-y-scroll scrollbar-hide">
                     {movie.overview} <br />

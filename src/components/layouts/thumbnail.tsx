@@ -43,20 +43,23 @@ export function ThumbnailTrailer({
       : `${imgUrl}/w500/${movie.backdrop_path}`;
 
   return (
-    <button
-      onClick={() => {
-        setCurrentMovie(movie);
-        setShowModal(true);
-      }}
-      title={movie.name || movie.title}
-      type="button"
-      className="w-full rounded">
-      <div className={cn(thumbnailVariants({ variant, className }))}>
+    <div
+      className={cn(
+        thumbnailVariants({ variant }),
+        "bg-zinc-800 transition duration-300 hover:bg-ireng group-focus-visible:bg-ireng",
+      )}
+    >
+      {thumbnailUrl ? (
         <NextImage
           src={thumbnailUrl}
-          className="absolute object-fill rounded-sm md:rounded"
-          alt={`thumbnail ${movie?.name}`}
+          className="rounded-sm object-fill md:rounded"
+          alt={`thumbnail ${movie.name || movie.title}`}
         />
+      ) : (
+        <ImageNotFound
+          className={cn(variant === "portrait" ? "text-base" : "text-xl")}
+        />
+      )}
       </div>
     </button>
   );
