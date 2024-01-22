@@ -45,12 +45,25 @@ const Navbar = () => {
         )}>
         <div className="flex items-center justify-center">
           <Sheet>
-            <SheetTrigger className="block px-2 py-1 rounded-md sm:hidden hover:bg-primary/10">
-              <Bars3BottomLeftIcon className="text-red-500 w-7" />
-              <span className="sr-only">open drawer</span>
-            </SheetTrigger>
-            <SheetContent
-              side="top"
+              <SheetTrigger className="block rounded-md px-2 py-1 hover:bg-primary/10 sm:hidden">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-7 text-red-500"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5"
+                  />
+                </svg>
+                <span className="sr-only">open drawer</span>
+              </SheetTrigger>
+              <SheetContent
+                side="top"
               className="w-full bg-gradient-to-r from-black to-ireng">
               <SheetHeader>
                 <SheetTitle className="mb-4">
