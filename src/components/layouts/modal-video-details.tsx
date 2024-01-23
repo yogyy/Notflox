@@ -1,31 +1,30 @@
-import React from 'react';
-import { Movie } from '~/typing';
-import { tanggal } from '@/lib/getDate';
-import { StarIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import React from "react";
+import { Movie } from "~/types/tmdb-type";
+import { tanggal } from "@/lib/getDate";
 
-type ModalVidDetailsProps = {
+interface ModalVidDetailsProps {
   movie: Movie | undefined;
   closeModal: () => void;
   loading: boolean;
-};
+}
 
-const ModalVidDetails = ({
+export const ModalVidDetails = ({
   movie,
   closeModal,
   loading,
 }: ModalVidDetailsProps) => {
   return (
-    <div className="flex px-8 py-8 space-x-16 rounded-b-md">
+    <div className="flex space-x-16 rounded-b-md px-8 py-8">
       {loading ? (
-        <div className="relative flex flex-col w-full space-y-6">
-          <div className="w-1/3 h-5 rounded-sm bg-zinc-800 animate-pulse" />
-          <div className="w-1/6 h-3.5 rounded-sm bg-green-400 animate-pulse" />
+        <div className="relative flex w-full flex-col space-y-6">
+          <div className="h-5 w-1/3 animate-pulse rounded-sm bg-zinc-800" />
+          <div className="h-3.5 w-1/6 animate-pulse rounded-sm bg-green-400" />
           <div className="flex flex-col gap-y-4">
-            <div className="w-1/3 h-4 rounded-sm bg-zinc-800 animate-pulse" />
-            <div className="w-1/12 h-4 rounded-sm bg-zinc-800 animate-pulse" />
-            <div className="w-1/4 h-4 rounded-sm bg-zinc-800 animate-pulse" />
+            <div className="h-4 w-1/3 animate-pulse rounded-sm bg-zinc-800" />
+            <div className="h-4 w-1/12 animate-pulse rounded-sm bg-zinc-800" />
+            <div className="h-4 w-1/4 animate-pulse rounded-sm bg-zinc-800" />
           </div>
-          <div className="w-3/5 h-4 rounded-sm bg-zinc-800 animate-pulse" />
+          <div className="h-4 w-3/5 animate-pulse rounded-sm bg-zinc-800" />
         </div>
       ) : (
         <div className="w-full space-y-6 text-lg">
@@ -35,14 +34,29 @@ const ModalVidDetails = ({
               title="close"
               onClick={closeModal}
               type="button"
-              className="absolute right-0 grid w-8 h-8 bg-black rounded-full place-content-center -top-6">
-              <XMarkIcon className="w-5 font-bold" />
+              className="absolute -top-6 right-0 grid h-8 w-8 place-content-center rounded-full bg-black"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-5 font-bold"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18 18 6M6 6l12 12"
+                />
+              </svg>
             </button>
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <p
               className="inline-flex items-center justify-center gap-1 text-sm font-semibold text-green-400"
-              title="average vote">
+              title="average vote"
+            >
               <span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +76,7 @@ const ModalVidDetails = ({
               {movie && `${movie.vote_average.toString().slice(0, 3)}/10`}
             </p>
             <p className="font-light">
-              {movie?.media_type === 'movie'
+              {movie?.media_type === "movie"
                 ? tanggal(movie?.release_date)
                 : tanggal(movie?.first_air_date)}
             </p>
@@ -70,12 +84,12 @@ const ModalVidDetails = ({
               HD
             </div>
           </div>
-          <div className="flex flex-col-reverse justify-between font-light gap-x-10 gap-y-4">
+          <div className="flex flex-col-reverse justify-between gap-x-10 gap-y-4 font-light">
             <p className="w-5/6 text-gray-300">
-              {movie?.overview}{' '}
+              {movie?.overview}{" "}
               {!movie?.overview && (
                 <>
-                  <span className="text-red-500">overview not avaiable.</span>{' '}
+                  <span className="text-red-500">overview not avaiable.</span>{" "}
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
                   Cumque at illo vero eius doloremque, ut magnam nobis minima,
                   officia odit quia?
@@ -87,7 +101,7 @@ const ModalVidDetails = ({
                 <p>
                   Genres :&nbsp;
                   <span className="font-semibold">
-                    {movie?.genres.map(genre => genre.name).join(', ')}
+                    {movie?.genres.map((genre) => genre.name).join(", ")}
                   </span>
                 </p>
               </div>
@@ -104,8 +118,8 @@ const ModalVidDetails = ({
                   Sudio :&nbsp;
                   <span className="font-semibold">
                     {movie?.production_companies
-                      .map(network => network.name)
-                      .join(', ')}
+                      .map((network) => network.name)
+                      .join(", ")}
                   </span>
                 </p>
               </div>
@@ -116,5 +130,3 @@ const ModalVidDetails = ({
     </div>
   );
 };
-
-export default ModalVidDetails;

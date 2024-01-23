@@ -1,14 +1,14 @@
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import { Movie } from '~/typing';
-import { FreeMode } from 'swiper';
-import { cn } from '@/lib/utils';
-import { HTMLAttributes } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperLoading from '../loader/swiper-loader';
-import { ThumbnailToPage, ThumbnailTrailer } from './thumbnail';
+import "swiper/css";
+import "swiper/css/free-mode";
+import { Movie } from "~/types/tmdb-type";
+import { FreeMode } from "swiper";
+import { cn } from "@/lib/utils";
+import { HTMLAttributes } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Thumbnail } from "./thumbnail";
+import { SwiperLoading } from "../loader/swiper-loader";
 
-type SwiperType = 'to-page' | 'play';
+type SwiperType = "to-page" | "play";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   title: string;
@@ -23,12 +23,12 @@ export function SwiperPotrait({
   className,
   loading,
   type,
-}: Partial<Props>) {
+}: Props) {
   if (loading) return <SwiperLoading variant="portrait" />;
 
   return (
-    <div className={cn('relative h-auto space-y-0.5', className)}>
-      <h2 className="mb-2 ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
+    <div className={cn("relative h-auto space-y-0.5", className)}>
+      <h2 className="mb-2 ml-5 w-fit text-sm font-semibold transition duration-200 md:text-2xl">
         {title}
       </h2>
       <Swiper
@@ -58,14 +58,11 @@ export function SwiperPotrait({
           1200: {
             slidesPerView: 7.3,
           },
-        }}>
-        {movies?.map(movie => (
-          <SwiperSlide className="px-1.5 pt-1 moviecard" key={movie.id}>
-            {type === 'play' ? (
-              <ThumbnailTrailer variant="portrait" movie={movie} />
-            ) : (
-              <ThumbnailToPage variant="portrait" movie={movie} />
-            )}
+        }}
+      >
+        {movies?.map((movie) => (
+          <SwiperSlide className="px-1.5 pt-1" key={movie.id}>
+            <Thumbnail movie={movie} variant="portrait" type={type} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -79,12 +76,12 @@ export function SwiperLanscape({
   className,
   loading,
   type,
-}: Partial<Props>) {
+}: Props) {
   if (loading) return <SwiperLoading variant="landscape" />;
 
   return (
-    <div className={cn('h-auto relative', className)}>
-      <h2 className="mb-2 ml-5 text-sm font-semibold transition duration-200 w-fit md:text-2xl">
+    <div className={cn("relative h-auto", className)}>
+      <h2 className="mb-2 ml-5 w-fit text-sm font-semibold transition duration-200 md:text-2xl">
         {title}
       </h2>
       <Swiper
@@ -109,14 +106,11 @@ export function SwiperLanscape({
           1200: {
             slidesPerView: 3.15,
           },
-        }}>
-        {movies?.map(movie => (
-          <SwiperSlide className="px-1.5 pt-1 moviecard" key={movie.id}>
-            {type === 'play' ? (
-              <ThumbnailTrailer variant="landscape" movie={movie} />
-            ) : (
-              <ThumbnailToPage variant="landscape" movie={movie} />
-            )}
+        }}
+      >
+        {movies?.map((movie) => (
+          <SwiperSlide className="px-1.5 pt-1" key={movie.id}>
+            <Thumbnail movie={movie} variant="landscape" type={type} />
           </SwiperSlide>
         ))}
       </Swiper>

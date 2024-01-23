@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/pagination";
 import React from "react";
 
-interface PaginateProps {
+interface PaginateProps extends React.ComponentProps<"nav"> {
   totalPost: number;
   postPerPage: number;
   currentPage: number;
@@ -17,9 +17,15 @@ interface PaginateProps {
   id_href: string;
 }
 
-export const Paginate: React.FC<PaginateProps> = (props) => {
-  const { totalPost, postPerPage, currentPage, setCurrentPage, id_href } =
-    props;
+export const Paginate: React.FC<PaginateProps> = ({
+  totalPost,
+  postPerPage,
+  currentPage,
+  setCurrentPage,
+  id_href,
+  className,
+  ...props
+}) => {
   let pages = [];
   for (let i = 1; i <= Math.ceil(totalPost / postPerPage); i++) {
     pages.push(i);
@@ -32,7 +38,13 @@ export const Paginate: React.FC<PaginateProps> = (props) => {
   const visiblePages = pages.slice(rangeStart - 1, rangeEnd);
 
   return (
-    <Pagination className="mt-2 w-full scale-90 overflow-hidden overflow-x-scroll pb-2 scrollbar-hide md:scale-100">
+    <Pagination
+      className={cn(
+        "mt-2 w-full scale-90 overflow-hidden overflow-x-scroll pb-2 scrollbar-hide md:scale-100",
+        className,
+      )}
+      {...props}
+    >
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
