@@ -7,16 +7,19 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import React from "react";
 
-interface Props {
+interface PaginateProps {
   totalPost: number;
   postPerPage: number;
   currentPage: number;
   setCurrentPage: (page: number) => void;
+  id_href: string;
 }
 
-export const Paginate: React.FC<Props> = (props) => {
-  const { totalPost, postPerPage, currentPage, setCurrentPage } = props;
+export const Paginate: React.FC<PaginateProps> = (props) => {
+  const { totalPost, postPerPage, currentPage, setCurrentPage, id_href } =
+    props;
   let pages = [];
   for (let i = 1; i <= Math.ceil(totalPost / postPerPage); i++) {
     pages.push(i);
@@ -29,11 +32,11 @@ export const Paginate: React.FC<Props> = (props) => {
   const visiblePages = pages.slice(rangeStart - 1, rangeEnd);
 
   return (
-    <Pagination className="mt-2 w-full scale-90 overflow-hidden overflow-x-scroll scrollbar-hide md:scale-100">
+    <Pagination className="mt-2 w-full scale-90 overflow-hidden overflow-x-scroll pb-2 scrollbar-hide md:scale-100">
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
-            href="#recent-released"
+            href={id_href}
             className={cn(
               currentPage <= 1
                 ? "pointer-events-none opacity-50 focus-visible:ring-0"
@@ -49,7 +52,7 @@ export const Paginate: React.FC<Props> = (props) => {
           return (
             <PaginationItem key={page} className="">
               <PaginationLink
-                href="#recent-released"
+                href={id_href}
                 isActive={isActive}
                 onClick={() => setCurrentPage(page)}
                 className={cn("focus-visible:ring-primary", isActive ? "" : "")}
@@ -61,7 +64,7 @@ export const Paginate: React.FC<Props> = (props) => {
         })}
         <PaginationItem>
           <PaginationNext
-            href="#recent-released"
+            href={id_href}
             className={cn(
               currentPage === pages.length
                 ? "pointer-events-none opacity-50 focus-visible:ring-0"
