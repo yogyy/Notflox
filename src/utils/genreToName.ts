@@ -1,5 +1,5 @@
 import { genreMovie, genreTv } from '~/constants/movie';
-import { Movie } from '~/typing';
+import { Movie } from '~/types/tmdb-type';
 
 const convertGenreIdsToNames = (genreIds: number[], movie: Movie) => {
   const genreNames = genreIds.map((genreId: number) => {
