@@ -11,7 +11,7 @@ import { useAtom } from "jotai";
 import { nonUser } from "~/atoms/jotaiAtoms";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-export default function AccountMenu() {
+export const AccountMenu = () => {
   const session = useSession();
   const { push } = useRouter();
   const [open, setOpen] = React.useState(false);
@@ -100,4 +100,4 @@ export default function AccountMenu() {
       </PopoverContent>
     </Popover>
   );
-}
+};

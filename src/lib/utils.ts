@@ -1,8 +1,8 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { imgUrl } from "~/constants/movie";
+import { imgUrl, genreMovie, genreTv } from "~/constants/movie";
 import axios, { AxiosRequestConfig } from "axios";
-
+import { Movie } from "~/types/tmdb-type";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -36,3 +36,13 @@ export async function fetcher<T>(
 
   return await response.data;
 }
+
+export const convertGenreIdsToNames = (genreIds: number[], movie: Movie) => {
+  const genreNames = genreIds.map((genreId: number) => {
+    const matchingGenre = (
+      movie.media_type === "tv" ? genreTv : genreMovie
+    ).find((genre) => genre.id === genreId);
+    return matchingGenre ? matchingGenre.name : "";
+  });
+  return genreNames.join(", ");
+};

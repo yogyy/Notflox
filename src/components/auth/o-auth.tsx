@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
 import { Github, Google } from "@/components/icons";
 
-const OAuth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+export const OAuth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   ...props
 }) => {
   return (
@@ -26,5 +26,3 @@ const OAuth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
     </div>
   );
 };
-
-export default OAuth;

@@ -9,7 +9,7 @@ import { atomWithStorage } from "jotai/utils";
 
 const notif = atomWithStorage<boolean>("notif", false);
 
-export default function Notifications() {
+export const Notifications = () => {
   const [open, setOpen] = useState(false);
   const [clicked, setClicked] = useAtom(notif);
 
@@ -60,4 +60,4 @@ export default function Notifications() {
       </PopoverContent>
     </Popover>
   );
-}
+};

@@ -1,13 +1,19 @@
-import Link from 'next/link';
-import * as React from 'react';
+import Link from "next/link";
+import * as React from "react";
 
-interface LTProps {
+interface LTProps extends React.ComponentProps<"span"> {
   text: any;
   maxLength: number;
   href: string;
 }
 
-export default function LongText({ text, maxLength, href }: LTProps) {
+export const LongText: React.FC<LTProps> = ({
+  text,
+  maxLength,
+  href,
+  className,
+  ...props
+}) => {
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
 
   if (text?.length <= maxLength) {
@@ -18,11 +24,11 @@ export default function LongText({ text, maxLength, href }: LTProps) {
     setIsExpanded(!isExpanded);
   };
   return (
-    <span>
+    <span className={className} {...props}>
       {isExpanded ? text : text?.slice(0, maxLength)}
       {isExpanded ? (
         <button
-          className="px-2 ml-2 font-semibold text-white rounded-sm bg-black/20 hover:bg-black"
+          className="ml-2 rounded-sm bg-black/20 px-2 font-semibold text-white hover:bg-black"
           onClick={toggleExpanded}
         >
           Read less
@@ -30,7 +36,7 @@ export default function LongText({ text, maxLength, href }: LTProps) {
       ) : (
         <Link
           href={href}
-          className="px-2 ml-2 font-semibold rounded-sm text-white/90 bg-black/5 hover:bg-black/50"
+          className="ml-2 rounded-sm bg-black/5 px-2 font-semibold text-white/90 hover:bg-black/50"
           onClick={toggleExpanded}
         >
           ...Read more
@@ -38,4 +44,4 @@ export default function LongText({ text, maxLength, href }: LTProps) {
       )}
     </span>
   );
-}
+};

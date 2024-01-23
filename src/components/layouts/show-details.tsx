@@ -5,19 +5,26 @@ import { tanggal } from "@/lib/getDate";
 import { imgUrl } from "~/constants/movie";
 import { ButtonTrailer } from "../button-trailer";
 
-interface ShowDetailsProps {
+interface ShowDetailsProps extends React.ComponentProps<"article"> {
   show: Movie | undefined;
   playFunc: () => void;
 }
 
-const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
+export const ShowDetails: React.FC<ShowDetailsProps> = ({
+  show,
+  playFunc,
+  className,
+  ...props
+}) => {
   return (
     <article
       className={cn(
         "relative flex flex-col gap-5 px-5 pt-4 sm:items-center",
         "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-ireng/20",
         "md:-mt-[20%] md:flex-row md:items-start md:bg-none lg:-mt-[40%]",
+        className,
       )}
+      {...props}
     >
       <div className="-mt-14 flex flex-col gap-3 min-[300px]:flex-row sm:mt-0 sm:block">
         <div className="relative h-full gap-3 md:flex md:flex-col">
@@ -85,5 +92,3 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
     </article>
   );
 };
-
-export default ShowDetails;
