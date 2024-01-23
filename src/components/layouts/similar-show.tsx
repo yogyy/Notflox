@@ -4,11 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Paginate } from "./paginate";
 import { Movie } from "~/types/tmdb-type";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, convertGenreIdsToNames } from "@/lib/utils";
 import { ImageNotFound, NextImage } from "../next-image";
 import { tanggal } from "@/lib/getDate";
 import { imgUrl } from "~/constants/movie";
-import convertGenreIdsToNames from "@/utils/genreToName";
 
 export const SimilarShow: React.FC<
   React.HTMLAttributes<HTMLElement> & {

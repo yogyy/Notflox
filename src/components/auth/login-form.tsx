@@ -1,6 +1,6 @@
 import React from "react";
 import { EmailInput, NameInput, PassInput } from ".";
-import OAuth from "./o-auth";
+import { OAuth } from "./o-auth";
 import {
   Popover,
   PopoverContent,

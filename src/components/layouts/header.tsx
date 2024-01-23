@@ -1,8 +1,8 @@
 import * as React from "react";
-import AccountMenu from "../account-menu";
+import { AccountMenu } from "../account-menu";
 import { Netflix } from "../icons";
-import NavbarItem from "../navbar-item";
-import Notifications from "../notification";
+import { NavbarItem } from "../navbar-item";
+import { Notifications } from "../notification";
 import Link from "next/link";
 import {
   Sheet,

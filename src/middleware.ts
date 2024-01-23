@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 const token =
-  process.env.NODE_ENV === 'production'
-    ? '__Secure-next-auth.session-token'
-    : 'next-auth.session-token';
+  process.env.NODE_ENV === "production"
+    ? "__Secure-next-auth.session-token"
+    : "next-auth.session-token";
 
 export function middleware(req: NextRequest) {
   const session = req.cookies.get(token);
@@ -16,10 +16,10 @@ export function middleware(req: NextRequest) {
 
   // Checks if no session exists
   if (!session) {
-    return redirect('/auth', req.url);
+    return redirect("/auth", req.url);
   }
 }
 
 export const config = {
-  matcher: ['/', '/testing', '/anime', '/tv/:path*', '/movie/:path*'],
+  matcher: ["/", "/testing", "/anime", "/tv/:path*", "/movie/:path*"],
 };

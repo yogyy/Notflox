@@ -1,7 +1,7 @@
 import "swiper/css";
 import Link from "next/link";
 import "swiper/css/effect-fade";
-import LongText from "../read-more";
+import { LongText } from "../read-more";
 import { Movie } from "~/types/tmdb-type";
 import { cn } from "@/lib/utils";
 import { NextImage } from "../next-image";

@@ -7,7 +7,7 @@ import { Netflix } from "@/components/icons";
 import { GetServerSidePropsContext } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { LoginForm } from "@/components/auth";
-import { HeadMetaData } from "@/components/layouts/head-meta";
+import { HeadMetaData } from "@/components/head-meta";
 
 const Auth = () => {
   return (
