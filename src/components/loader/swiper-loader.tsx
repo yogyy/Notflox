@@ -21,10 +21,10 @@ interface ThumbnailLoading<T>
   extends React.HTMLAttributes<T>,
     VariantProps<typeof thumbnailLoading> {}
 
-export default function SwiperLoading({
+export const SwiperLoading: React.FC<ThumbnailLoading<HTMLDivElement>> = ({
   variant,
   className,
-}: ThumbnailLoading<HTMLDivElement>) {
+}) => {
   const arr = variant === 'portrait' ? [...Array(3)] : [...Array(2)];
   return (
     <div className={cn('h-auto relative space-y-0.5 md:space-y-2')}>
@@ -44,4 +44,4 @@ export default function SwiperLoading({
       </div>
     </div>
   );
-}
+};

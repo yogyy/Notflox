@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import React, { HTMLAttributes } from 'react';
+import { cn } from "@/lib/utils";
+import React, { HTMLAttributes } from "react";
 
 interface LoaderBlockType extends HTMLAttributes<HTMLDivElement> {}
 
@@ -9,8 +9,9 @@ export const LoaderBlock: React.FC<LoaderBlockType> = ({
 }) => {
   return (
     <div
-      className={cn('grid place-content-center w-screen h-screen', className)}
-      {...props}>
+      className={cn("grid h-dvh w-dvw place-content-center", className)}
+      {...props}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -19,7 +20,8 @@ export const LoaderBlock: React.FC<LoaderBlockType> = ({
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="loader animate-spin text-primary w-7 h-7 md:w-12 md:h-12">
+        className="loader h-7 w-7 animate-spin text-primary md:h-12 md:w-12"
+      >
         <path d="M21 12a9 9 0 1 1-6.219-8.56" />
       </svg>
     </div>
