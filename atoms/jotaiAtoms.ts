@@ -1,5 +1,5 @@
-import { atom } from 'jotai';
-import { Movie } from '../typing';
+import { atom } from "jotai";
+import { Movie } from "~/types/tmdb-type";
 
 export const modalState = atom<boolean>(false);
 
@@ -13,7 +13,7 @@ export const changeMovieState = atom(
   null,
   (get, set, newMovie: Movie | null) => {
     set(movieState, newMovie);
-  }
+  },
 );
 
-export const nonUser = atom('/images/default-red.png');
+export const nonUser = atom("/images/default-red.png");
