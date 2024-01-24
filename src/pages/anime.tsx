@@ -20,14 +20,12 @@ const AnimePage = () => {
       className="mx-auto flex max-w-7xl flex-col gap-4 p-3 pb-5 sm:pt-16 xl:flex-row"
     >
       <section className="mt-3 flex w-full flex-col gap-4">
-        <div className="flex">
-          <div className="relative mx-auto w-full max-w-[948px] lg:px-0">
-            <SwiperAnime
-              loading={isLoadingBannerAnime}
-              bannerAnime={bannerAnime}
-              aria-label="swiper-anime"
-            />
-          </div>
+        <div className="relative mx-auto w-full max-w-[948px]">
+          <SwiperAnime
+            loading={isLoadingBannerAnime}
+            bannerAnime={bannerAnime}
+            aria-label="swiper-anime"
+          />
         </div>
         <AnimeAiring aria-label="airing-anime" />
       </section>
