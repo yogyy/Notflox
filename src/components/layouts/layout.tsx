@@ -1,12 +1,13 @@
-import Navbar from './navbar';
-import { Poppins } from 'next/font/google';
-import { HeadMetaData } from './head-meta';
-import Footer from './footer';
-import { HTMLAttributes } from 'react';
-import { Toaster } from '../UI/toaster';
-import { useSession } from 'next-auth/react';
-import LoaderBlock from '../loader/loaderblock';
-const poppins = Poppins({ weight: '400', subsets: ['latin'] });
+import { Poppins } from "next/font/google";
+import { HeadMetaData } from "@/components/head-meta";
+import { HTMLAttributes } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { useSession } from "next-auth/react";
+import { LoaderBlock } from "@/components/loader";
+import { cn } from "@/lib/utils";
+import { Header } from "./header";
+import { Footer } from "./footer";
+const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -16,17 +17,28 @@ interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
   footer?: boolean;
 }
 
-const RootLayout = (props: LayoutProps) => {
-  const {
-    children,
-    title,
-    description,
-    image,
-    footer = true,
-    className,
-  } = props;
-
+const RootLayout = ({
+  children,
+  title,
+  description,
+  image,
+  footer = true,
+  className,
+  ...props
+}: LayoutProps) => {
   const { data: session } = useSession();
+  if (!session) {
+    return (
+      <>
+        <HeadMetaData
+          metaDescription={description}
+          ogImageUrl={image}
+          title={title}
+        />
+        <LoaderBlock className="bg-gradient-to-b from-ireng to-black" />
+      </>
+    );
+  }
 
   return (
     <>
@@ -35,18 +47,12 @@ const RootLayout = (props: LayoutProps) => {
         ogImageUrl={image}
         title={title}
       />
-      {!session ? (
-        <LoaderBlock className="bg-gradient-to-b from-ireng to-black" />
-      ) : (
-        <>
-          <header className="sticky top-0 z-20">
-            <Navbar />
-          </header>
-          <main className={(poppins.className, className)}>{children}</main>
-          <Toaster />
-          {footer && <Footer />}
-        </>
-      )}
+      <Header />
+      <main className={cn(poppins.className, className)} {...props}>
+        {children}
+      </main>
+      <Toaster />
+      {footer && <Footer />}
     </>
   );
 };

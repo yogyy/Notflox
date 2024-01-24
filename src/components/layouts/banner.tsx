@@ -1,27 +1,32 @@
-import 'swiper/css';
-import Link from 'next/link';
-import 'swiper/css/effect-fade';
-import LongText from '../read-more';
-import { Movie } from '~/typing';
-import { cn } from '@/lib/utils';
-import NextImage from '../next-image';
-import { imgUrl } from '~/constants/movie';
-import { Autoplay, EffectFade } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import LoaderBlock from '../loader/loaderblock';
+import "swiper/css";
+import Link from "next/link";
+import "swiper/css/effect-fade";
+import { LongText } from "../read-more";
+import { Movie } from "~/types/tmdb-type";
+import { cn } from "@/lib/utils";
+import { NextImage } from "../next-image";
+import { imgUrl } from "~/constants/movie";
+import { Autoplay, EffectFade } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { LoaderBlock } from "../loader/loader-block";
 
-interface Props {
+interface BannerProps extends React.HTMLAttributes<HTMLElement> {
   banner: Movie[] | undefined;
   loading?: boolean;
 }
 
-export default function Banner({ banner, loading }: Props) {
+export const Banner = ({
+  banner,
+  loading,
+  className,
+  ...props
+}: BannerProps) => {
   if (loading) return <LoaderBlock className="h-[56.25vw] bg-ireng" />;
   return (
-    <section className="relative">
-      <div className={cn('relative h-[56.25vw] z-[1]')}>
+    <section className={cn("relative", className)} {...props}>
+      <div className="relative z-[1] h-[56.25vw]">
         <Swiper
-          effect={'fade'}
+          effect={"fade"}
           loop={true}
           centeredSlides={true}
           autoplay={{
@@ -29,14 +34,16 @@ export default function Banner({ banner, loading }: Props) {
             disableOnInteraction: false,
           }}
           allowTouchMove={false}
-          modules={[Autoplay, EffectFade]}>
-          {banner?.map(bann => (
+          modules={[Autoplay, EffectFade]}
+        >
+          {banner?.map((bann) => (
             <SwiperSlide key={bann.id}>
               <div
                 className={cn(
-                  'relative w-full sm:h-[56.25vw] object-cover aspect-video bg-ireng brightness-50',
-                  loading ? 'hidden' : 'block'
-                )}>
+                  "relative aspect-video w-full bg-ireng object-cover brightness-50 sm:h-[56.25vw]",
+                  loading ? "hidden" : "block",
+                )}
+              >
                 <NextImage
                   src={`${imgUrl}/original${
                     bann?.backdrop_path || bann?.poster_path
@@ -45,19 +52,20 @@ export default function Banner({ banner, loading }: Props) {
                   className="bg-ireng"
                   priority
                 />
-                <div className="absolute bottom-0 w-full bg-gradient-to-b from-transparent h-3/4 to-ireng" />
+                <div className="absolute bottom-0 h-3/4 w-full bg-gradient-to-b from-transparent to-ireng" />
               </div>
-              <div className="hidden absolute top-[50%] xl:top-[20%] ml-4 md:ml-16 xs:flex flex-col gap-3 min-w-[300px] drop-shadow-lg z-20">
+              <div className="absolute top-[50%] z-20 ml-4 hidden min-w-[300px] flex-col gap-3 drop-shadow-lg xs:flex md:ml-16 xl:top-[20%]">
                 <Link
                   className="w-fit"
                   href={
                     bann.release_date ? `/movie/${bann.id}` : `/tv/${bann.id}`
-                  }>
+                  }
+                >
                   <h1 className="text-2xl font-bold md:text-4xl xl:text-[2vw]">
                     {bann?.title || bann?.name || bann?.original_name}
                   </h1>
                 </Link>
-                <p className="max-w-xs text-xs text-shadow-md md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
+                <p className="text-shadow-md max-w-xs text-xs md:max-w-lg md:text-lg lg:max-w-2xl lg:text-2xl">
                   <LongText
                     href={
                       bann.release_date ? `/movie/${bann.id}` : `/tv/${bann.id}`
@@ -73,4 +81,4 @@ export default function Banner({ banner, loading }: Props) {
       </div>
     </section>
   );
-}
+};

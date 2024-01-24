@@ -1,57 +1,47 @@
-import req from '@/utils/request';
-import dynamic from 'next/dynamic';
-import useAnime from '@/hooks/useCustomQuery';
-import RootLayout from '@/components/layouts/layout';
-import SwiperAnime from '@/components/layouts/swiper-anime';
-import AnimeWeekly from '@/components/layouts/anime-weekly';
-import AnimeWeeklyLoading from '@/components/loader/anime-weekly-loading';
-import AnimeAiringLoading from '@/components/loader/anime-airing-loading';
-
-const LazyAnimeAiring = dynamic(
-  () => import('@/components/layouts/anime-airing'),
-  {
-    ssr: false,
-    loading: () => <AnimeAiringLoading />,
-  }
-);
+import req from "@/utils/request";
+import { useCustomQuery } from "@/hooks/use-custom-query";
+import RootLayout from "@/components/layouts/layout";
+import { AnimeWeeklyLoading } from "@/components/loader/anime-loader";
+import {
+  AnimeAiring,
+  AnimeWeekly,
+  SwiperAnime,
+} from "@/components/layouts/anime";
 
 const AnimePage = () => {
-  const { data: bannerAnime, isLoading: isLoadingBannerAnime } = useAnime(
-    ['anime-popular'],
-    req.PopularAnime
+  const { data: bannerAnime, isLoading: isLoadingBannerAnime } = useCustomQuery(
+    ["anime-popular"],
+    req.PopularAnime,
   );
-
   return (
     <RootLayout
       title="Anime"
-      description="Stay up-to-date with the latest anime releases. Explore new episodes, series, and exciting titles in the world of Japanese animation. Find release schedules, episode summaries, and streaming options for the hottest anime releases, all in one place">
-      <div className="p-3 pb-5">
-        <div className="flex flex-col gap-4 mx-auto xl:flex-row max-w-7xl sm:pt-16">
-          <section className="flex flex-col w-full gap-4">
-            <div className="flex">
-              <div className="w-full relative lg:px-0 mx-auto max-w-[948px]">
-                <SwiperAnime
-                  loading={isLoadingBannerAnime}
-                  bannerAnime={bannerAnime}
-                />
-              </div>
-            </div>
-            <LazyAnimeAiring />
-          </section>
-          <section
-            id="popular-tv-week"
-            className="bg-[#1C1C1C] max-w-[948px] mx-auto p-2 rounded xl:w-[380px] h-max w-full">
-            <h1 className="mb-2 text-xl font-semibold text-primary">
-              More Popular Anime Weekly
-            </h1>
-            {isLoadingBannerAnime ? (
-              <AnimeWeeklyLoading />
-            ) : (
-              <AnimeWeekly bannerAnime={bannerAnime?.slice(10, 20)} />
-            )}
-          </section>
+      description="Stay up-to-date with the latest anime releases. Explore new episodes, series, and exciting titles in the world of Japanese animation. Find release schedules, episode summaries, and streaming options for the hottest anime releases, all in one place"
+      className="mx-auto flex max-w-7xl flex-col gap-4 p-3 pb-5 sm:pt-16 xl:flex-row"
+    >
+      <section className="mt-3 flex w-full flex-col gap-4">
+        <div className="relative mx-auto w-full max-w-[948px]">
+          <SwiperAnime
+            loading={isLoadingBannerAnime}
+            bannerAnime={bannerAnime}
+            aria-label="swiper-anime"
+          />
         </div>
-      </div>
+        <AnimeAiring aria-label="airing-anime" />
+      </section>
+      <aside className="mx-auto h-max w-full max-w-[948px] rounded bg-[#1C1C1C] p-2 xl:mt-3 xl:w-[380px]">
+        <h1 className="mb-2 text-xl font-semibold text-primary">
+          More Popular Anime Weekly
+        </h1>
+        {isLoadingBannerAnime ? (
+          <AnimeWeeklyLoading />
+        ) : (
+          <AnimeWeekly
+            bannerAnime={bannerAnime?.slice(10, 20)}
+            aria-label="weekly-anime"
+          />
+        )}
+      </aside>
     </RootLayout>
   );
 };

@@ -1,48 +1,82 @@
-import Link from 'next/link';
-import * as React from 'react';
-import { useAtom } from 'jotai';
-import { Movie } from '~/typing';
-import { cn } from '@/lib/utils';
-import NextImage from '../next-image';
-import { imgUrl } from '~/constants/movie';
-import { type VariantProps, cva } from 'class-variance-authority';
-import { changeModalState, changeMovieState } from '~/atoms/jotaiAtoms';
+import Link from "next/link";
+import * as React from "react";
+import { useAtom } from "jotai";
+import { Movie } from "~/types/tmdb-type";
+import { cn } from "@/lib/utils";
+import { ImageNotFound, NextImage } from "../next-image";
+import { imgUrl } from "~/constants/movie";
+import { type VariantProps, cva } from "class-variance-authority";
+import { changeModalState, changeMovieState } from "~/atoms/jotaiAtoms";
 
-export interface ThumbnailProps<T>
-  extends React.HTMLAttributes<T>,
+export interface ThumbnailProps
+  extends React.HTMLAttributes<HTMLAnchorElement | HTMLButtonElement>,
     VariantProps<typeof thumbnailVariants> {
   movie: Movie;
+  type: "to-page" | "play";
 }
 
-const thumbnailVariants = cva(
-  'relative min-w-full bg-zinc-800 rounded h-full',
-  {
-    variants: {
-      variant: {
-        portrait: 'aspect-poster w-[92px]',
-        landscape: 'aspect-video w-[96.43px]',
-      },
+const thumbnailVariants = cva("relative min-w-full rounded h-full", {
+  variants: {
+    variant: {
+      portrait: "aspect-poster w-[92px]",
+      landscape: "aspect-video w-[96.43px]",
     },
-    defaultVariants: {
-      variant: 'portrait',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: "portrait",
+  },
+});
 
-export function ThumbnailTrailer({
+const InnerThumbnail = ({
+  movie,
+  variant,
+}: Pick<ThumbnailProps, "variant" | "movie">) => {
+  const thumbnailUrl =
+    variant === "portrait"
+      ? movie.poster_path &&
+        `${imgUrl}/w220_and_h330_bestv2${movie.poster_path}`
+      : movie.backdrop_path && `${imgUrl}/w500/${movie.backdrop_path}`;
+
+  return (
+    <div
+      className={cn(
+        thumbnailVariants({ variant }),
+        "bg-zinc-800 transition duration-300 hover:bg-ireng group-focus-visible:bg-ireng",
+      )}
+    >
+      {thumbnailUrl ? (
+        <NextImage
+          src={thumbnailUrl}
+          className="rounded-sm object-fill md:rounded"
+          alt={`thumbnail ${movie.name || movie.title}`}
+        />
+      ) : (
+        <ImageNotFound
+          className={cn(variant === "portrait" ? "text-base" : "text-xl")}
+        />
+      )}
+    </div>
+  );
+};
+export const Thumbnail = ({
+  type,
   movie,
   variant,
   className,
-}: ThumbnailProps<HTMLButtonElement>) {
+  ...props
+}: ThumbnailProps) => {
   const [, setCurrentMovie] = useAtom(changeMovieState);
   const [, setShowModal] = useAtom(changeModalState);
-
-  const thumbnailUrl =
-    variant === 'portrait'
-      ? `${imgUrl}/w220_and_h330_bestv2${movie.poster_path}`
-      : `${imgUrl}/w500/${movie.backdrop_path}`;
-
-  return (
+  return type === "to-page" ? (
+    <Link
+      href={`/${movie?.release_date ? "movie" : "tv"}/${movie?.id}`}
+      title={movie.name || movie.title}
+      className={cn("moviecard group w-full rounded outline-none", className)}
+      {...props}
+    >
+      <InnerThumbnail movie={movie} variant={variant} />
+    </Link>
+  ) : (
     <button
       onClick={() => {
         setCurrentMovie(movie);
@@ -50,40 +84,10 @@ export function ThumbnailTrailer({
       }}
       title={movie.name || movie.title}
       type="button"
-      className="w-full rounded">
-      <div className={cn(thumbnailVariants({ variant, className }))}>
-        <NextImage
-          src={thumbnailUrl}
-          className="absolute object-fill rounded-sm md:rounded"
-          alt={`thumbnail ${movie?.name}`}
-        />
-      </div>
+      className={cn("moviecard group w-full rounded outline-none", className)}
+      {...props}
+    >
+      <InnerThumbnail movie={movie} variant={variant} />
     </button>
   );
-}
-
-export function ThumbnailToPage({
-  movie,
-  variant,
-  className,
-}: ThumbnailProps<HTMLAnchorElement>) {
-  const thumbnailUrl =
-    variant === 'portrait'
-      ? `${imgUrl}/w220_and_h330_bestv2${movie.poster_path}`
-      : `${imgUrl}/w500${movie.backdrop_path}`;
-
-  return (
-    <Link
-      href={`/${movie?.release_date ? 'movie' : 'tv'}/${movie?.id}`}
-      title={movie.name || movie.title}
-      className="w-full rounded">
-      <div className={cn(thumbnailVariants({ variant, className }))}>
-        <NextImage
-          src={thumbnailUrl}
-          className="object-fill rounded-sm md:rounded"
-          alt={`thumbnail ${movie.name || movie.title}`}
-        />
-      </div>
-    </Link>
-  );
-}
+};

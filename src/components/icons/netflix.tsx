@@ -1,15 +1,18 @@
-import * as React from 'react';
-import { SvgProps } from '.';
+import * as React from "react";
 
-export const Netflix: React.FC<SvgProps> = ({ fillColor, className }) => {
+interface LogoProps extends React.SVGProps<SVGSVGElement> {
+  fillColor?: string;
+}
+export const Netflix = ({ fillColor, className, ...props }: LogoProps) => {
   return (
     <svg
       width={100}
       height="1.5rem"
       viewBox="0 0 500 150"
-      fill={fillColor ? fillColor : '#E50914'}
+      fill={fillColor ? fillColor : "#E50914"}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      {...props}
     >
       <path
         d="M0 9.20296e-05H26.4382L46.9374 78.5626H47.3206V9.20296e-05H66.0955V65.6251V107.297V123.163L43.9995 125.668L38.1247 107.297L31.8025 83.3438L19.1581 35.4376H18.775V129.084L0 132.102V9.20296e-05Z"

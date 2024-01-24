@@ -1,36 +1,43 @@
-import { Movie } from '~/typing';
-import { cn } from '@/lib/utils';
-import NextImage from '../next-image';
-import { tanggal } from '@/lib/getDate';
-import { imgUrl } from '~/constants/movie';
-import ButtonTrailer from '../UI/ButtonTrailer';
+import { Movie } from "~/types/tmdb-type";
+import { cn } from "@/lib/utils";
+import { NextImage } from "../next-image";
+import { tanggal } from "@/lib/getDate";
+import { imgUrl } from "~/constants/movie";
+import { ButtonTrailer } from "../button-trailer";
 
-interface ShowDetailsProps {
+interface DetailProps extends React.ComponentProps<"article"> {
   show: Movie | undefined;
   playFunc: () => void;
 }
-
-const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
+export const ShowDetails = ({
+  show,
+  playFunc,
+  className,
+  ...props
+}: DetailProps) => {
   return (
-    <div
+    <article
       className={cn(
-        'relative flex-col sm:items-center px-5 pt-4 flex gap-5',
-        'bg-gradient-to-b from-[#5f5f5f]/20 to-ireng/20 max-w-7xl mx-auto justify-start',
-        'md:bg-none md:flex-row md:items-start md:-mt-[20%] lg:-mt-[40%]'
-      )}>
-      <div className="flex gap-3 flex-col min-[300px]:flex-row sm:block -mt-14 sm:mt-0">
+        "relative flex flex-col gap-5 px-5 pt-4 sm:items-center",
+        "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-ireng/20",
+        "md:-mt-[20%] md:flex-row md:items-start md:bg-none lg:-mt-[40%]",
+        className,
+      )}
+      {...props}
+    >
+      <div className="-mt-14 flex flex-col gap-3 min-[300px]:flex-row sm:mt-0 sm:block">
         <div className="relative h-full gap-3 md:flex md:flex-col">
-          <div className="relative aspect-[27/40] w-32 sm:w-40 sm:-mt-32 rounded md:mt-0 ">
+          <div className="relative aspect-[27/40] w-32 rounded sm:-mt-32 sm:w-40 md:mt-0 ">
             <NextImage
               src={`${imgUrl}/w220_and_h330_bestv2${show?.poster_path}`}
-              className="object-cover rounded-sm md:rounded"
+              className="rounded-sm object-cover md:rounded"
               alt={`${show?.name || show?.title} poster`}
               fetchPriority="auto"
             />
           </div>
         </div>
-        <div className="flex flex-col justify-between w-full gap-3 text-sm sm:mt-3">
-          <span className="font-mono text-base md:text-3xl sm:hidden">
+        <div className="flex w-full flex-col justify-between gap-3 text-sm sm:mt-3">
+          <span className="font-mono text-base sm:hidden md:text-3xl">
             {show?.tagline}
           </span>
           <ButtonTrailer
@@ -42,7 +49,7 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
         </div>
       </div>
       <div className="w-full">
-        <div className="pb-2 border-b border-zinc-800/25">
+        <div className="border-b border-zinc-800/25 pb-2">
           <h1 className="text-xl font-semibold text-red-600">
             {show?.name || show?.title}&nbsp;
             <span className="text-gray-300">
@@ -57,18 +64,18 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
           </h2>
           <p className="text-sm text-gray-400 lg:text-base">{show?.overview}</p>
         </div>
-        <div className="pb-2 mt-3 text-sm text-gray-300 border-b border-zinc-800/25">
+        <div className="mt-3 border-b border-zinc-800/25 pb-2 text-sm text-gray-300">
           <p className="text-inherit">
             Aired : {tanggal(show?.first_air_date || show?.release_date)}
             {show?.first_air_date && (
-              <span>&nbsp;to {tanggal(show?.last_air_date || '?')}</span>
+              <span>&nbsp;to {tanggal(show?.last_air_date || "?")}</span>
             )}
           </p>
           <p className="text-inherit">Status : {show?.status}</p>
           <p className="text-inherit">
             Genre :&nbsp;
             <span className="text-red-300">
-              {show?.genres.map(genre => genre.name).join(', ')}
+              {show?.genres.map((genre) => genre.name).join(", ")}
             </span>
           </p>
           <p className="text-inherit">
@@ -77,12 +84,10 @@ const ShowDetails = ({ show, playFunc }: ShowDetailsProps) => {
           </p>
           <p className="text-sm text-inherit">
             Studio :&nbsp;
-            {show?.production_companies.map(studio => studio.name).join(', ')}
+            {show?.production_companies.map((studio) => studio.name).join(", ")}
           </p>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
-
-export default ShowDetails;

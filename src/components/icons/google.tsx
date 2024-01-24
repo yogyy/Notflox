@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 
-interface GoogleProps extends React.SVGAttributes<SVGElement> {
+interface GoogleProps extends React.SVGProps<SVGSVGElement> {
   size?: number | string;
 }
 
-export const Google = ({ size = 24, ...rest }: GoogleProps) => {
+export const Google = ({ size = 24, ...props }: GoogleProps) => {
   return (
     <svg
       stroke="currentColor"
@@ -18,7 +18,7 @@ export const Google = ({ size = 24, ...rest }: GoogleProps) => {
       height={size}
       width={size}
       xmlns="http://www.w3.org/2000/svg"
-      {...rest}
+      {...props}
     >
       <path
         fill="#FFC107"

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Movie } from '~/typing';
+import { Movie } from '~/types/tmdb-type';
 import { API_KEY } from '@/utils/request';
 import { getSession } from 'next-auth/react';
 import { getServerSession } from 'next-auth';

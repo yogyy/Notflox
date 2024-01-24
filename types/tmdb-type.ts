@@ -1,36 +1,35 @@
-export interface Genre {
+interface Genre {
   id: number;
   name: string;
 }
 
-export interface Network {
+interface Network {
   name: string;
-  id: integer;
+  id: number;
   logo_path: string;
   origin_country: string;
 }
-export interface ProductionCompany {
+interface ProductionCompany {
   name: string;
   id: number;
   logo_path: string | null;
   origin_country: string;
 }
 
-export type MovieResponse = {
+type MovieResponse = {
   page: number;
   results: Movie[];
   total_pages: number;
   total_results: number;
 };
 
-export interface Movie {
+interface Movie {
   adult: boolean;
   backdrop_path: string | null;
-  homepage: Url;
+  homepage: string;
   tagline: string;
   production_companies: ProductionCompany[];
   title: string;
-  backdrop_path: string;
   media_type: 'movie' | 'tv';
   release_date?: string;
   first_air_date?: string | undefined;
@@ -67,7 +66,7 @@ type VideoInfo = {
   }[];
 };
 
-export type TypeTrailer =
+type TypeTrailer =
   | 'Bloopers'
   | 'Featurette'
   | 'Behind the Scenes'
@@ -76,7 +75,7 @@ export type TypeTrailer =
   | 'Teaser'
   | 'Opening Credits';
 
-export interface Anime {
+interface Anime {
   episodeNum?: string;
   animeId: string;
   animeTitle: string;
@@ -86,3 +85,14 @@ export interface Anime {
   episodeUrl: string;
   genres: string[];
 }
+
+export type {
+  Anime,
+  Genre,
+  Movie,
+  MovieResponse,
+  Network,
+  ProductionCompany,
+  TypeTrailer,
+  VideoInfo,
+};
