@@ -4,18 +4,20 @@ import React from "react";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/router";
 
-type ButtonProps = {
+interface ButtonAuthProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "register" | "login";
   email: string;
   password: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+}
 
-export const ButtonAuth: React.FC<ButtonProps> = ({
+export const ButtonAuth = ({
   email,
   password,
   variant,
+  className,
   ...props
-}) => {
+}: ButtonAuthProps) => {
   const [disabled, setDisabled] = React.useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -65,6 +67,7 @@ export const ButtonAuth: React.FC<ButtonProps> = ({
       className={cn(
         disabled ? "cursor-not-allowed bg-red-900" : "hover:bg-red-700",
         "w-full rounded-md bg-red-600 py-3 text-white  transition-colors",
+        className,
       )}
       onClick={login}
       {...props}

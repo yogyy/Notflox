@@ -7,13 +7,18 @@ import { imgUrl } from "~/constants/movie";
 import { Swiper, SwiperProps, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, EffectFade } from "swiper";
 import { Movie } from "~/types/tmdb-type";
+import { cn } from "@/lib/utils";
 
-export const SwiperAnime: React.FC<
-  SwiperProps & {
-    bannerAnime: Movie[] | undefined;
-    loading: boolean;
-  }
-> = ({ bannerAnime, loading, ...props }) => {
+interface SwiperAnimeProps extends SwiperProps {
+  bannerAnime: Movie[] | undefined;
+  loading: boolean;
+}
+export const SwiperAnime = ({
+  bannerAnime,
+  loading,
+  className,
+  ...props
+}: SwiperAnimeProps) => {
   if (loading) {
     return (
       <div className="aspect-video h-full w-full animate-pulse rounded-sm bg-zinc-800 lg:w-[948px]" />
@@ -28,11 +33,7 @@ export const SwiperAnime: React.FC<
         disableOnInteraction: false,
       }}
       centeredSlides={true}
-      pagination={{
-        clickable: true,
-      }}
-      navigation={true}
-      className="w-full max-w-[948px]"
+      className={cn("w-full max-w-[948px]", className)}
       modules={[Autoplay, Navigation, EffectFade]}
       {...props}
     >

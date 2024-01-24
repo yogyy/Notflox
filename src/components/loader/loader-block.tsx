@@ -3,10 +3,7 @@ import React, { HTMLAttributes } from "react";
 
 interface LoaderBlockType extends HTMLAttributes<HTMLDivElement> {}
 
-export const LoaderBlock: React.FC<LoaderBlockType> = ({
-  className,
-  ...props
-}) => {
+export const LoaderBlock = ({ className, ...props }: LoaderBlockType) => {
   return (
     <div
       className={cn("grid h-dvh w-dvw place-content-center", className)}

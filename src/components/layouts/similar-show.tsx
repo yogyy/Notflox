@@ -9,18 +9,15 @@ import { ImageNotFound, NextImage } from "../next-image";
 import { tanggal } from "@/lib/getDate";
 import { imgUrl } from "~/constants/movie";
 
-export const SimilarShow: React.FC<
-  React.HTMLAttributes<HTMLElement> & {
-    similar: number;
-    type: string;
-  }
-> = ({ similar, type }) => {
-  console.time("render");
+interface SimilarProps {
+  similar: number;
+  type: string;
+}
+export const SimilarShow = ({ similar, type }: SimilarProps) => {
   const [currentPage, setCurrentPage] = React.useState(1);
   const postPerPage = 6;
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  console.timeEnd("render");
   const { data, isLoading } = useQuery<Movie[]>(
     [`similar ${type}`, similar],
     () =>

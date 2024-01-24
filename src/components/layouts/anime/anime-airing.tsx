@@ -8,10 +8,8 @@ import { baseUrl, imgUrl } from "~/constants/movie";
 import { AnimeAiringLoading } from "@/components/loader";
 import { cn, fetcher } from "@/lib/utils";
 
-export const AnimeAiring: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
-  className,
-  ...props
-}) => {
+interface AiringProps extends React.HTMLAttributes<HTMLDivElement> {}
+export const AnimeAiring = ({ className, ...props }: AiringProps) => {
   const queryConfigurations = Array.from({ length: 4 }, (_, page) => ({
     queryKey: ["anime-airing", page + 1],
     queryFn: () => {

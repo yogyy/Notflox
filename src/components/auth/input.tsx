@@ -1,22 +1,23 @@
-import { cn } from '@/lib/utils';
-import React from 'react';
+import { cn } from "@/lib/utils";
+import React from "react";
 
-type InputType = {
-  variant: 'register' | 'login';
-} & React.InputHTMLAttributes<HTMLInputElement>;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  variant: "register" | "login";
+}
 
-const EmailInput: React.FC<InputType> = ({ variant, ...props }) => {
+const EmailInput = ({ variant, className, ...props }: InputProps) => {
   return (
-    <div className="relative email">
+    <div className="email relative">
       <input
         type="email"
         id="email"
         placeholder="email"
-        disabled={variant === 'register'}
+        disabled={variant === "register"}
         className={cn(
-          'block rounded-md px-6 pt-[18px] pb-1.5 w-full text-md bg-neutral-700/30 appearance-none',
-          'placeholder:text-transparent focus:outline-none focus:ring-0 peer invalid:border-b-1',
-          variant === 'register' ? 'text-gray-400' : ''
+          "text-md block w-full appearance-none rounded-md bg-neutral-700/30 px-6 pb-1.5 pt-[18px]",
+          "invalid:border-b-1 peer placeholder:text-transparent focus:outline-none focus:ring-0",
+          variant === "register" ? "text-gray-400" : "",
+          className,
         )}
         required
         {...props}
@@ -24,26 +25,28 @@ const EmailInput: React.FC<InputType> = ({ variant, ...props }) => {
       <label
         htmlFor="email"
         className={cn(
-          'absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-3 z-10 origin-[0] left-6 cursor-text',
-          'peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3'
-        )}>
+          "text-md absolute left-6 top-3 z-10 origin-[0] -translate-y-3 scale-75 transform cursor-text text-zinc-400 duration-150",
+          "peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-3 peer-focus:scale-75",
+        )}
+      >
         Email
       </label>
     </div>
   );
 };
 
-const PassInput: React.FC<InputType> = ({ variant, ...props }) => {
+const PassInput = ({ variant, className, ...props }: InputProps) => {
   return (
-    <div className="relative pass">
+    <div className="pass relative">
       <input
         type="password"
         id="password"
         placeholder="password"
-        disabled={variant === 'register'}
+        disabled={variant === "register"}
         className={cn(
-          'block w-full px-6 pt-[18px] pb-1.5 text-white rounded-md appearance-none text-md bg-neutral-700/30',
-          'placeholder:text-transparent focus:outline-none focus:ring-0 peer invalid:border-b-1'
+          "text-md block w-full appearance-none rounded-md bg-neutral-700/30 px-6 pb-1.5 pt-[18px] text-white",
+          "invalid:border-b-1 peer placeholder:text-transparent focus:outline-none focus:ring-0",
+          className,
         )}
         required
         {...props}
@@ -51,32 +54,37 @@ const PassInput: React.FC<InputType> = ({ variant, ...props }) => {
       <label
         htmlFor="password"
         className={cn(
-          'absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-3 z-10 origin-[0] left-6 cursor-text',
-          'peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3'
-        )}>
+          "text-md absolute left-6 top-3 z-10 origin-[0] -translate-y-3 scale-75 transform cursor-text text-zinc-400 duration-150",
+          "peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-3 peer-focus:scale-75",
+        )}
+      >
         Password
       </label>
     </div>
   );
 };
 
-const NameInput: React.FC<InputType> = ({ variant, ...props }) => {
+const NameInput = ({ variant, className, ...props }: InputProps) => {
   return (
-    <div className="relative name">
+    <div className="name relative">
       <input
         type="text"
-        disabled={variant === 'register'}
+        disabled={variant === "register"}
         id="name"
-        className="block w-full px-6 pt-[18px] pb-1.5 text-white rounded-md text-md bg-neutral-700/30 focus:outline-none focus:ring-0 peer invalid:border-b-1"
+        className={cn(
+          "text-md invalid:border-b-1 peer block w-full rounded-md bg-neutral-700/30 px-6 pb-1.5 pt-[18px] text-white focus:outline-none focus:ring-0",
+          className,
+        )}
         required
         {...props}
       />
       <label
         htmlFor="name"
         className={cn(
-          'absolute text-md text-zinc-400 duration-150 transform -translate-y-3 scale-75 top-3 z-10 origin-[0] left-6 cursor-text',
-          'peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3'
-        )}>
+          "text-md absolute left-6 top-3 z-10 origin-[0] -translate-y-3 scale-75 transform cursor-text text-zinc-400 duration-150",
+          "peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-3 peer-focus:scale-75",
+        )}
+      >
         Username
       </label>
     </div>

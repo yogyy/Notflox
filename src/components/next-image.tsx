@@ -14,10 +14,8 @@ const NextImage = ({ className, src, alt, ...props }: ImageProps) => {
   );
 };
 
-const ImageNotFound: React.FC<React.HTMLAttributes<HTMLSpanElement>> = ({
-  className,
-  ...props
-}) => {
+interface Image404Props extends React.HTMLAttributes<HTMLSpanElement> {}
+const ImageNotFound = ({ className, ...props }: Image404Props) => {
   return (
     <span
       className={cn(

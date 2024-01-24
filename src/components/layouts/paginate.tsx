@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "@/lib/utils";
 import {
   Pagination,
@@ -7,7 +8,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import React from "react";
 
 interface PaginateProps extends React.ComponentProps<"nav"> {
   totalPost: number;
@@ -17,7 +17,7 @@ interface PaginateProps extends React.ComponentProps<"nav"> {
   id_href: string;
 }
 
-export const Paginate: React.FC<PaginateProps> = ({
+export const Paginate = ({
   totalPost,
   postPerPage,
   currentPage,
@@ -25,7 +25,7 @@ export const Paginate: React.FC<PaginateProps> = ({
   id_href,
   className,
   ...props
-}) => {
+}: PaginateProps) => {
   let pages = [];
   for (let i = 1; i <= Math.ceil(totalPost / postPerPage); i++) {
     pages.push(i);

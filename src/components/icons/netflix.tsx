@@ -1,10 +1,9 @@
 import * as React from "react";
 
-export const Netflix: React.FC<
-  React.SVGProps<SVGSVGElement> & {
-    fillColor?: string;
-  }
-> = ({ fillColor, className, ...props }) => {
+interface LogoProps extends React.SVGProps<SVGSVGElement> {
+  fillColor?: string;
+}
+export const Netflix = ({ fillColor, className, ...props }: LogoProps) => {
   return (
     <svg
       width={100}

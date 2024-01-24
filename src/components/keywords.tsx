@@ -7,21 +7,23 @@ interface KW {
   name: string;
 }
 
-interface KEYWORDS extends React.ComponentProps<"div"> {
+interface KeywordProps extends React.ComponentProps<"div"> {
   keyword: number;
   type: string;
 }
 
-export const Keywords: React.FC<KEYWORDS> = ({
+export const Keywords = ({
   keyword,
   type,
   className,
   ...props
-}) => {
-  const { data, isLoading } = useQuery([`keywords ${type}`, keyword], () =>
-    axios
-      .get(`/api/${type}/keyword/${keyword}`)
-      .then((res) => res.data.results || res.data.keywords),
+}: KeywordProps) => {
+  const { data, isLoading } = useQuery<KW[]>(
+    [`keywords ${type}`, keyword],
+    () =>
+      axios
+        .get(`/api/${type}/keyword/${keyword}`)
+        .then((res) => res.data.results || res.data.keywords),
   );
 
   if (isLoading) {
@@ -55,7 +57,7 @@ export const Keywords: React.FC<KEYWORDS> = ({
           {keyword.name}
         </p>
       ))}
-      {data.length === 0 && <p>keywords no available</p>}
+      {data?.length === 0 && <p>keywords no available</p>}
     </div>
   );
 };

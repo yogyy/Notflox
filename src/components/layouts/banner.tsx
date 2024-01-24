@@ -10,16 +10,21 @@ import { Autoplay, EffectFade } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { LoaderBlock } from "../loader/loader-block";
 
-export const Banner: React.FC<
-  React.HTMLAttributes<HTMLElement> & {
-    banner: Movie[] | undefined;
-    loading?: boolean;
-  }
-> = ({ banner, loading, className, ...props }) => {
+interface BannerProps extends React.HTMLAttributes<HTMLElement> {
+  banner: Movie[] | undefined;
+  loading?: boolean;
+}
+
+export const Banner = ({
+  banner,
+  loading,
+  className,
+  ...props
+}: BannerProps) => {
   if (loading) return <LoaderBlock className="h-[56.25vw] bg-ireng" />;
   return (
     <section className={cn("relative", className)} {...props}>
-      <div className={cn("relative z-[1] h-[56.25vw]")}>
+      <div className="relative z-[1] h-[56.25vw]">
         <Swiper
           effect={"fade"}
           loop={true}

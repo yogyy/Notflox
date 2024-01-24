@@ -27,10 +27,10 @@ const thumbnailVariants = cva("relative min-w-full rounded h-full", {
   },
 });
 
-const InnerThumbnail: React.FC<Pick<ThumbnailProps, "variant" | "movie">> = ({
+const InnerThumbnail = ({
   movie,
   variant,
-}) => {
+}: Pick<ThumbnailProps, "variant" | "movie">) => {
   const thumbnailUrl =
     variant === "portrait"
       ? movie.poster_path &&
@@ -58,13 +58,13 @@ const InnerThumbnail: React.FC<Pick<ThumbnailProps, "variant" | "movie">> = ({
     </div>
   );
 };
-export const Thumbnail: React.FC<ThumbnailProps> = ({
+export const Thumbnail = ({
   type,
   movie,
   variant,
   className,
   ...props
-}) => {
+}: ThumbnailProps) => {
   const [, setCurrentMovie] = useAtom(changeMovieState);
   const [, setShowModal] = useAtom(changeModalState);
   return type === "to-page" ? (

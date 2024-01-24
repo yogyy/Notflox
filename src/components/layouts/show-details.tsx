@@ -5,17 +5,16 @@ import { tanggal } from "@/lib/getDate";
 import { imgUrl } from "~/constants/movie";
 import { ButtonTrailer } from "../button-trailer";
 
-interface ShowDetailsProps extends React.ComponentProps<"article"> {
+interface DetailProps extends React.ComponentProps<"article"> {
   show: Movie | undefined;
   playFunc: () => void;
 }
-
-export const ShowDetails: React.FC<ShowDetailsProps> = ({
+export const ShowDetails = ({
   show,
   playFunc,
   className,
   ...props
-}) => {
+}: DetailProps) => {
   return (
     <article
       className={cn(

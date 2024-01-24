@@ -1,12 +1,17 @@
 import { signIn } from "next-auth/react";
 import { Github, Google } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
-export const OAuth: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+export const OAuth = ({
+  className,
   ...props
-}) => {
+}: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className="mt-4 flex flex-row items-center justify-center gap-4"
+      className={cn(
+        "mt-4 flex flex-row items-center justify-center gap-4",
+        className,
+      )}
       {...props}
     >
       <button

@@ -2,19 +2,19 @@ import React from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 
-export const HeadMetaData: React.FC<{
+interface MetaProps {
   title?: string;
   metaDescription?: string;
   ogImageUrl?: string;
-}> = ({
+}
+
+export const HeadMetaData = ({
   title = "Movie Lists",
   metaDescription = "Experience the world of cinema through our movie consumption app. Explore a vast collection of movies sourced from a reliable API. Dive into a diverse selection of films, genres, and more. Stream seamlessly and enjoy the magic of the movies. Discover your next favorite film today!",
   ogImageUrl = "https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.jpg",
-}) => {
+}: MetaProps) => {
   const defaultTitle = "NOTFLOX";
-
   const { asPath } = useRouter();
-
   const pageUrl =
     process.env.NODE_ENV === "development"
       ? `localhost:3000${asPath}`
@@ -34,6 +34,7 @@ export const HeadMetaData: React.FC<{
       <meta property="og:description" content={metaDescription} />
 
       <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:creator" content="@yogyyconst" />
       <meta property="twitter:url" content={pageUrl} />
       <meta name="twitter:title" content={title + " | " + defaultTitle} />
       <meta name="twitter:image" content={ogImageUrl} />

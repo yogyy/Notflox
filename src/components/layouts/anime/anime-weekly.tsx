@@ -4,11 +4,14 @@ import { Movie } from "~/types/tmdb-type";
 import { ImageNotFound, NextImage } from "@/components/next-image";
 import { imgUrl } from "~/constants/movie";
 
-export const AnimeWeekly: React.FC<
-  React.HTMLAttributes<HTMLUListElement> & {
-    bannerAnime: Movie[] | undefined;
-  }
-> = ({ bannerAnime, className, ...props }) => {
+interface WeeklyAnimeProps extends React.HTMLAttributes<HTMLUListElement> {
+  bannerAnime: Movie[] | undefined;
+}
+export const AnimeWeekly = ({
+  bannerAnime,
+  className,
+  ...props
+}: WeeklyAnimeProps) => {
   return (
     <ul
       className={cn(

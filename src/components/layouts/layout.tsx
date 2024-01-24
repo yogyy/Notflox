@@ -17,7 +17,7 @@ interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
   footer?: boolean;
 }
 
-const RootLayout: React.FC<LayoutProps> = ({
+const RootLayout = ({
   children,
   title,
   description,
@@ -25,7 +25,7 @@ const RootLayout: React.FC<LayoutProps> = ({
   footer = true,
   className,
   ...props
-}) => {
+}: LayoutProps) => {
   const { data: session } = useSession();
   if (!session) {
     return (

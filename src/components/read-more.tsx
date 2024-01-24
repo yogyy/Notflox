@@ -7,13 +7,13 @@ interface LTProps extends React.ComponentProps<"span"> {
   href: string;
 }
 
-export const LongText: React.FC<LTProps> = ({
+export const LongText = ({
   text,
   maxLength,
   href,
   className,
   ...props
-}) => {
+}: LTProps) => {
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
 
   if (text?.length <= maxLength) {

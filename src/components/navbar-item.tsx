@@ -3,10 +3,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export const NavbarItem: React.FC<React.ComponentProps<"div">> = ({
-  className,
-  ...props
-}) => {
+interface NavbarItemProps extends React.ComponentProps<"div"> {}
+export const NavbarItem = ({ className, ...props }: NavbarItemProps) => {
   const router = useRouter();
   const arrOfRoute = router.route.split("/");
   const baseRoute = "/" + arrOfRoute[1];
