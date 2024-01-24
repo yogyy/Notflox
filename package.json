@@ -1,12 +1,17 @@
 {
   "name": "notflox",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
+  "author": {
+    "name": "yogyy",
+    "url": "https://twitter.com/yogyyconst"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "typecheck": "tsc --noemit",
+    "lint": "npm run typecheck && next lint"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
