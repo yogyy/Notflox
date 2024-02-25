@@ -1,7 +1,7 @@
 import { compare } from "bcrypt";
 import prisma from "@/lib/db/prisma";
 import { Adapter } from "next-auth/adapters";
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
@@ -67,15 +67,28 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth",
   },
+  events: {
+    async linkAccount({ user }) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    },
+  },
   callbacks: {
     async jwt({ token, user, account }) {
-      return { ...token, ...user };
+      if (account) {
+        token.accessToken = account.access_token;
+        token.sub = user?.id;
+      }
+      return token;
     },
     async session({ session, token, user }) {
-      session.user = token as any;
+      session.user = token as Session["user"];
       return session;
     },
   },
+
   debug: process.env.NODE_ENV === "development",
   session: { strategy: "jwt", maxAge: 3600 * 24 * 7 },
   jwt: {
@@ -84,4 +97,9 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-export default NextAuth(authOptions);
+// export default NextAuth(authOptions);
+
+const authHandler = NextAuth(authOptions);
+export default async function handler(...params: any[]) {
+  await authHandler(...params);
+}
