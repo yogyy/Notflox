@@ -1,14 +1,9 @@
 import { signIn } from "next-auth/react";
 import { Github, Google } from "@/components/icons";
-
-import { useSearchParams } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 
 export const Social = () => {
-  const searchParams = useSearchParams();
-
-  const onClick = (provider: "google" | "github") => {
+  const login = (provider: "google" | "github") => {
     signIn(provider, {
       callbackUrl: "/profiles",
     });
@@ -20,7 +15,7 @@ export const Social = () => {
         size="default"
         className="w-full bg-white/10 text-white hover:bg-white/20 focus-visible:bg-white/20"
         variant="ghost"
-        onClick={() => onClick("google")}
+        onClick={() => login("google")}
       >
         <Google className="h-5 w-5" />
       </Button>
@@ -28,7 +23,7 @@ export const Social = () => {
         size="default"
         className="w-full bg-white/10 text-white hover:bg-white/20 hover:text-current focus-visible:bg-white/20"
         variant="ghost"
-        onClick={() => onClick("github")}
+        onClick={() => login("github")}
       >
         <Github className="h-5 w-5" />
       </Button>

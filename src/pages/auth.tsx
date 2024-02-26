@@ -8,6 +8,8 @@ import { GetServerSidePropsContext } from "next";
 import { Toaster } from "@/components/ui/toaster";
 import { LoginForm } from "@/components/auth";
 import { HeadMetaData } from "@/components/head-meta";
+import { LoginForm } from "@/components/auth/login-form";
+import { CardWrapper } from "@/components/auth/card-wrapper";
 
 const Auth = () => {
   return (
@@ -26,12 +28,10 @@ const Auth = () => {
             className="absolute z-[-1] hidden h-full w-full object-cover md:block lg:bg-cover"
             priority
           />
-          <nav className="absolute top-0 flex w-full px-12 py-5">
-            <Link href="/profiles">
-              <Netflix className="h-6" />
-            </Link>
-          </nav>
-          <LoginForm />
+          <CardWrapper>
+            <LoginForm />
+          </CardWrapper>
+        </div>
         </div>
         <Toaster />
       </div>
