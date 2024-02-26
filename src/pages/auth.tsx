@@ -1,15 +1,12 @@
 import Head from "next/head";
-import Link from "next/link";
 import { auth } from "~/auth";
 import Image from "next/image";
 import * as React from "react";
-import { Netflix } from "@/components/icons";
 import { GetServerSidePropsContext } from "next";
-import { Toaster } from "@/components/ui/toaster";
-import { LoginForm } from "@/components/auth";
 import { HeadMetaData } from "@/components/head-meta";
 import { LoginForm } from "@/components/auth/login-form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
+import { Toaster } from "@/components/ui/toaster";
 
 const Auth = () => {
   return (
@@ -19,7 +16,7 @@ const Auth = () => {
         <title>Login</title>
       </Head>
       <div className="relative w-full">
-        <div className="relative grid h-dvh w-full place-content-center bg-black md:bg-black/70">
+        <div className="relative flex h-dvh w-full items-center justify-center bg-black max-[400px]:justify-start md:bg-black/70">
           <Image
             src="/images/auth-background.webp"
             alt="background"
@@ -32,9 +29,8 @@ const Auth = () => {
             <LoginForm />
           </CardWrapper>
         </div>
-        </div>
-        <Toaster />
       </div>
+      <Toaster />
     </>
   );
 };
