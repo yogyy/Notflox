@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { FormError } from "@/components/form-error";
+import { FormError } from "./form-error";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { loginState } from "~/atoms/auth-atoms";
@@ -69,6 +69,7 @@ export const LoginForm = () => {
         }
         if (data?.error) {
           setError(data.error);
+          toast.error("error", { description: data.error });
         }
       })
       .catch(() => setError("Something went wrong"));
