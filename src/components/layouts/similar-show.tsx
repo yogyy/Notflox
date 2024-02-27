@@ -6,7 +6,7 @@ import { Movie } from "~/types/tmdb-type";
 import Link from "next/link";
 import { cn, convertGenreIdsToNames } from "@/lib/utils";
 import { ImageNotFound, NextImage } from "../next-image";
-import { tanggal } from "@/lib/getDate";
+import { tanggal } from "@/lib/get-date";
 import { imgUrl } from "~/constants/movie";
 
 interface SimilarProps {

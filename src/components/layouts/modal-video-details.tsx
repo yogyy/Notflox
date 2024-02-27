@@ -1,6 +1,6 @@
 import React from "react";
 import { Movie } from "~/types/tmdb-type";
-import { tanggal } from "@/lib/getDate";
+import { tanggal } from "@/lib/get-date";
 
 interface ModalVidDetailsProps {
   movie: Movie | undefined;

@@ -1,7 +1,7 @@
 import { Movie } from "~/types/tmdb-type";
 import { cn } from "@/lib/utils";
 import { NextImage } from "../next-image";
-import { tanggal } from "@/lib/getDate";
+import { tanggal } from "@/lib/get-date";
 import { imgUrl } from "~/constants/movie";
 import { ButtonTrailer } from "../button-trailer";
 
