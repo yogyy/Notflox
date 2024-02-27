@@ -6,6 +6,8 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { getClientIp } from "request-ip";
+import { ratelimit } from "@/lib/redis";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
@@ -32,7 +34,12 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
+        const ip = getClientIp(req) as string;
+
+        const { success } = await ratelimit.limit(ip);
+        if (!success) throw new Error("Too Many Request");
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password required");
         }

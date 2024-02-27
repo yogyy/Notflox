@@ -1,7 +1,7 @@
 import { Poppins } from "next/font/google";
 import { HeadMetaData } from "@/components/head-meta";
 import { HTMLAttributes } from "react";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 import { useSession } from "next-auth/react";
 import { LoaderBlock } from "@/components/loader";
 import { cn } from "@/lib/utils";
@@ -26,20 +26,6 @@ const RootLayout = ({
   className,
   ...props
 }: LayoutProps) => {
-  const { data: session } = useSession();
-  if (!session) {
-    return (
-      <>
-        <HeadMetaData
-          metaDescription={description}
-          ogImageUrl={image}
-          title={title}
-        />
-        <LoaderBlock className="bg-gradient-to-b from-ireng to-black" />
-      </>
-    );
-  }
-
   return (
     <>
       <HeadMetaData
@@ -48,10 +34,12 @@ const RootLayout = ({
         title={title}
       />
       <Header />
-      <main className={cn(poppins.className, className)} {...props}>
+      <main
+        className={cn(poppins.className, "min-h-dvh", className)}
+        {...props}
+      >
         {children}
       </main>
-      <Toaster />
       {footer && <Footer />}
     </>
   );

@@ -6,7 +6,6 @@ import { GetServerSidePropsContext } from "next";
 import { HeadMetaData } from "@/components/head-meta";
 import { LoginForm } from "@/components/auth/login-form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { Toaster } from "@/components/ui/toaster";
 
 const Auth = () => {
   return (
@@ -30,7 +29,6 @@ const Auth = () => {
           </CardWrapper>
         </div>
       </div>
-      <Toaster />
     </>
   );
 };
