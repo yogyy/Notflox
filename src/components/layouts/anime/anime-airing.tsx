@@ -7,25 +7,20 @@ import { useQueries } from "@tanstack/react-query";
 import { baseUrl, imgUrl } from "~/constants/movie";
 import { AnimeAiringLoading } from "@/components/loader";
 import { cn, fetcher } from "@/lib/utils";
+import { lastYear, sevenDaysAgo, today } from "@/lib/get-date";
 
 interface AiringProps extends React.HTMLAttributes<HTMLDivElement> {}
 export const AnimeAiring = ({ className, ...props }: AiringProps) => {
   const queryConfigurations = Array.from({ length: 4 }, (_, page) => ({
     queryKey: ["anime-airing", page + 1],
     queryFn: () => {
-      const currentDate = new Date();
-      let sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(currentDate.getDate() - 7);
-      const formattedCurrentDate = currentDate.toISOString().split("T")[0];
-      const formattedSevenDaysAgo = sevenDaysAgo.toISOString().split("T")[0];
       return fetcher<MovieResponse>(
         `${baseUrl}/discover/tv?page=${
           page + 1
-        }&sort_by=primary_release_date.desc&air_date.lte=${formattedCurrentDate}&air_date.gte=${formattedSevenDaysAgo}&with_genres=16&with_keywords=210024&without_keywords=278823&with_original_language=ja`,
+        }&sort_by=primary_release_date.desc&first_air_date.gte=${lastYear}&air_date.lte=${today}&air_date.gte=${sevenDaysAgo}&with_genres=16&with_keywords=210024&without_keywords=278823&with_original_language=ja`,
       );
     },
   }));
-  //        }&with_genres=16&with_keywords=210024&with_genres=16&with_original_language=ja`
   const queryResults = useQueries({ queries: queryConfigurations });
   const combinedData = queryResults.map((res) => res.data?.results).flat();
   const isLoading = queryResults.some((res) => res.isLoading);

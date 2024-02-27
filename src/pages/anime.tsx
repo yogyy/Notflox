@@ -7,12 +7,15 @@ import {
   AnimeWeekly,
   SwiperAnime,
 } from "@/components/layouts/anime";
+import { baseUrl } from "~/constants/movie";
+import { lastYear, today } from "@/lib/get-date";
 
 const AnimePage = () => {
   const { data: bannerAnime, isLoading: isLoadingBannerAnime } = useCustomQuery(
     ["anime-popular"],
-    req.PopularAnime,
+    `${baseUrl}/discover/tv?sort_by=popularity.desc&first_air_date.gte=${lastYear}&air_date.gte=${today}&with_genres=16&with_original_language=ja`,
   );
+  console.log(bannerAnime);
   return (
     <RootLayout
       title="Anime"
@@ -23,7 +26,7 @@ const AnimePage = () => {
         <div className="relative mx-auto w-full max-w-[948px]">
           <SwiperAnime
             loading={isLoadingBannerAnime}
-            bannerAnime={bannerAnime}
+            anime={bannerAnime?.slice(0, 10)}
             aria-label="swiper-anime"
           />
         </div>
@@ -37,7 +40,7 @@ const AnimePage = () => {
           <AnimeWeeklyLoading />
         ) : (
           <AnimeWeekly
-            bannerAnime={bannerAnime?.slice(10, 20)}
+            anime={bannerAnime?.slice(10, 20)}
             aria-label="weekly-anime"
           />
         )}

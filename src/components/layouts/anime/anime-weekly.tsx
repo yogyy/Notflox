@@ -5,10 +5,10 @@ import { ImageNotFound, NextImage } from "@/components/next-image";
 import { imgUrl } from "~/constants/movie";
 
 interface WeeklyAnimeProps extends React.HTMLAttributes<HTMLUListElement> {
-  bannerAnime: Movie[] | undefined;
+  anime: Movie[] | undefined;
 }
 export const AnimeWeekly = ({
-  bannerAnime,
+  anime,
   className,
   ...props
 }: WeeklyAnimeProps) => {
@@ -20,7 +20,7 @@ export const AnimeWeekly = ({
       )}
       {...props}
     >
-      {bannerAnime?.map((tv, index) => (
+      {anime?.map((tv, index) => (
         <li
           key={tv.id}
           className={cn("", index === 0 && "md:col-span-2 xl:col-span-1")}

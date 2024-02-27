@@ -10,11 +10,11 @@ import { Movie } from "~/types/tmdb-type";
 import { cn } from "@/lib/utils";
 
 interface SwiperAnimeProps extends SwiperProps {
-  bannerAnime: Movie[] | undefined;
+  anime: Movie[] | undefined;
   loading: boolean;
 }
 export const SwiperAnime = ({
-  bannerAnime,
+  anime,
   loading,
   className,
   ...props
@@ -37,7 +37,7 @@ export const SwiperAnime = ({
       modules={[Autoplay, Navigation, EffectFade]}
       {...props}
     >
-      {bannerAnime?.slice(0, 10).map((tv) => (
+      {anime?.map((tv) => (
         <SwiperSlide key={tv.id}>
           <Link href={`/tv/${tv.id}`} aria-label={tv.name || tv.title}>
             <div className="relative aspect-video h-full w-full">
