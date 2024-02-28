@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { Search } from "../search";
+import { BurgerMenu } from "../icons/general";
 
 export const Header = () => {
   const [showBackground, setShowBackground] = React.useState(false);
@@ -48,20 +49,7 @@ export const Header = () => {
           <div className="flex items-center justify-center">
             <Sheet>
               <SheetTrigger className="block rounded-md px-2 py-1 hover:bg-primary/10 sm:hidden">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-7 text-red-500"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5"
-                  />
-                </svg>
+                <BurgerMenu />
                 <span className="sr-only">open drawer</span>
               </SheetTrigger>
               <SheetContent

@@ -8,6 +8,7 @@ import { cn, convertGenreIdsToNames } from "@/lib/utils";
 import { ImageNotFound, NextImage } from "../next-image";
 import { tanggal } from "@/lib/get-date";
 import { imgUrl } from "~/constants/movie";
+import { ClockIcon, FolderIcon } from "../icons/general";
 
 interface SimilarProps {
   similar: number;
@@ -87,37 +88,11 @@ export const SimilarShow = ({ similar, type }: SimilarProps) => {
                 </Link>
                 <div className="relative flex flex-col text-[10px] text-gray-300 sm:flex-row sm:gap-2">
                   <span className="inline-flex gap-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-3 w-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                      />
-                    </svg>
+                    <ClockIcon />
                     {tanggal(movie.release_date || movie.first_air_date)}
                   </span>
                   <span className="inline-flex cursor-pointer gap-1 hover:text-gray-300">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="h-3 w-3"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
-                      />
-                    </svg>
+                    <FolderIcon />
                     {convertGenreIdsToNames(movie.genre_ids, movie)}
                   </span>
                 </div>

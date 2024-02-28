@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { BellIcon } from "./icons/general";
 
 const notif = atomWithStorage<boolean>("notif", false);
 
@@ -20,21 +21,7 @@ export const Notifications = () => {
         className="group relative inline-flex items-center rounded-full text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
       >
         <span className="sr-only">notification</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="m-1 w-6 text-gray-300"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-          />
-        </svg>
-
+        <BellIcon />
         <div
           className={
             !clicked
