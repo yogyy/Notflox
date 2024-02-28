@@ -64,6 +64,12 @@ module.exports = {
       aspectRatio: {
         poster: "27 / 40",
       },
+      boxShadow: {
+        x: [
+          "rgba(136, 153, 166, 0.2) 0px 0px 15px",
+          "rgba(136, 153, 166, 0.15) 0px 0px 3px 1px",
+        ],
+      },
       keyframes: {
         "accordion-down": {
           from: { height: 0 },
