@@ -1,4 +1,5 @@
 import * as React from "react";
+import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import { Movie } from "~/types/tmdb-type";
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { useToast } from "./ui/use-toast";
 import { useDebounce } from "@/hooks/use-debounce";
 import { MovieIcon, SearchIcon, SeriesIcon } from "./icons/general";
 
@@ -23,7 +23,6 @@ export const Search = () => {
   const encodedQuery = encodeURIComponent(query);
   const debouncedQuery = useDebounce<string>(encodedQuery, 500);
   const { data: session } = useSession();
-  const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -40,10 +39,9 @@ export const Search = () => {
         setSearchResults(response.data);
       } catch (err) {
         const error = err as AxiosError<Error>;
-        toast({
-          title: `${error.message}`,
-          description: `${error.response?.statusText}`,
-          variant: "destructive",
+        console.log(error);
+        toast.error(`${error.code}`, {
+          description: `${error.message}`,
         });
       }
     } else {

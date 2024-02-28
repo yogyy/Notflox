@@ -1,27 +1,22 @@
-import * as React from "react";
+import React from "react";
+import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { cn } from "@/lib/utils";
-import { Movie } from "~/types/tmdb-type";
 import { fetcher } from "@/lib/utils";
+import { Movie } from "~/types/tmdb-type";
 import { NextImage } from "../next-image";
 import ReactPlayer from "react-player/youtube";
 import { useQuery } from "@tanstack/react-query";
 import { baseUrl, imgUrl } from "~/constants/movie";
 import { ModalVidDetails } from "./modal-video-details";
-import { useToast } from "@/components/ui/use-toast";
 import { Dialog, Transition } from "@headlessui/react";
 import { modalState, movieState } from "~/atoms/jotaiAtoms";
 
-interface modalProps {
-  showDetail?: boolean;
-}
-
-const ModalVid = ({ showDetail }: modalProps) => {
+const ModalVid = ({ showDetail }: { showDetail?: boolean }) => {
   const [showModal, setShowModal] = useAtom(modalState);
   const [movie, setMovie] = useAtom(movieState);
   const [trailer, setTrailer] = React.useState("");
   const [videoError, setVideoError] = React.useState(false);
-  const { toast } = useToast();
 
   const handleClose = () => {
     setShowModal(false);
@@ -45,20 +40,10 @@ const ModalVid = ({ showDetail }: modalProps) => {
       setTrailer(data.videos?.results[index]?.key);
       if (!data.videos?.results[index]?.key) {
         setVideoError(true);
+        toast.error("Error", { description: "Trailer not available" });
       }
     }
   }, [data]);
-
-  React.useEffect(() => {
-    if (data?.videos.results.length === 0 || videoError) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Trailer not available",
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoError]);
 
   return (
     <>
@@ -77,7 +62,7 @@ const ModalVid = ({ showDetail }: modalProps) => {
           </Transition.Child>
           <div
             className={cn(
-              "fixed inset-0 top-[15%] overflow-x-hidden overflow-y-scroll rounded-md scrollbar-hide",
+              "fixed inset-0 overflow-x-hidden overflow-y-scroll rounded-md scrollbar-hide",
               !showDetail && "",
             )}
           >
@@ -93,7 +78,7 @@ const ModalVid = ({ showDetail }: modalProps) => {
               >
                 <Dialog.Panel
                   className={cn(
-                    "w-[64rem] max-w-5xl transform rounded-2xl bg-ireng/95 text-left align-middle shadow-xl transition-all",
+                    "absolute top-[15%] w-[64rem] max-w-5xl transform rounded-2xl bg-ireng/95 text-left align-middle shadow-xl transition-all",
                     !showDetail && "rounded-none",
                   )}
                 >
