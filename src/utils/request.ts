@@ -1,7 +1,6 @@
-import { today } from '@/lib/getDate';
-import { baseUrl } from '~/constants/movie';
+import { baseUrl } from "~/constants/movie";
 
-export const API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+export const API_KEY = process.env.TMDB_API_KEY;
 
 const requests = {
   TrendingMovies: `${baseUrl}/trending/movie/week?language=en-US&with_networks=213`,
@@ -33,11 +32,6 @@ const requests = {
   MysteryTv: `${baseUrl}/discover/tv?language=en-US&with_genres=9648`,
   SciFiTv: `${baseUrl}/discover/tv?language=en-US&with_genres=10765`,
   NowPlayingTv: `${baseUrl}/tv/on_the_air?page=1&with_original_language=en`,
-
-  // anime
-  TopAnime: `${baseUrl}/tv/top_rated?with_genres=16&with_keywords=210024&with_genres=16&with_original_language=ja`,
-  PopularAnime: `${baseUrl}/discover/tv?sort_by=popularity.desc&air_date.gte=${today}&with_genres=16&with_original_language=ja`,
-  // RecentAnime:
 };
 
 export default requests;
