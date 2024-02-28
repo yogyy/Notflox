@@ -1,12 +1,11 @@
 import { Poppins } from "next/font/google";
 import { HeadMetaData } from "@/components/head-meta";
 import { HTMLAttributes } from "react";
-import { Toaster } from "sonner";
-import { useSession } from "next-auth/react";
-import { LoaderBlock } from "@/components/loader";
+
 import { cn } from "@/lib/utils";
 import { Header } from "./header";
 import { Footer } from "./footer";
+
 const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
