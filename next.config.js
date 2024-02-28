@@ -9,10 +9,7 @@ const nextConfig = {
       "gogocdn.net",
       "res.cloudinary.com",
     ],
-    unoptimized: true,
-  },
-  experimental: {
-    scrollRestoration: true,
+    deviceSizes: [1080, 1920],
   },
 };
 

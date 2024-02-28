@@ -19,8 +19,7 @@ const Auth = () => {
           <Image
             src="/images/auth-background.webp"
             alt="background"
-            width={1920}
-            height={1080}
+            fill
             className="absolute z-[-1] hidden h-full w-full object-cover md:block lg:bg-cover"
             priority
           />
