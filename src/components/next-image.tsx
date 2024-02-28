@@ -8,6 +8,7 @@ const NextImage = ({ className, src, alt, ...props }: ImageProps) => {
       alt={alt}
       fill
       className={cn("object-cover", className)}
+      unoptimized
       draggable={false}
       {...props}
     />
