@@ -15,7 +15,6 @@ const AnimePage = () => {
     ["anime-popular"],
     `${baseUrl}/discover/tv?sort_by=popularity.desc&first_air_date.gte=${lastYear}&air_date.gte=${today}&with_genres=16&with_original_language=ja`,
   );
-  console.log(bannerAnime);
   return (
     <RootLayout
       title="Anime"
