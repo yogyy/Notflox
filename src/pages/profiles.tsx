@@ -3,8 +3,6 @@ import Image from "next/image";
 import { useAtom } from "jotai";
 import { nonUser } from "~/atoms/jotaiAtoms";
 import { useSession } from "next-auth/react";
-import React from "react";
-import { toast } from "sonner";
 import RootLayout from "@/components/layouts/layout";
 
 const Profiles = () => {
@@ -13,11 +11,7 @@ const Profiles = () => {
   const [userPic] = useAtom(nonUser);
 
   return (
-    <RootLayout
-      title={`${user ? user.name : "Anonymous"}`}
-      footer={false}
-      className="h-screen bg-gradient-to-b from-ireng to-black"
-    >
+    <RootLayout title={`${user ? user.name : "Anonymous"}`} footer={false}>
       <div className="grid h-[calc(100vh_-_145px)] place-content-center">
         <div className="flex flex-col">
           <h1 className="text-center text-3xl text-white">
@@ -27,11 +21,8 @@ const Profiles = () => {
             Choose a profile to watch.
           </p>
           <Link
-            href="#tai"
+            href="/"
             className="group mx-auto mt-10 w-fit flex-col overflow-hidden rounded-lg ring-2 ring-transparent transition duration-300 ease-out hover:ring-gray-200"
-            onClick={() =>
-              toast.success("wsg y'll", { description: "wuhan knt" })
-            }
           >
             <div className="relative flex flex-col items-center justify-center overflow-hidden  border border-transparent group-hover:cursor-pointer">
               <Image
@@ -41,7 +32,8 @@ const Profiles = () => {
                 draggable={false}
                 className="w-32 md:w-44"
                 src={user?.picture || userPic}
-                alt="profile"
+                alt="user's profile"
+                priority
               />
             </div>
           </Link>
