@@ -17,7 +17,7 @@ const Auth = () => {
       <div className="relative w-full">
         <div className="relative flex h-dvh w-full items-center justify-center bg-black max-[400px]:justify-start md:bg-black/70">
           <Image
-            src="/images/auth-background.webp"
+            src="https://res.cloudinary.com/dpegakmzh/image/upload/v1711799337/notflox/auth-background_wx9vbo.webp"
             alt="background"
             fill
             className="absolute z-[-1] hidden h-full w-full object-cover md:block lg:bg-cover"

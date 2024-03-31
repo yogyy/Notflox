@@ -142,6 +142,7 @@ export const LoginForm = () => {
         <FormError message={error || urlError} />
         {!authState && <FormError message="registration currently disabled" />}
         <Button
+          data-umami-event="Signin button"
           disabled={disabled || !authState}
           type="submit"
           className={cn(

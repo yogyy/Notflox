@@ -1,14 +1,8 @@
-import { Poppins } from "next/font/google";
 import { HeadMetaData } from "@/components/head-meta";
-import { HTMLAttributes } from "react";
-
-import { cn } from "@/lib/utils";
 import { Header } from "./header";
 import { Footer } from "./footer";
 
-const poppins = Poppins({ weight: "400", subsets: ["latin"] });
-
-interface LayoutProps extends HTMLAttributes<HTMLDivElement> {
+interface LayoutProps {
   children: React.ReactNode;
   title: string;
   description?: string;
@@ -22,8 +16,6 @@ const RootLayout = ({
   description,
   image,
   footer = true,
-  className,
-  ...props
 }: LayoutProps) => {
   return (
     <>
@@ -33,12 +25,7 @@ const RootLayout = ({
         title={title}
       />
       <Header />
-      <main
-        className={cn(poppins.className, "min-h-dvh", className)}
-        {...props}
-      >
-        {children}
-      </main>
+      <main className="min-h-dvh">{children}</main>
       {footer && <Footer />}
     </>
   );

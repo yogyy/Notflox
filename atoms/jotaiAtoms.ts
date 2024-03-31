@@ -16,4 +16,4 @@ export const changeMovieState = atom(
   },
 );
 
-export const nonUser = atom("/images/default-red.png");
+export const nonUser = atom("/images/default-red.webp");
