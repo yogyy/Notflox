@@ -16,6 +16,7 @@ export const Social = () => {
         className="w-full bg-white/10 text-white hover:bg-white/20 focus-visible:bg-white/20"
         variant="ghost"
         onClick={() => login("google")}
+        data-umami-event="Google Signin button"
       >
         <Google className="h-5 w-5" />
       </Button>
@@ -24,6 +25,7 @@ export const Social = () => {
         className="w-full bg-white/10 text-white hover:bg-white/20 hover:text-current focus-visible:bg-white/20"
         variant="ghost"
         onClick={() => login("github")}
+        data-umami-event="Github Signin button"
       >
         <Github className="h-5 w-5" />
       </Button>
