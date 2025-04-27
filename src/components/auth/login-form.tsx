@@ -11,17 +11,17 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { FormError } from "./form-error";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { loginState } from "~/atoms/auth-atoms";
+import { loginState, providerState } from "~/atoms/auth-atoms";
 import { useAtomValue } from "jotai";
 import { Spinner } from "../icons";
 import { cn } from "@/lib/utils";
+import { Social } from "./social-auth";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -31,19 +31,15 @@ export const LoginForm = () => {
       ? "Email already in use with different provider!"
       : "";
   const [error, setError] = useState<string | undefined>("");
-  const [disabled, setDisabled] = useState(false);
   const authState = useAtomValue(loginState);
+  const providerLogin = useAtomValue(providerState);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   });
 
   const login = async (values: z.infer<typeof LoginSchema>) => {
-    setDisabled(true);
     try {
       setError("");
       return await signIn("credentials", {
@@ -54,14 +50,13 @@ export const LoginForm = () => {
       });
     } catch (error) {
       throw error;
-    } finally {
-      setDisabled((prev) => !prev);
     }
   };
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     login(values)
       .then((data) => {
+        form.reset();
         if (data?.status === 200) {
           router
             .push("/profiles")
@@ -76,86 +71,101 @@ export const LoginForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="space-y-4">
-          {!authState && (
+    <div className="">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            {!authState && (
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        className="min-h-14 rounded-sm border-zinc-600 text-zinc-100"
+                        {...field}
+                        disabled={form.formState.isSubmitted || !authState}
+                        placeholder="username"
+                        type="text"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
-                      className="border-zinc-600 text-zinc-100"
                       {...field}
-                      disabled={disabled || !authState}
-                      placeholder="lex"
-                      type="username"
+                      className={cn(
+                        "min-h-14 rounded-sm border-zinc-600 text-zinc-100 focus:border-zinc-100",
+                        form.getFieldState("email").invalid &&
+                          "border-destructive",
+                      )}
+                      autoComplete="off"
+                      disabled={form.formState.isSubmitted || !authState}
+                      placeholder="Email"
+                      type="email"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className={cn(
+                        "min-h-14 rounded-sm border-zinc-600 text-zinc-100 focus:border-zinc-100",
+                        form.getFieldState("password").invalid &&
+                          "border-destructive",
+                      )}
+                      autoComplete="off"
+                      disabled={form.formState.isSubmitted || !authState}
+                      placeholder="Password"
+                      type="password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormError message={error || urlError} />
+          {!authState && (
+            <FormError message="registration currently disabled" />
           )}
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    className="border-zinc-600 text-zinc-100"
-                    {...field}
-                    disabled={disabled || !authState}
-                    placeholder="lex@kryptonite.stn"
-                    type="email"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+          <Button
+            data-umami-event="Signin button"
+            disabled={
+              form.formState.isSubmitted || !authState || providerLogin !== null
+            }
+            type="submit"
+            className={cn(
+              "min-h-10 w-full rounded-sm font-medium tracking-wide focus-visible:bg-primary/90",
+              form.formState.isSubmitted && "opacity-70",
             )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    className="border-zinc-600 text-zinc-100"
-                    {...field}
-                    disabled={disabled || !authState}
-                    placeholder="********"
-                    type="password"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+          >
+            {form.formState.isSubmitted ? (
+              <Spinner className="h-5 w-5 animate-spin text-white" />
+            ) : (
+              <span>{authState ? "Sign In" : "Sign Up"}</span>
             )}
-          />
-        </div>
-        <FormError message={error || urlError} />
-        {!authState && <FormError message="registration currently disabled" />}
-        <Button
-          data-umami-event="Signin button"
-          disabled={disabled || !authState}
-          type="submit"
-          className={cn(
-            "w-full focus-visible:bg-primary/90",
-            disabled && "opacity-70",
-          )}
-        >
-          {disabled && <Spinner className="h-5 w-5 animate-spin text-white" />}
-          <span className={cn(disabled && "hidden")}>
-            {authState ? "Login" : "Register"}
-          </span>
-        </Button>
-      </form>
-    </Form>
+          </Button>
+        </form>
+      </Form>
+      <Social disabled={form.formState.isSubmitted} />
+    </div>
   );
 };
