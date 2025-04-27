@@ -156,9 +156,30 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      className={cn(
+        "flex items-start gap-1 text-[0.8rem] font-medium text-destructive",
+        className,
+      )}
       {...props}
     >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1.25em"
+        height="1.25em"
+        viewBox="0 0 24 24"
+        className="mt-0.5 shrink-0"
+      >
+        <g
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <path d="m15 9l-6 6m0-6l6 6" />
+        </g>
+      </svg>
       {body}
     </p>
   );
