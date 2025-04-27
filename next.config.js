@@ -11,6 +11,14 @@ const nextConfig = {
     ],
     deviceSizes: [1080, 1920],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/script.analytics.js",
+        destination: "https://cloud.umami.is/script.js",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
