@@ -3,6 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import {
   Popover,
+  PopoverArrow,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
@@ -10,7 +11,7 @@ import { useRouter } from "next/router";
 import { useAtomValue } from "jotai";
 import { nonUser } from "~/atoms/jotaiAtoms";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LoginIcon, LogoutIcon } from "./icons/general";
+import { cn } from "@/lib/utils";
 
 export const AccountMenu = () => {
   const { data: session } = useSession();
@@ -24,18 +25,35 @@ export const AccountMenu = () => {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="relative rounded-full bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
-        <Avatar className="h-10 w-10">
+      <PopoverTrigger className="relative flex items-center gap-1 rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-opacity-75">
+        <Avatar className="h-8 w-8 rounded-md">
           <AvatarImage src={userPicture} alt={session?.user?.name || "user"} />
           <AvatarFallback className="bg-black">
             {session ? session?.user.name.slice(0, 3) : "lex"}
           </AvatarFallback>
         </Avatar>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 15 15"
+          className={cn(
+            open ? "rotate-180" : "",
+            "transition-transform duration-300",
+          )}
+        >
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M4.182 6.182a.45.45 0 0 1 .636 0L7.5 8.864l2.682-2.682a.45.45 0 0 1 .636.636l-3 3a.45.45 0 0 1-.636 0l-3-3a.45.45 0 0 1 0-.636"
+            clipRule="evenodd"
+          />
+        </svg>
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}
         align="end"
-        className="shadow-x flex w-60 flex-col gap-1 bg-ireng"
+        className="flex w-60 flex-col gap-1 rounded-sm border border-muted/20 bg-ireng/90"
       >
         <button
           className="sr-only"
@@ -44,7 +62,7 @@ export const AccountMenu = () => {
         >
           close popover
         </button>
-        <div className="group rounded-md focus-within:bg-black/70 hover:bg-black/70">
+        <div className="group group rounded-md outline-1 outline-white focus-within:outline">
           <button
             onClick={() => push("/profiles")}
             type="button"
@@ -53,25 +71,23 @@ export const AccountMenu = () => {
             <Image
               width={32}
               height={32}
-              className="w-8 rounded-full"
+              className="rounded-md"
               unoptimized
               src={userPicture}
               alt={session?.user?.name || "Anonymous User"}
             />
-            <p className="text-start text-sm text-white group-hover/item:underline">
+            <p className="text-start text-sm text-white group-hover/item:underline group-hover:underline">
               {session?.user?.name || "Profile"}
             </p>
           </button>
         </div>
-        <div className="rounded-md px-1 py-1 focus-within:bg-black/70 hover:bg-black/70">
+        <div className="-mx-1 border-t border-muted/20"></div>
+        <div className="group rounded-md px-1 py-1 outline-1 outline-white focus-within:outline">
           <button
             type="button"
             onClick={() => (session !== null ? signOut() : signIn())}
-            className={`group flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-white outline-none`}
+            className="group flex w-full items-center justify-center gap-2 rounded-md px-2 py-1 text-sm text-white outline-none group-hover:underline"
           >
-            <span className="flex h-8 w-8 items-center justify-center">
-              {session !== null ? <LogoutIcon /> : <LoginIcon />}
-            </span>
             {session !== null ? "Logout" : "SignIn"}
           </button>
         </div>
