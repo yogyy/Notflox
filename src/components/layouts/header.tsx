@@ -1,4 +1,3 @@
-import * as React from "react";
 import { AccountMenu } from "../account-menu";
 import { Netflix } from "../icons";
 import { NavbarItem } from "../navbar-item";
@@ -13,13 +12,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Search } from "../search";
+import { SearchInput } from "../search-input";
 import { BurgerMenu } from "../icons/general";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
-  const [showBackground, setShowBackground] = React.useState(false);
+  const [showBackground, setShowBackground] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY >= 100) {
         setShowBackground(true);
@@ -76,7 +76,7 @@ export const Header = () => {
             <NavbarItem className="ml-4 hidden flex-row sm:flex sm:gap-3 md:gap-7" />
           </div>
           <div className="relative flex items-center gap-2 md:gap-4">
-            <Search />
+            <SearchInput />
             <Notifications />
             <AccountMenu />
           </div>
