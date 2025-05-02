@@ -1,9 +1,8 @@
-import React from "react";
+import { SVGProps, useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import {
   Popover,
-  PopoverArrow,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
@@ -16,7 +15,7 @@ import { cn } from "@/lib/utils";
 export const AccountMenu = () => {
   const { data: session } = useSession();
   const { push } = useRouter();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const defaultPict = useAtomValue(nonUser);
 
   const userPicture = session?.user?.picture
@@ -32,23 +31,12 @@ export const AccountMenu = () => {
             {session ? session?.user.name.slice(0, 3) : "lex"}
           </AvatarFallback>
         </Avatar>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 15 15"
+        <CaretIcon
           className={cn(
             open ? "rotate-180" : "",
             "transition-transform duration-300",
           )}
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M4.182 6.182a.45.45 0 0 1 .636 0L7.5 8.864l2.682-2.682a.45.45 0 0 1 .636.636l-3 3a.45.45 0 0 1-.636 0l-3-3a.45.45 0 0 1 0-.636"
-            clipRule="evenodd"
-          />
-        </svg>
+        />
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}
@@ -62,11 +50,11 @@ export const AccountMenu = () => {
         >
           close popover
         </button>
-        <div className="group group rounded-md outline-1 outline-white focus-within:outline">
+        <div className="group rounded-md">
           <button
             onClick={() => push("/profiles")}
             type="button"
-            className={` flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm outline-none`}
+            className={` flex w-full items-center gap-2 px-2 py-2 text-sm`}
           >
             <Image
               width={32}
@@ -82,11 +70,11 @@ export const AccountMenu = () => {
           </button>
         </div>
         <div className="-mx-1 border-t border-muted/20"></div>
-        <div className="group rounded-md px-1 py-1 outline-1 outline-white focus-within:outline">
+        <div className="group rounded-md">
           <button
             type="button"
             onClick={() => (session !== null ? signOut() : signIn())}
-            className="group flex w-full items-center justify-center gap-2 rounded-md px-2 py-1 text-sm text-white outline-none group-hover:underline"
+            className="flex w-full items-center justify-center gap-2 px-2 py-1 text-sm text-white group-hover:underline"
           >
             {session !== null ? "Logout" : "SignIn"}
           </button>
@@ -95,3 +83,22 @@ export const AccountMenu = () => {
     </Popover>
   );
 };
+
+function CaretIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 15 15"
+      {...props}
+    >
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M4.182 6.182a.45.45 0 0 1 .636 0L7.5 8.864l2.682-2.682a.45.45 0 0 1 .636.636l-3 3a.45.45 0 0 1-.636 0l-3-3a.45.45 0 0 1 0-.636"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+}
