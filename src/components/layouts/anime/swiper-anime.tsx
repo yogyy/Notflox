@@ -11,27 +11,18 @@ import { cn } from "@/lib/utils";
 
 interface SwiperAnimeProps extends SwiperProps {
   anime: Movie[] | undefined;
-  loading: boolean;
 }
+
 export const SwiperAnime = ({
   anime,
-  loading,
   className,
   ...props
 }: SwiperAnimeProps) => {
-  if (loading) {
-    return (
-      <div className="aspect-video h-full w-full animate-pulse rounded-sm bg-zinc-800 lg:w-[948px]" />
-    );
-  }
   return (
     <Swiper
       effect={"fade"}
       loop={true}
-      autoplay={{
-        delay: 6500,
-        disableOnInteraction: false,
-      }}
+      autoplay={{ delay: 6500, disableOnInteraction: false }}
       centeredSlides={true}
       className={cn("w-full max-w-[948px]", className)}
       modules={[Autoplay, Navigation, EffectFade]}
@@ -48,7 +39,7 @@ export const SwiperAnime = ({
                 priority
               />
               <div className="absolute bottom-0 h-auto w-full bg-red-600/80 pb-2">
-                <h1 className="flex items-center justify-center text-center text-base font-semibold text-white md:text-xl lg:text-2xl ">
+                <h1 className="flex items-center justify-center text-center text-base font-semibold tracking-wide text-white/90 md:text-xl lg:text-2xl ">
                   {tv.name || tv.title}
                 </h1>
               </div>

@@ -34,7 +34,7 @@ export const AnimeAiring = ({ className, ...props }: AiringProps) => {
     <div className={cn("mx-auto w-full max-w-[948px]", className)} {...props}>
       <div className="w-full py-1">
         <span id="recent-released" className="absolute -mt-16 md:-mt-20" />
-        <h1 className="mb-5 text-xl font-semibold text-primary">
+        <h1 className="mb-5 text-xl font-semibold tracking-wide text-primary">
           Recent Released
         </h1>
       </div>
@@ -64,11 +64,9 @@ export const AnimeAiring = ({ className, ...props }: AiringProps) => {
                   )}
                 </div>
                 <span className="max-h-8 w-full text-pretty text-[#ababab] transition duration-200 group-focus-within:text-white group-hover:text-white">
-                  <h2 className="flex justify-center text-center text-[14px] leading-4">
-                    {tv?.name.length! <= 30
-                      ? tv?.name
-                      : `${tv?.name.slice(0, 30)}...`}{" "}
-                  </h2>
+                  <p className="flex justify-center truncate text-balance text-center text-[14px] leading-4">
+                    {tv?.name}
+                  </p>
                 </span>
               </Link>
             </li>
@@ -78,6 +76,7 @@ export const AnimeAiring = ({ className, ...props }: AiringProps) => {
       {!isLoading && (
         <Paginate
           id_href="#recent-released"
+          className="mt-5 pt-1"
           currentPage={currentPage}
           postPerPage={postPerPage}
           setCurrentPage={setCurrentPage}
