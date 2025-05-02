@@ -32,11 +32,7 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
   };
 
   return (
-    <RootLayout
-      title={movie.title}
-      image={`${imageOg}${movie.backdrop_path}`}
-      description={movie.overview}
-    >
+    <>
       <div className="relative flex aspect-video w-full items-center justify-center object-cover brightness-50 sm:h-[56.25vw]">
         <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default font-mono text-xl sm:block md:text-[2vw]">
           {movie.tagline}
@@ -63,7 +59,7 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
         <SimilarShow type="movie" similar={movie.id} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
-    </RootLayout>
+    </>
   );
 }
 
