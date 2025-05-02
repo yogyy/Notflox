@@ -19,15 +19,17 @@ export const LogoutIcon = () => {
   );
 };
 
-export const LoginIcon = () => {
+export const LoginIcon = (props: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
+      width="24"
+      height="24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-6 w-6"
+      {...props}
     >
       <path
         strokeLinecap="round"
@@ -38,7 +40,7 @@ export const LoginIcon = () => {
   );
 };
 
-export const SearchIcon = () => {
+export const SearchIcon = (props: IconProps) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +48,9 @@ export const SearchIcon = () => {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="h-5 w-5"
+      width="24"
+      height="24"
+      {...props}
     >
       <path
         strokeLinecap="round"
