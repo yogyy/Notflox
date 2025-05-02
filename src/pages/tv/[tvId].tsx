@@ -32,11 +32,7 @@ export default function TvDetails({ tv }: { tv: Movie }) {
   };
 
   return (
-    <RootLayout
-      title={tv.name}
-      image={`${imageOg}${tv.backdrop_path}`}
-      description={tv.overview}
-    >
+    <>
       <div className="relative flex aspect-video w-full items-center justify-center object-cover brightness-50 sm:h-[56.25vw]">
         <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default font-mono text-xl sm:block md:text-[2vw]">
           {tv.tagline}
@@ -63,9 +59,23 @@ export default function TvDetails({ tv }: { tv: Movie }) {
         <SimilarShow type="tv" similar={tv.id} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
-    </RootLayout>
+    </>
   );
 }
+
+TvDetails.getLayout = function getLayout(
+  page: React.ReactElement<{ tv: Movie }>,
+) {
+  return (
+    <RootLayout
+      title={page.props.tv.name}
+      image={`${imageOg}${page.props.tv.backdrop_path}`}
+      description={page.props.tv.overview}
+    >
+      {page}
+    </RootLayout>
+  );
+};
 
 export async function getServerSideProps(context: {
   params: {

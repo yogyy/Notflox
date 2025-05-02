@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { nonUser } from "~/atoms/jotaiAtoms";
 import { useSession } from "next-auth/react";
 import RootLayout from "@/components/layouts/layout";
+import { ReactElement } from "react";
 
 const Profiles = () => {
   const { data: session } = useSession();
@@ -11,7 +12,7 @@ const Profiles = () => {
   const [userPic] = useAtom(nonUser);
 
   return (
-    <RootLayout title={`${user ? user.name : "Anonymous"}`} footer={false}>
+    <>
       <div className="grid h-[calc(100vh_-_145px)] place-content-center">
         <div className="flex flex-col">
           <h1 className="text-center text-3xl text-white">
@@ -42,6 +43,15 @@ const Profiles = () => {
           </p>
         </div>
       </div>
+    </>
+  );
+};
+
+Profiles.getLayout = function getLayout(page: ReactElement) {
+  console.log(page.props);
+  return (
+    <RootLayout title="Profile" footer={false}>
+      {page}
     </RootLayout>
   );
 };

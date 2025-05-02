@@ -67,6 +67,20 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
   );
 }
 
+MovieDetails.getLayout = function getLayout(
+  page: React.ReactElement<{ movie: Movie }>,
+) {
+  return (
+    <RootLayout
+      title={page.props.movie.title}
+      image={`${imageOg}${page.props.movie.backdrop_path}`}
+      description={page.props.movie.overview}
+    >
+      {page}
+    </RootLayout>
+  );
+};
+
 export async function getServerSideProps(ctx: {
   params: {
     movieId: number;

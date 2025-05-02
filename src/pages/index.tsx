@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import req from "@/utils/request";
-import { useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import dynamic from "next/dynamic";
 import {
   SwiperLanscape,
@@ -16,7 +16,7 @@ const LazyModalVideo = dynamic(
   { ssr: false },
 );
 
-const Notflox = () => {
+const HomePage = () => {
   const [showModal, setShowModal] = useAtom(modalState);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Notflox = () => {
   );
 
   return (
-    <RootLayout title="Home">
+    <>
       <Banner
         loading={
           loadingTrending || loadingToprated || loadingAirtdy || loadingPopular
@@ -76,8 +76,11 @@ const Notflox = () => {
         />
       </section>
       {showModal && <LazyModalVideo showDetail={true} />}
-    </RootLayout>
+    </>
   );
 };
 
-export default Notflox;
+HomePage.getLayout = function getLayout(page: ReactElement) {
+  return <RootLayout title="Home">{page}</RootLayout>;
+};
+export default HomePage;
