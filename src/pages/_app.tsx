@@ -2,7 +2,6 @@ import nProgress from "nprogress";
 import "@/styles/globals.css";
 import "@/styles/nprogress.css";
 import { Router } from "next/router";
-import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Provider as JotaiProvider } from "jotai";
 import { type AppProps } from "next/app";
@@ -45,16 +44,14 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
   return (
-    <SessionProvider session={pageProps.session} refetchOnWindowFocus={false}>
-      <JotaiProvider>
-        <QueryClientProvider client={queryClient}>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-          <NuqsAdapter>
-            {component}
-            <Toaster theme="dark" />
-          </NuqsAdapter>
-        </QueryClientProvider>
-      </JotaiProvider>
-    </SessionProvider>
+    <JotaiProvider>
+      <QueryClientProvider client={queryClient}>
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <NuqsAdapter>
+          {component}
+          <Toaster theme="dark" />
+        </NuqsAdapter>
+      </QueryClientProvider>
+    </JotaiProvider>
   );
 }
