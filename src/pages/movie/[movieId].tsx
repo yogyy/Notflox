@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Movie } from "~/types/tmdb-type";
 import { AxiosError } from "axios";
@@ -21,7 +21,7 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
   const [, setCurrentMovie] = useAtom(changeMovieState);
   const [showModal, setShowModal] = useAtom(modalState);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movie.id]);
@@ -55,8 +55,8 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
       </div>
       <ShowDetails show={movie} playFunc={playTrailer} />
       <div className="relative mx-auto max-w-7xl space-y-8">
-        <Keywords type="movie" keyword={movie.id} />
-        <SimilarShow type="movie" similar={movie.id} />
+        <Keywords type="movie" showId={movie.id} />
+        <SimilarShow type="movie" showId={movie.id} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
     </>
@@ -79,26 +79,23 @@ MovieDetails.getLayout = function getLayout(
 
 export async function getServerSideProps(ctx: {
   params: {
-    movieId: number;
+    movieId: string;
   };
 }) {
-  const movieId = Number(ctx.params.movieId);
+  const movieId = parseInt(ctx.params?.movieId);
+  if (!Number.isInteger(movieId)) {
+    return { notFound: true };
+  }
 
   try {
     const data = await fetcher<Movie>(
       `https://api.themoviedb.org/3/movie/${movieId}`,
     );
-    return {
-      props: {
-        movie: data,
-      },
-    };
+    return { props: { movie: data } };
   } catch (err) {
     const error = err as AxiosError<Error>;
     if (error.response && error.response.status === 404) {
-      return {
-        notFound: true,
-      };
+      return { notFound: true };
     }
   }
 }

@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import axios from "axios";
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Paginate } from "./paginate";
 import { Movie } from "~/types/tmdb-type";
@@ -11,26 +11,26 @@ import { imgUrl } from "~/constants/movie";
 import { ClockIcon, FolderIcon } from "../icons/general";
 
 interface SimilarProps {
-  similar: number;
+  showId: number;
   type: string;
 }
-export const SimilarShow = ({ similar, type }: SimilarProps) => {
-  const [currentPage, setCurrentPage] = React.useState(1);
+export const SimilarShow = ({ showId, type }: SimilarProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const postPerPage = 6;
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const { data, isLoading } = useQuery<Movie[]>(
-    [`similar ${type}`, similar],
+    [`similar-${type}`, showId],
     () =>
       axios
-        .get(`/api/${type}/recommend/${similar}`)
+        .get(`/api/${type}/${showId}/recommend`)
         .then((res) => res.data.results),
   );
   const movies = data?.slice(firstPostIndex, lastPostIndex);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrentPage(1);
-  }, [similar]);
+  }, [showId]);
 
   if (isLoading) {
     return (
@@ -66,7 +66,7 @@ export const SimilarShow = ({ similar, type }: SimilarProps) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <section className={cn("relative mx-4 h-auto space-y-0.5 md:space-y-2")}>
         <span id="similar-show" className="absolute -mt-16 md:-mt-20" />
         <h2 className="mb-5 text-xl font-semibold text-[#fcfbfb]">
@@ -133,6 +133,6 @@ export const SimilarShow = ({ similar, type }: SimilarProps) => {
         totalPost={data?.length}
         className="pt-1"
       />
-    </React.Fragment>
+    </>
   );
 };

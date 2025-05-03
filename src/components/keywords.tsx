@@ -2,27 +2,27 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-interface KW {
+interface Keyword {
   id: number;
   name: string;
 }
 
 interface KeywordProps extends React.ComponentProps<"div"> {
-  keyword: number;
+  showId: number;
   type: string;
 }
 
 export const Keywords = ({
-  keyword,
+  showId,
   type,
   className,
   ...props
 }: KeywordProps) => {
-  const { data, isLoading } = useQuery<KW[]>(
-    [`keywords ${type}`, keyword],
+  const { data, isLoading } = useQuery<Keyword[]>(
+    [`keywords-${type}`, showId],
     () =>
       axios
-        .get(`/api/${type}/keyword/${keyword}`)
+        .get(`/api/${type}/${showId}/keyword`)
         .then((res) => res.data.results || res.data.keywords),
   );
 
@@ -49,10 +49,10 @@ export const Keywords = ({
       {...props}
     >
       <h1 className="px-3">Keywords :</h1>
-      {data?.map((keyword: KW) => (
+      {data?.map((keyword) => (
         <p
           key={keyword.id}
-          className="m-1 w-max cursor-default rounded-md bg-white/5 px-2 text-sm text-gray-300 hover:bg-white/10 hover:text-gray-200 md:text-base"
+          className="m-1 w-max cursor-default rounded-sm bg-white/5 px-2 text-sm text-gray-300 hover:bg-white/10 hover:text-gray-200 md:text-base"
         >
           {keyword.name}
         </p>
