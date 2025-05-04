@@ -33,7 +33,7 @@ export const Notifications = () => {
         <TooltipContent
           align="end"
           sideOffset={10}
-          className="rounded-sm border-muted/20 bg-ireng/90 p-0"
+          className="rounded-sm border-muted/20 bg-background/90 p-0"
         >
           <div className="rounded-sm p-4">
             <span className="flex items-center">

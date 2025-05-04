@@ -21,7 +21,7 @@ export const Banner = ({
   className,
   ...props
 }: BannerProps) => {
-  if (loading) return <LoaderBlock className="h-[56.25vw] bg-ireng" />;
+  if (loading) return <LoaderBlock className="h-[56.25vw] bg-background" />;
   return (
     <section className={cn("relative", className)} {...props}>
       <div className="relative z-[1] h-[56.25vw]">
@@ -40,7 +40,7 @@ export const Banner = ({
             <SwiperSlide key={bann.id}>
               <div
                 className={cn(
-                  "relative aspect-video w-full bg-ireng object-cover brightness-50 sm:h-[56.25vw]",
+                  "relative aspect-video w-full bg-background object-cover brightness-50 sm:h-[56.25vw]",
                   loading ? "hidden" : "block",
                 )}
               >
@@ -49,10 +49,10 @@ export const Banner = ({
                     bann?.backdrop_path || bann?.poster_path
                   }`}
                   alt={`banner ${bann?.title || bann?.name}`}
-                  className="bg-ireng"
+                  className="bg-background"
                   priority
                 />
-                <div className="absolute bottom-0 h-3/4 w-full bg-gradient-to-b from-transparent to-ireng" />
+                <div className="absolute bottom-0 h-3/4 w-full bg-gradient-to-b from-transparent to-background" />
               </div>
               <div className="absolute top-[50%] z-20 ml-4 hidden min-w-[300px] flex-col gap-3 drop-shadow-lg xs:flex md:ml-16 xl:top-[20%]">
                 <Link

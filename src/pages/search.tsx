@@ -49,7 +49,7 @@ const SearchPage = () => {
                       aria-label={show?.name || show?.title}
                       className="min-h-16 w-full outline-none"
                     >
-                      <div className="relative aspect-video w-auto overflow-hidden rounded bg-zinc-800 transition duration-300 ease-out group-focus-within:bg-ireng group-hover:bg-ireng">
+                      <div className="relative aspect-video w-auto overflow-hidden rounded bg-zinc-800 transition duration-300 ease-out group-focus-within:bg-background group-hover:bg-background">
                         {show?.backdrop_path || show.poster_path ? (
                           <NextImage
                             src={

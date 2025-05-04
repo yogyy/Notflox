@@ -28,8 +28,8 @@ export const Header = () => {
     <header className="sticky top-0 z-20">
       <nav
         className={cn(
-          "flex w-full justify-center bg-ireng transition duration-300 sm:-mt-16 sm:bg-transparent",
-          showBackground ? "sm:bg-ireng/90 sm:backdrop-blur-sm" : "",
+          "flex w-full justify-center bg-background transition duration-300 sm:-mt-16 sm:bg-transparent",
+          showBackground ? "sm:bg-background/90 sm:backdrop-blur-sm" : "",
         )}
       >
         <div

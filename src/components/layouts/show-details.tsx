@@ -19,7 +19,7 @@ export const ShowDetails = ({
     <article
       className={cn(
         "relative flex flex-col gap-5 px-5 pt-4 sm:items-center",
-        "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-ireng/20",
+        "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-background/20",
         "md:-mt-[20%] md:flex-row md:items-start md:bg-none lg:-mt-[40%]",
         className,
       )}

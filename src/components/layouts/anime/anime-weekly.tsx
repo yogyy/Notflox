@@ -41,7 +41,7 @@ export const AnimeWeekly = ({
                     )}
                     src={`${imgUrl}/w500/${tv.backdrop_path || tv.poster_path}`}
                   />
-                  <div className="absolute bottom-0 flex w-full items-center justify-start bg-ireng/50">
+                  <div className="absolute bottom-0 flex w-full items-center justify-start bg-background/50">
                     <span className="m-1.5 flex h-5 w-5 items-center justify-center rounded-md border bg-accent p-5 text-sm font-semibold text-black">
                       {index + 1}
                     </span>

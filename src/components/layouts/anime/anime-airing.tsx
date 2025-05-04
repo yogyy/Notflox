@@ -53,7 +53,7 @@ export const AnimeAiring = ({ className, ...props }: AiringProps) => {
                 aria-label={tv?.name || tv?.title}
                 className="relative flex aspect-poster h-auto w-auto flex-col gap-0.5 outline-none"
               >
-                <div className="relative aspect-poster h-full w-full overflow-hidden rounded bg-zinc-800 transition duration-300 ease-out group-focus-within:bg-ireng group-hover:bg-ireng">
+                <div className="relative aspect-poster h-full w-full overflow-hidden rounded bg-zinc-800 transition duration-300 ease-out group-focus-within:bg-background group-hover:bg-background">
                   {tv?.poster_path ? (
                     <NextImage
                       src={`${imgUrl}/w220_and_h330_bestv2${tv?.poster_path}`}
