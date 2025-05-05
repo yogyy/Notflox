@@ -1,5 +1,4 @@
 import RootLayout from "@/components/layouts/layout";
-import { SearchShowSkeleton } from "@/components/loader/searching-loader";
 import { ImageNotFound, NextImage } from "@/components/next-image";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useQuery } from "@tanstack/react-query";
@@ -28,7 +27,15 @@ const SearchPage = () => {
           Result for: <span className="text-white">{query}</span>
         </h1>
         <div className="w-full">
-          {query && query.length >= 3 && isLoading && <SearchShowSkeleton />}
+          {query && query.length >= 3 && isLoading && (
+            <ul className="relative grid grid-cols-2 gap-y-[4vw] sm:grid-cols-3 lg:grid-cols-4">
+              {[...Array(12)].map((_, index) => (
+                <li key={index} className="relative w-full  px-[.2vw]">
+                  <div className="aspect-video min-h-16 w-full animate-pulse rounded bg-zinc-800"></div>
+                </li>
+              ))}
+            </ul>
+          )}
           {data?.length === 0 ? (
             <div className="italic text-primary/70">
               No result found for&nbsp;
