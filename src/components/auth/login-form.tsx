@@ -1,10 +1,8 @@
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/lib/client/schema";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -15,67 +13,67 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { FormError } from "./form-error";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import { loginState, providerState } from "~/atoms/auth-atoms";
+import { authState, providerState } from "~/atoms/auth-atoms";
 import { useAtomValue } from "jotai";
 import { Spinner } from "../icons";
 import { cn } from "@/lib/utils";
 import { Social } from "./social-auth";
+import { authClient } from "@/lib/auth-client";
 
 export const LoginForm = () => {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
-      : "";
-  const [error, setError] = useState<string | undefined>("");
-  const authState = useAtomValue(loginState);
+  const state = useAtomValue(authState);
   const providerLogin = useAtomValue(providerState);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", username: "Lex Luthor" },
   });
 
-  const login = async (values: z.infer<typeof LoginSchema>) => {
-    try {
-      setError("");
-      return await signIn("credentials", {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    if (state === "login") {
+      const { data, error } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
-        redirect: false,
-        callbackUrl: "/profiles",
+        fetchOptions: {
+          onSuccess: () => {
+            router
+              .push("/profiles")
+              .then(() => toast.success("Welcome To Notflox"));
+          },
+        },
       });
-    } catch (error) {
-      throw error;
+
+      if (error) {
+        form.setError("root", { message: error.message });
+      }
+    } else {
+      const { error } = await authClient.signUp.email({
+        email: values.email,
+        password: values.password,
+        name: values.username || "",
+        fetchOptions: {
+          onSuccess: () => {
+            router
+              .push("/profiles")
+              .then(() => toast.success("Welcome To Notflox"));
+          },
+        },
+      });
+
+      if (error) {
+        form.setError("root", { message: error.message });
+      }
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    login(values)
-      .then((data) => {
-        form.reset();
-        if (data?.status === 200) {
-          router
-            .push("/profiles")
-            .then(() => toast.success("Sign In Success."));
-        }
-        if (data?.error) {
-          setError(data.error);
-          toast.error("error", { description: data.error });
-        }
-      })
-      .catch(() => setError("Something went wrong"));
-  };
-
   return (
-    <div className="">
+    <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
-            {!authState && (
+            {state === "register" && (
               <FormField
                 control={form.control}
                 name="username"
@@ -83,10 +81,10 @@ export const LoginForm = () => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        className="min-h-14 rounded-sm border-zinc-600 text-zinc-100"
                         {...field}
-                        disabled={form.formState.isSubmitted || !authState}
-                        placeholder="username"
+                        className="min-h-14 rounded border-zinc-600 text-zinc-100"
+                        disabled={form.formState.isSubmitting}
+                        placeholder="John Constantine"
                         type="text"
                       />
                     </FormControl>
@@ -104,12 +102,12 @@ export const LoginForm = () => {
                     <Input
                       {...field}
                       className={cn(
-                        "min-h-14 rounded-sm border-zinc-600 text-zinc-100 focus:border-zinc-100",
+                        "min-h-14 rounded border-zinc-600 text-zinc-100",
                         form.getFieldState("email").invalid &&
                           "border-destructive",
                       )}
                       autoComplete="off"
-                      disabled={form.formState.isSubmitted || !authState}
+                      disabled={form.formState.isSubmitting}
                       placeholder="Email"
                       type="email"
                     />
@@ -127,12 +125,12 @@ export const LoginForm = () => {
                     <Input
                       {...field}
                       className={cn(
-                        "min-h-14 rounded-sm border-zinc-600 text-zinc-100 focus:border-zinc-100",
+                        "min-h-14 rounded border-zinc-600 text-zinc-100",
                         form.getFieldState("password").invalid &&
                           "border-destructive",
                       )}
                       autoComplete="off"
-                      disabled={form.formState.isSubmitted || !authState}
+                      disabled={form.formState.isSubmitting}
                       placeholder="Password"
                       type="password"
                     />
@@ -142,30 +140,28 @@ export const LoginForm = () => {
               )}
             />
           </div>
-          <FormError message={error || urlError} />
-          {!authState && (
+          <FormError message={form.formState.errors.root?.message} />
+          {/* {!authState && (
             <FormError message="registration currently disabled" />
-          )}
+          )} */}
           <Button
             data-umami-event="Signin button"
-            disabled={
-              form.formState.isSubmitted || !authState || providerLogin !== null
-            }
+            disabled={form.formState.isSubmitting || providerLogin !== null}
             type="submit"
             className={cn(
-              "min-h-10 w-full rounded-sm font-medium tracking-wide focus-visible:bg-primary/90",
-              form.formState.isSubmitted && "opacity-70",
+              "min-h-10 w-full rounded font-medium tracking-wide focus-visible:bg-primary/90",
+              form.formState.isSubmitting && "opacity-70",
             )}
           >
-            {form.formState.isSubmitted ? (
+            {form.formState.isSubmitting ? (
               <Spinner className="h-5 w-5 animate-spin text-white" />
             ) : (
-              <span>{authState ? "Sign In" : "Sign Up"}</span>
+              <span>{state === "login" ? "Sign In" : "Sign Up"}</span>
             )}
           </Button>
         </form>
       </Form>
-      <Social disabled={form.formState.isSubmitted} />
+      <Social disabled={form.formState.isSubmitting} />
     </div>
   );
 };

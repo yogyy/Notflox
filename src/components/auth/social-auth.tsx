@@ -1,13 +1,27 @@
-import { signIn } from "next-auth/react";
 import { Github, Google, Spinner } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { providerState } from "~/atoms/auth-atoms";
 import { useAtom } from "jotai";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
 
 export const Social = ({ disabled }: { disabled: boolean }) => {
   const [provider, setProvider] = useAtom(providerState);
-  const login = (provider: "google" | "github") => {
-    signIn(provider, { callbackUrl: "/profiles" });
+  const router = useRouter();
+  const socialSignIn = async (provider: "google" | "github") => {
+    const data = await authClient.signIn.social({
+      provider,
+      fetchOptions: {
+        onSuccess: () => {
+          router
+            .push("/profiles")
+            .then(() => toast.success("Welcome To Notflox"));
+        },
+      },
+    });
+
+    return data;
   };
 
   return (
@@ -15,10 +29,10 @@ export const Social = ({ disabled }: { disabled: boolean }) => {
       <Button
         size="default"
         disabled={disabled || provider !== null}
-        className="w-full rounded-sm bg-white/10 text-white hover:bg-white/20 focus-visible:bg-white/20"
+        className="w-full rounded bg-white/10 text-white hover:bg-white/20 focus-visible:bg-white/20"
         variant="ghost"
         onClick={() => {
-          login("google");
+          socialSignIn("google");
           setProvider("google");
         }}
         data-umami-event="Google Signin button"
@@ -32,10 +46,10 @@ export const Social = ({ disabled }: { disabled: boolean }) => {
       <Button
         size="default"
         disabled={disabled || provider !== null}
-        className="w-full rounded-sm bg-white/10 text-white hover:bg-white/20 hover:text-current focus-visible:bg-white/20"
+        className="w-full rounded bg-white/10 text-white hover:bg-white/20 hover:text-current focus-visible:bg-white/20"
         variant="ghost"
         onClick={() => {
-          login("github");
+          socialSignIn("github");
           setProvider("github");
         }}
         data-umami-event="Github Signin button"
