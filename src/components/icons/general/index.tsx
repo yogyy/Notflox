@@ -253,3 +253,47 @@ export const PlayIcon = () => {
     </svg>
   );
 };
+
+export function PlayListAdd(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        d="M2 7h19m-4.5-5l-3 5m-4-5l-3 5m5 14c-4.478 0-6.718 0-8.109-1.391S2 15.979 2 11.5c0-4.478 0-6.718 1.391-8.109S7.021 2 11.5 2c4.478 0 6.718 0 8.109 1.391S21 7.021 21 11.5M14 18h8m-4 4v-8"
+        color="currentColor"
+      ></path>
+    </svg>
+  );
+}
+
+export function PlayListRemove(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        d="M2 7h19m-4.5-5l-3 5m-4-5l-3 5m5 14c-4.478 0-6.718 0-8.109-1.391S2 15.979 2 11.5c0-4.478 0-6.718 1.391-8.109S7.021 2 11.5 2c4.478 0 6.718 0 8.109 1.391S21 7.021 21 11.5M15 15l3.5 3.5m0 0L22 22m-3.5-3.5L15 22m3.5-3.5L22 15"
+        color="currentColor"
+      ></path>
+    </svg>
+  );
+}
