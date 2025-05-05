@@ -44,14 +44,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
   return (
-    <JotaiProvider>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <JotaiProvider>
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        <NuqsAdapter>
-          {component}
-          <Toaster theme="dark" />
-        </NuqsAdapter>
-      </QueryClientProvider>
-    </JotaiProvider>
+        <NuqsAdapter>{component}</NuqsAdapter>
+        <Toaster theme="dark" />
+      </JotaiProvider>
+    </QueryClientProvider>
   );
 }
