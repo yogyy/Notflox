@@ -24,7 +24,7 @@ export const CardWrapper = ({ children }: { children: React.ReactNode }) => {
           <Button
             onClick={() => setAuth(false)}
             variant="link"
-            className="w-full font-normal"
+            className="w-fit font-normal"
           >
             First time using Notflox?
           </Button>
@@ -33,7 +33,7 @@ export const CardWrapper = ({ children }: { children: React.ReactNode }) => {
           <Button
             onClick={() => setAuth(true)}
             variant="link"
-            className="w-full font-normal"
+            className="w-fit font-normal"
           >
             Already have an account?
           </Button>
