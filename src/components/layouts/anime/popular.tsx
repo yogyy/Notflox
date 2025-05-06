@@ -9,15 +9,15 @@ import { Autoplay, Navigation, EffectFade } from "swiper";
 import { Movie } from "~/types/tmdb-type";
 import { cn } from "@/lib/utils";
 
-interface SwiperAnimeProps extends SwiperProps {
+interface PopularAnimeProps extends SwiperProps {
   anime: Movie[] | undefined;
 }
 
-export const SwiperAnime = ({
+export const PopularAnime = ({
   anime,
   className,
   ...props
-}: SwiperAnimeProps) => {
+}: PopularAnimeProps) => {
   return (
     <Swiper
       effect={"fade"}
@@ -34,7 +34,7 @@ export const SwiperAnime = ({
             <div className="relative aspect-video h-full w-full">
               <NextImage
                 src={`${imgUrl}/w1280${tv?.backdrop_path || tv.poster_path}`}
-                className="h-auto w-auto rounded-t-md bg-ireng object-contain"
+                className="h-auto w-auto rounded-t-md bg-background object-contain"
                 alt={`banner ${tv.name || tv.title}`}
                 priority
               />

@@ -5,19 +5,19 @@ import { ImageNotFound, NextImage } from "@/components/next-image";
 import { MovieResponse } from "~/types/tmdb-type";
 import { useQueries } from "@tanstack/react-query";
 import { baseUrl, imgUrl } from "~/constants/movie";
-import { AnimeAiringLoading } from "@/components/loader";
+import { AiringAnimeSkeleton } from "@/components/loader/skeleton";
 import { cn, fetcher } from "@/lib/utils";
-import { lastYear, sevenDaysAgo, today } from "@/lib/get-date";
+import { today } from "@/lib/get-date";
 
 interface AiringProps extends React.HTMLAttributes<HTMLDivElement> {}
-export const AnimeAiring = ({ className, ...props }: AiringProps) => {
+export const AiringAnime = ({ className, ...props }: AiringProps) => {
   const queryConfigurations = Array.from({ length: 4 }, (_, page) => ({
     queryKey: ["anime-airing", page + 1],
     queryFn: () => {
       return fetcher<MovieResponse>(
         `${baseUrl}/discover/tv?page=${
           page + 1
-        }&sort_by=primary_release_date.desc&first_air_date.gte=${lastYear}&air_date.lte=${today}&air_date.gte=${sevenDaysAgo}&with_genres=16&with_keywords=210024&without_keywords=278823&with_original_language=ja`,
+        }&sort_by=first_air_date.desc&first_air_date.lte=${today}&with_keywords=210024&with_original_language=ja|zh`,
       );
     },
   }));
@@ -39,7 +39,7 @@ export const AnimeAiring = ({ className, ...props }: AiringProps) => {
         </h1>
       </div>
       {isLoading ? (
-        <AnimeAiringLoading />
+        <AiringAnimeSkeleton />
       ) : (
         <ul className="moviecard-container relative grid grid-cols-2 place-content-center gap-3 min-[320px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
           {currentAiring?.map((tv) => (
