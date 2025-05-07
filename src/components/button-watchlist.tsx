@@ -15,16 +15,18 @@ interface Props {
 }
 
 export const ButtonWatchlists = (props: Props) => {
-  const { asPath } = useRouter();
   const queryClient = useQueryClient();
-  const currentRoute = asPath.split("?")[0];
+  const { pathname } = useRouter();
+  const showType = pathname.split("/")[1];
+  const key = `${showType}/${props.showId}`;
+
   const { data, isLoading: loadingQuery } = useQuery<{ in_list: boolean }>(
-    ["watchlist", asPath],
-    () => fetch(`/api/${currentRoute}/watchlist`).then((res) => res.json()),
+    ["watchlist", key],
+    () => fetch(`/api/${key}/watchlist`).then((res) => res.json()),
   );
   const { mutate, isLoading: loadingMutate } = useMutation({
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["watchlist", asPath] });
+      queryClient.invalidateQueries({ queryKey: ["watchlist", key] });
       toast(data?.message, {
         classNames: { toast: "!bg-background/80 !justify-center" },
         position: "top-center",
@@ -33,7 +35,7 @@ export const ButtonWatchlists = (props: Props) => {
     mutationFn: async () => {
       return fetch("/api/watchlist/post", {
         method: "POST",
-        body: JSON.stringify({ ...props, mediaType: asPath.split("/")[1] }),
+        body: JSON.stringify({ ...props, mediaType: showType }),
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json());
     },
@@ -46,7 +48,7 @@ export const ButtonWatchlists = (props: Props) => {
       title={data?.in_list ? "Remove from Watchlist" : "Add to Watchlist"}
       disabled={loadingQuery || loadingMutate}
       className={cn(
-        data?.in_list ? "bg-primary" : "bg-card",
+        data?.in_list ? "bg-primary/70" : "bg-card/70",
         "w-32 justify-between sm:w-40",
       )}
       onClick={() => mutate()}

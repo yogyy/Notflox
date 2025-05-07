@@ -12,7 +12,7 @@ export const ButtonTrailer = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           buttonVariants({ variant: "ghost" }),
-          "group inline-flex items-center justify-between bg-card font-medium",
+          "group inline-flex items-center justify-between bg-card/70 font-medium",
           className,
         )}
         {...props}
