@@ -14,21 +14,18 @@ const AnimePage = () => {
   );
 
   return (
-    <section className="relative mx-auto flex max-w-7xl flex-col gap-4 p-3 pb-16 sm:pt-16 xl:flex-row">
+    <section className="relative mx-auto flex max-w-7xl flex-col gap-4 scroll-smooth p-3 pb-16 sm:pt-16 xl:flex-row">
       <div className="mt-3 flex w-full flex-col gap-4">
         <div className="relative mx-auto w-full max-w-[948px]">
           {isLoadingBannerAnime ? (
             <div className="aspect-video h-full w-full animate-pulse rounded-sm bg-zinc-800 lg:w-[948px]" />
           ) : (
-            <PopularAnime
-              anime={bannerAnime?.slice(0, 10)}
-              aria-label="Popular Anime"
-            />
+            <PopularAnime anime={bannerAnime?.slice(0, 10)} aria-label="Popular Anime" />
           )}
         </div>
         <AiringAnime aria-label="Airing Anime" />
       </div>
-      <aside className="relative mx-auto w-full max-w-[948px] rounded bg-card p-2 xl:mt-3 xl:w-[380px]">
+      <aside className="relative mx-auto w-full max-w-[948px] rounded bg-background/60 p-2 xl:mt-3 xl:w-[380px]">
         <TopAnime aria-label="Top Leaderboards Anime" />
       </aside>
     </section>
