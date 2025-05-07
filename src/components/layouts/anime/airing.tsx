@@ -45,8 +45,7 @@ export const AiringAnime = ({ className, ...props }: AiringProps) => {
 
   return (
     <div className={cn("mx-auto w-full max-w-[948px]", className)} {...props}>
-      <div className="w-full py-1">
-        <span id="asrecent-released" className="absolute -mt-16 md:-mt-20" />
+      <div id="recent-released" className="w-full scroll-mt-20 py-1">
         <h1 className="mb-5 text-xl font-semibold tracking-wide text-primary">
           Recent Released
         </h1>
@@ -77,9 +76,7 @@ export const AiringAnime = ({ className, ...props }: AiringProps) => {
                   )}
                 </div>
                 <span className="max-h-8 w-full text-pretty text-[#ababab] transition duration-200 group-focus-within:text-white group-hover:text-white">
-                  <p className="truncate text-center text-[14px] leading-4">
-                    {tv?.name}
-                  </p>
+                  <p className="truncate text-center text-[14px] leading-4">{tv?.name}</p>
                 </span>
               </Link>
             </li>
@@ -110,7 +107,7 @@ export const AiringAnime = ({ className, ...props }: AiringProps) => {
             />
           </PaginationItem>
           {[1, 2, 3, 4].map((curr) => (
-            <PaginationItem key={curr} className="">
+            <PaginationItem key={curr}>
               <PaginationLink
                 href="#recent-released"
                 isActive={curr === page}

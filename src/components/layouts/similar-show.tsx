@@ -51,10 +51,14 @@ export const SimilarShow = ({ showId, type, genres }: SimilarProps) => {
   }
 
   return (
-    <>
-      <section className={cn("relative mx-4 h-auto space-y-0.5 md:space-y-2")}>
-        <span id="similar-show" className="absolute -mt-16 md:-mt-20" />
-        <h2 className="mb-5 text-xl font-medium text-[#fcfbfb]">Similar Show</h2>
+    <section>
+      <div className="relative mx-4 h-auto space-y-0.5 md:space-y-2">
+        <h2
+          id="similar-show"
+          className="mb-5 scroll-mt-20 text-xl font-medium text-[#fcfbfb]"
+        >
+          Similar Show
+        </h2>
         <div className="relative grid grid-cols-1 gap-3 md:grid-cols-2">
           {isLoading ? (
             <SimilarShowSkeleton />
@@ -96,18 +100,17 @@ export const SimilarShow = ({ showId, type, genres }: SimilarProps) => {
                       {show.overview} <br />
                     </p>
                   </div>
-                  <hr className="my-2 border-[#141414]" />
                 </>
               </article>
             ))
           )}
         </div>
-      </section>
+      </div>
       <Pagination className="mt-2 w-full scale-90 overflow-hidden overflow-x-scroll pb-2 pt-1 scrollbar-hide md:scale-100">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
-              href="#recent-released"
+              href="#similar-show"
               className={
                 currentPage > 1
                   ? "focus-visible:ring-primary"
@@ -126,7 +129,7 @@ export const SimilarShow = ({ showId, type, genres }: SimilarProps) => {
           ).map((curr) => (
             <PaginationItem key={curr}>
               <PaginationLink
-                href="#recent-released"
+                href="#similar-show"
                 isActive={curr === currentPage}
                 onClick={() => setCurrentPage(curr)}
                 className="focus-visible:ring-primary"
@@ -142,7 +145,7 @@ export const SimilarShow = ({ showId, type, genres }: SimilarProps) => {
                   ? "focus-visible:ring-primary"
                   : "pointer-events-none opacity-50 focus-visible:ring-0"
               }
-              href="#recent-released"
+              href="#similar-show"
               onClick={() => {
                 if (currentPage < 5 && data.total_pages > 5) {
                   setCurrentPage((prev) => prev + 1);
@@ -152,6 +155,6 @@ export const SimilarShow = ({ showId, type, genres }: SimilarProps) => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </>
+    </section>
   );
 };
