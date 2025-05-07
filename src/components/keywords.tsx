@@ -1,29 +1,28 @@
-import { cn } from "@/lib/utils";
+import { fetcher } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { baseUrl } from "~/constants/movie";
 
 interface Keyword {
   id: number;
   name: string;
 }
 
-interface KeywordProps extends React.ComponentProps<"div"> {
+interface KeywordProps {
   showId: number;
   type: string;
 }
 
-export const Keywords = ({
-  showId,
-  type,
-  className,
-  ...props
-}: KeywordProps) => {
-  const { data, isLoading } = useQuery<Keyword[]>(
-    [`keywords-${type}`, showId],
-    () =>
-      axios
-        .get(`/api/${type}/${showId}/keyword`)
-        .then((res) => res.data.results || res.data.keywords),
+interface Response {
+  id: number;
+  keywords?: Keyword[];
+  results?: Keyword[];
+}
+
+export const Keywords = ({ showId, type }: KeywordProps) => {
+  const { data, isLoading } = useQuery([`keywords-${type}`, showId], () =>
+    fetcher<Response>(`${baseUrl}/${type}/${showId}/keywords`).then(
+      (res) => res.results || res.keywords,
+    ),
   );
 
   if (isLoading) {
@@ -41,13 +40,7 @@ export const Keywords = ({
   }
 
   return (
-    <div
-      className={cn(
-        "mt-5 flex flex-wrap items-center px-3 py-2 xl:mb-52",
-        className,
-      )}
-      {...props}
-    >
+    <div className="mt-5 flex flex-wrap items-center px-3 py-2 xl:mb-52">
       <h1 className="px-3">Keywords :</h1>
       {data?.map((keyword) => (
         <p
