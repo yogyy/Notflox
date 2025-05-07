@@ -12,10 +12,9 @@ import { SimilarShow } from "@/components/layouts/similar-show";
 import { ShowDetails } from "@/components/layouts/show-details";
 import { changeMovieState, modalState } from "~/atoms/jotaiAtoms";
 
-const DynamicModalVideo = dynamic(
-  () => import("@/components/layouts/modal-video"),
-  { ssr: false },
-);
+const DynamicModalVideo = dynamic(() => import("@/components/layouts/modal-video"), {
+  ssr: false,
+});
 
 export default function MovieDetails({ movie }: { movie: Movie }) {
   const [, setCurrentMovie] = useAtom(changeMovieState);
@@ -26,15 +25,15 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [movie.id]);
 
-  const playTrailer = () => {
+  function playTrailer() {
     setCurrentMovie(movie);
     setShowModal(true);
-  };
+  }
 
   return (
-    <>
+    <div key={movie.id} className="bg-background/70">
       <div className="relative flex aspect-video w-full items-center justify-center object-cover brightness-50 sm:h-[56.25vw]">
-        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default font-mono text-xl sm:block md:text-[2vw]">
+        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default select-none font-mono text-xl sm:block md:text-[2vw]">
           {movie.tagline}
         </span>
         {movie.backdrop_path !== null || movie.poster_path !== null ? (
@@ -51,21 +50,19 @@ export default function MovieDetails({ movie }: { movie: Movie }) {
             </p>
           </div>
         )}
-        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-[#5f5f5f]" />
+        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-background" />
       </div>
       <ShowDetails show={movie} playFunc={playTrailer} />
       <div className="relative mx-auto max-w-7xl space-y-8">
         <Keywords type="movie" showId={movie.id} />
-        <SimilarShow type="movie" showId={movie.id} />
+        <SimilarShow type="movie" showId={movie.id} genres={movie.genres} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
-    </>
+    </div>
   );
 }
 
-MovieDetails.getLayout = function getLayout(
-  page: React.ReactElement<{ movie: Movie }>,
-) {
+MovieDetails.getLayout = function getLayout(page: React.ReactElement<{ movie: Movie }>) {
   return (
     <RootLayout
       title={page.props.movie.title}
@@ -88,9 +85,7 @@ export async function getServerSideProps(ctx: {
   }
 
   try {
-    const data = await fetcher<Movie>(
-      `https://api.themoviedb.org/3/movie/${movieId}`,
-    );
+    const data = await fetcher<Movie>(`https://api.themoviedb.org/3/movie/${movieId}`);
     return { props: { movie: data } };
   } catch (err) {
     const error = err as AxiosError<Error>;

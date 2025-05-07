@@ -12,10 +12,9 @@ import { ShowDetails } from "@/components/layouts/show-details";
 import { changeMovieState, modalState } from "~/atoms/jotaiAtoms";
 import { SimilarShow } from "@/components/layouts/similar-show";
 
-const DynamicModalVideo = dynamic(
-  () => import("@/components/layouts/modal-video"),
-  { ssr: false },
-);
+const DynamicModalVideo = dynamic(() => import("@/components/layouts/modal-video"), {
+  ssr: false,
+});
 
 export default function TvDetails({ tv }: { tv: Movie }) {
   const [, setCurrentMovie] = useAtom(changeMovieState);
@@ -26,15 +25,15 @@ export default function TvDetails({ tv }: { tv: Movie }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tv.id]);
 
-  const playTrailer = () => {
+  function playTrailer() {
     setCurrentMovie(tv);
     setShowModal(true);
-  };
+  }
 
   return (
-    <>
+    <div key={tv.id} className="bg-background/60">
       <div className="relative flex aspect-video w-full items-center justify-center object-cover brightness-50 sm:h-[56.25vw]">
-        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default font-mono text-xl sm:block md:text-[2vw]">
+        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default select-none font-mono text-xl sm:block md:text-[2vw]">
           {tv.tagline}
         </span>
         {tv.backdrop_path !== null || tv.poster_path !== null ? (
@@ -51,21 +50,19 @@ export default function TvDetails({ tv }: { tv: Movie }) {
             </p>
           </div>
         )}
-        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-[#5f5f5f]" />
+        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-background" />
       </div>
       <ShowDetails show={tv} playFunc={playTrailer} />
       <div className="relative mx-auto max-w-7xl space-y-8">
         <Keywords type="tv" showId={tv.id} />
-        <SimilarShow type="tv" showId={tv.id} />
+        <SimilarShow type="tv" showId={tv.id} genres={tv.genres} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
-    </>
+    </div>
   );
 }
 
-TvDetails.getLayout = function getLayout(
-  page: React.ReactElement<{ tv: Movie }>,
-) {
+TvDetails.getLayout = function getLayout(page: React.ReactElement<{ tv: Movie }>) {
   return (
     <RootLayout
       title={page.props.tv.name}
@@ -84,9 +81,7 @@ export async function getServerSideProps(ctx: { params: { tvId: string } }) {
   }
 
   try {
-    const data = await fetcher<Movie>(
-      `https://api.themoviedb.org/3/tv/${tvId}`,
-    );
+    const data = await fetcher<Movie>(`https://api.themoviedb.org/3/tv/${tvId}`);
 
     return { props: { tv: data } };
   } catch (err) {
