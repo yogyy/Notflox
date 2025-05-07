@@ -26,28 +26,20 @@
     --ring: 0 72.2% 50.6%;
     --radius: 0.3rem;
   }
-  html {
-    color-scheme: dark;
-    height: 100%;
-    scroll-behavior: smooth !important;
-    min-width: 260px;
-    /* scroll-padding-top: 74px; */
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border) / 1);
   }
+
   body {
-    background-color: #121212;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%231e1e1e' fill-opacity='0.45'%3E%3Cpath d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    overflow-x: hidden;
-    min-height: 100dvh;
+    background-color: color-mix(in oklab, hsl(var(--background)) 98%, transparent);
+    color: hsl(var(--foreground) / 1);
+    min-height: 100svh;
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
-  }
-  main {
-    --tw-gradient-from: rgb(18 18 18 / 0.2);
-    --tw-gradient-to: rgb(18 18 18 / 1);
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-    --tw-gradient-to: rgb(18 18 18);
-    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
   }
 
   input:-webkit-autofill,
@@ -59,12 +51,8 @@
 }
 
 @layer components {
-  .bannerButton {
-    @apply flex items-center gap-x-1 rounded px-2.5 py-1 text-sm font-semibold transition hover:opacity-75 md:px-8 md:py-2.5 md:text-xl;
-  }
-
-  .modalButton {
-    @apply flex h-11 w-11 items-center justify-center rounded-full border-2 border-[gray] bg-[#2a2a2a]/60 transition hover:border-white hover:bg-white/10;
+  .bg-pattern {
+    background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMiAzMicgd2lkdGg9JzMyJyBoZWlnaHQ9JzMyJyBmaWxsPSdub25lJyBzdHJva2U9J2NvbG9yLW1peChpbiBva2xhYiwgd2hpdGUgMiUsIHRyYW5zcGFyZW50KSc+PHBhdGggZD0nTTAgLjVIMzEuNVYzMicvPjwvc3ZnPg==");
   }
 
   .moviecard div {
@@ -76,9 +64,9 @@
   .moviecard:hover img,
   .moviecard:focus-within img {
     --tw-brightness: brightness(0.5);
-    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast)
-      var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert)
-      var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale)
+      var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia)
+      var(--tw-drop-shadow);
   }
   .moviecard div:after {
     --tw-scale-x: 0;
@@ -97,9 +85,8 @@
     max-width: 70px;
     z-index: 1;
     display: block;
-    transition-property: color, background-color, border-color,
-      text-decoration-color, fill, stroke, opacity, box-shadow, transform,
-      filter, backdrop-filter;
+    transition-property: color, background-color, border-color, text-decoration-color,
+      fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
     transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
     transition-duration: 400ms;
     --tw-scale-x: 1;
