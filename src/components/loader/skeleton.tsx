@@ -10,7 +10,7 @@ export function SearchShowSkeleton() {
   );
 }
 
-export const AiringAnimeSkeleton = () => {
+export function AiringAnimeSkeleton() {
   return (
     <ul className="relative mb-14 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
       {[...Array(12)].map((_, index) => (
@@ -20,9 +20,9 @@ export const AiringAnimeSkeleton = () => {
       ))}
     </ul>
   );
-};
+}
 
-export const TopAnimeSkeleton = () => {
+export function TopAnimeSkeleton() {
   return (
     <ul className="grid w-auto flex-auto grid-cols-1 gap-3 font-semibold text-gray-400 md:grid-cols-2 xl:grid-cols-1">
       <li className="relative flex aspect-video h-full max-h-[200px] w-full justify-center md:col-span-2 xl:col-span-1">
@@ -47,4 +47,24 @@ export const TopAnimeSkeleton = () => {
       ))}
     </ul>
   );
-};
+}
+
+export function SimilarShowSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {[...Array(4)].map((_, index) => (
+        <div key={index} className="frounded-sm mt-1 flex-col">
+          <div className="mb-3 mt-2 h-4 w-1/3 animate-pulse bg-[#fcfbfb70] md:w-[20vw]"></div>
+          <div className="flex">
+            <div className="relative mr-1.5 aspect-[9/14] h-[150px] w-24 animate-pulse rounded bg-[#1c1c1c] md:h-[249px] md:w-40"></div>
+            <div className="flex w-full flex-col gap-2">
+              <div className="h-3 w-full animate-pulse bg-[#fcfbfb40]" />
+              <div className="h-3 w-full animate-pulse bg-[#fcfbfb40]" />
+              <div className="h-3 w-5/6 animate-pulse bg-[#fcfbfb40]" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

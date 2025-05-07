@@ -37,11 +37,11 @@ export async function fetcher<T>(
   return await response.data;
 }
 
-export const convertGenreIdsToNames = (genreIds: number[], movie: Movie) => {
+export const convertGenreIdsToNames = (genreIds: number[], type: "movie" | "tv") => {
   const genreNames = genreIds.map((genreId: number) => {
-    const matchingGenre = (
-      movie.media_type === "tv" ? genreTv : genreMovie
-    ).find((genre) => genre.id === genreId);
+    const matchingGenre = (type === "tv" ? genreTv : genreMovie).find(
+      (genre) => genre.id === genreId,
+    );
     return matchingGenre ? matchingGenre.name : "";
   });
   return genreNames.join(", ");
