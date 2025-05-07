@@ -1,18 +1,19 @@
 import Head from "next/head";
-import { auth } from "~/auth";
 import Image from "next/image";
 import { GetServerSidePropsContext } from "next";
 import { HeadMetaData } from "@/components/head-meta";
 import { LoginForm } from "@/components/auth/login-form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Netflix } from "@/components/icons";
+import { auth } from "@/lib/auth";
+import { fromNodeHeaders } from "better-auth/node";
 
 const Auth = () => {
   return (
     <>
       <HeadMetaData />
       <Head>
-        <title>Login | NOTFLOX</title>
+        <title>Login | Notflox</title>
       </Head>
       <div className="relative w-full">
         <Image
@@ -42,9 +43,11 @@ const Auth = () => {
 export default Auth;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await auth(context.req, context.res);
+  const data = await auth.api.getSession({
+    headers: fromNodeHeaders(context.req.headers),
+  });
 
-  if (session) {
+  if (data) {
     return {
       redirect: {
         destination: "/profiles",
@@ -54,6 +57,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: { user: session },
+    props: {},
   };
 }
