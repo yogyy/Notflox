@@ -4,7 +4,6 @@ import { auth } from "@/lib/auth";
 import { addWatchlistSchema } from "@/lib/server/schema";
 import { fromNodeHeaders } from "better-auth/node";
 import { and, eq } from "drizzle-orm";
-import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -24,12 +23,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const newId = nanoid();
-
   try {
     await db.insert(watchlist).values({
       ...parseResult.data,
-      id: newId,
       userId: session.user.id,
     });
 
