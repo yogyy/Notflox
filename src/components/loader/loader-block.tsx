@@ -5,10 +5,7 @@ interface LoaderBlockType extends HTMLAttributes<HTMLDivElement> {}
 
 export const LoaderBlock = ({ className, ...props }: LoaderBlockType) => {
   return (
-    <div
-      className={cn("grid h-svh w-dvw place-content-center", className)}
-      {...props}
-    >
+    <div className={cn("grid place-content-center", className)} {...props}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

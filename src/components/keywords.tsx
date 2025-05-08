@@ -25,23 +25,17 @@ export const Keywords = ({ showId, type }: KeywordProps) => {
     ),
   );
 
-  if (isLoading) {
-    return (
-      <div className="mx-3 mt-5 flex flex-wrap items-center gap-2 py-2 xl:mb-52">
-        <h1>Keywords :</h1>
-        {[...Array(12)].map((_, index) => (
-          <div
-            key={index}
-            className="relative h-5 w-20 animate-pulse bg-white/5"
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className="mt-5 flex flex-wrap items-center px-3 py-2 xl:mb-52">
       <h1 className="px-3">Keywords :</h1>
+      {isLoading &&
+        [...Array(12)].map((_, index) => (
+          <p
+            key={index}
+            className="relative m-1 h-5 w-20 animate-pulse bg-white/5 text-opacity-0 first:ml-0 md:h-6"
+            aria-label="keyword loading"
+          ></p>
+        ))}
       {data?.map((keyword) => (
         <p
           key={keyword.id}

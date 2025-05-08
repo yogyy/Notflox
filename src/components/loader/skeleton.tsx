@@ -51,9 +51,9 @@ export function TopAnimeSkeleton() {
 
 export function SimilarShowSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+    <div className="relative grid grid-cols-1 gap-3 md:grid-cols-2">
       {[...Array(4)].map((_, index) => (
-        <div key={index} className="frounded-sm mt-1 flex-col">
+        <div key={index} className="mt-1 flex-col rounded-sm">
           <div className="mb-3 mt-2 h-4 w-1/3 animate-pulse bg-[#fcfbfb70] md:w-[20vw]"></div>
           <div className="flex">
             <div className="relative mr-1.5 aspect-[9/14] h-[150px] w-24 animate-pulse rounded bg-[#1c1c1c] md:h-[249px] md:w-40"></div>
