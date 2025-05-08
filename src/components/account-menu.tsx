@@ -43,16 +43,13 @@ export const AccountMenu = () => {
             </AvatarFallback>
           </Avatar>
           <CaretIcon
-            className={cn(
-              open ? "rotate-180" : "",
-              "transition-transform duration-300",
-            )}
+            className={cn(open ? "rotate-180" : "", "transition-transform duration-300")}
           />
         </TooltipTrigger>
         <TooltipContent
           sideOffset={10}
           align="end"
-          className="flex w-60 flex-col gap-1 rounded-sm border border-muted/20 bg-card/90"
+          className="flex w-60 flex-col gap-1 rounded border border-muted/20 bg-card/90"
         >
           <div className="group rounded-md">
             <button

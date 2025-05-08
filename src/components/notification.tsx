@@ -18,10 +18,10 @@ export const Notifications = () => {
       <Tooltip>
         <TooltipTrigger
           onClick={() => setClicked(true)}
-          className="group relative inline-flex items-center rounded-full text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
+          className="group relative inline-flex items-center rounded-full p-1 text-base font-medium hover:text-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600"
         >
           <span className="sr-only">notification</span>
-          <BellIcon />
+          <BellIcon className="h-6 w-6 text-gray-300" />
           <div
             className={
               clicked
@@ -33,13 +33,11 @@ export const Notifications = () => {
         <TooltipContent
           align="end"
           sideOffset={10}
-          className="rounded-sm border-muted/20 bg-background/90 p-0"
+          className="rounded border-muted/20 bg-background/90 p-0"
         >
           <div className="rounded-sm p-4">
             <span className="flex items-center">
-              <span className="text-sm font-medium text-gray-200">
-                Greetings!
-              </span>
+              <span className="text-sm font-medium text-gray-200">Greetings!</span>
             </span>
             <span className="block text-sm text-gray-400">
               Welcome to Notflox, enjoy surfing~
