@@ -53,7 +53,10 @@ export const AiringAnime = ({ className, ...props }: AiringProps) => {
       {isLoading ? (
         <AiringAnimeSkeleton />
       ) : (
-        <ul className="moviecard-container relative grid grid-cols-2 place-content-center gap-3 min-[320px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6">
+        <ul
+          key={data?.page}
+          className="moviecard-container relative grid grid-cols-2 place-content-center gap-3 min-[320px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 xl:grid-cols-6"
+        >
           {data?.results.map((tv) => (
             <li
               key={tv?.id}
