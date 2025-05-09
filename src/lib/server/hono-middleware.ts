@@ -5,8 +5,9 @@ const authMiddleware = createMiddleware(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
 
   if (!session) {
-    c.status(401);
-    return c.json({ message: "Unauthorized" });
+    c.set("user", null);
+    c.set("session", null);
+    return next();
   }
 
   c.set("user", session.user);
