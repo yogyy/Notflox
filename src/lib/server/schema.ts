@@ -32,3 +32,10 @@ export const honoSchema = z.object({
   type: z.union([z.literal("tv"), z.literal("movie")]),
   id: z.string().regex(/^\d+$/, "ID must be a number"),
 });
+
+export const addWatchlistSchemaHono = z.object({
+  title: z.string(),
+  backdropPath: z.string(),
+  posterPath: z.string(),
+  releaseDate: z.string(),
+});
