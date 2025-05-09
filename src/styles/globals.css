@@ -35,18 +35,12 @@
 
   body {
     background-color: color-mix(in oklab, hsl(var(--background)) 98%, transparent);
+    color-scheme: dark;
     color: hsl(var(--foreground) / 1);
     min-height: 100svh;
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     font-style: normal;
-  }
-
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus,
-  input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px black inset !important;
   }
 }
 
