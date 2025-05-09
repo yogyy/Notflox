@@ -1,5 +1,5 @@
 import { AccountMenu } from "../account-menu";
-import { Netflix } from "../icons";
+import { Netflix } from "../icons/logo";
 import { NavbarItem } from "../navbar-item";
 import { Notifications } from "../notification";
 import Link from "next/link";

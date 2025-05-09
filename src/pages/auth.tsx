@@ -4,7 +4,7 @@ import { GetServerSidePropsContext } from "next";
 import { HeadMetaData } from "@/components/head-meta";
 import { LoginForm } from "@/components/auth/login-form";
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { Netflix } from "@/components/icons";
+import { Netflix } from "@/components/icons/logo";
 import { auth } from "@/lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
 

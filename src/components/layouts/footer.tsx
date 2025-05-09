@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github } from "../icons";
+import { Github } from "../icons/logo";
 
 const date = new Date().getFullYear();
 

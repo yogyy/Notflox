@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { Button } from "./ui/button";
-import { Spinner } from "./icons";
+import { Spinner } from "./icons/spinner";
 
 interface Props {
   title: string;
@@ -22,7 +22,7 @@ export const ButtonWatchlists = (props: Props) => {
 
   const { data, isLoading: loadingQuery } = useQuery<{ in_list: boolean }>(
     ["watchlist", key],
-    () => fetch(`/api/${key}/watchlist`).then((res) => res.json()),
+    () => fetch(`/api/watchlist/${key}`).then((res) => res.json()),
   );
   const { mutate, isLoading: loadingMutate } = useMutation({
     onSuccess: (data) => {
@@ -33,9 +33,9 @@ export const ButtonWatchlists = (props: Props) => {
       });
     },
     mutationFn: async () => {
-      return fetch("/api/watchlist/post", {
+      return fetch(`/api/watchlist/${key}`, {
         method: "POST",
-        body: JSON.stringify({ ...props, mediaType: showType }),
+        body: JSON.stringify({ ...props }),
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json());
     },
