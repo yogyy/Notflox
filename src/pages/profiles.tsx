@@ -14,9 +14,9 @@ const Profiles = () => {
   const user = session?.user;
   const [userPic] = useAtom(nonUser);
 
-  const { data, isLoading } = useQuery<Watchlist[]>(
+  const { data, isLoading } = useQuery<{ watchlist: Watchlist[] }>(
     ["watchlist", user?.id],
-    () => fetch("/api/user/watchlist").then((res) => res.json()),
+    () => fetch("/api/watchlist").then((res) => res.json()),
     { enabled: !!user },
   );
 
@@ -59,7 +59,7 @@ const Profiles = () => {
               ))}
             </ul>
           ) : (
-            <UserWatchlist data={data || []} />
+            <UserWatchlist data={data?.watchlist || []} />
           )}
         </div>
       )}
