@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { Github } from "../icons";
+import { Github } from "../icons/logo";
 
 const date = new Date().getFullYear();
 
 export const Footer = () => {
   return (
-    <footer className="bg-ireng transition-colors">
+    <footer className="bg-background/60 transition-colors">
       <hr className="border-gray-700 pt-4 sm:mx-auto md:mb-6" />
       <div className="relative mx-auto max-w-7xl p-2.5 md:p-4">
         <div className="flex flex-row items-center justify-between gap-6 text-gray-400">

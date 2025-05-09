@@ -15,8 +15,10 @@ const NextImage = ({ className, src, alt, ...props }: ImageProps) => {
   );
 };
 
-interface Image404Props extends React.HTMLAttributes<HTMLSpanElement> {}
-const ImageNotFound = ({ className, ...props }: Image404Props) => {
+interface Image404Props extends React.HTMLAttributes<HTMLSpanElement> {
+  message?: string;
+}
+const ImageNotFound = ({ className, message, ...props }: Image404Props) => {
   return (
     <span
       className={cn(
@@ -25,8 +27,7 @@ const ImageNotFound = ({ className, ...props }: Image404Props) => {
       )}
       {...props}
     >
-      NOT FOUND <br />
-      404
+      {message || "Image not found"}
     </span>
   );
 };

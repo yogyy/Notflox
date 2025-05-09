@@ -25,7 +25,8 @@ const RootLayout = ({
         title={title}
       />
       <Header />
-      <main className="min-h-dvh">{children}</main>
+      <div className="bg-pattern fixed -z-10 h-svh w-svw" />
+      <main className="min-h-svh">{children}</main>
       {footer && <Footer />}
     </>
   );

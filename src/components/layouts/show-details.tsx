@@ -4,6 +4,7 @@ import { NextImage } from "../next-image";
 import { tanggal } from "@/lib/get-date";
 import { imgUrl } from "~/constants/movie";
 import { ButtonTrailer } from "../button-trailer";
+import { ButtonWatchlists } from "../button-watchlist";
 
 interface DetailProps extends React.ComponentProps<"article"> {
   show: Movie | undefined;
@@ -15,11 +16,13 @@ export const ShowDetails = ({
   className,
   ...props
 }: DetailProps) => {
+  if (!show) return null;
+
   return (
     <article
       className={cn(
         "relative flex flex-col gap-5 px-5 pt-4 sm:items-center",
-        "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-ireng/20",
+        "mx-auto max-w-7xl justify-start bg-gradient-to-b from-[#5f5f5f]/20 to-background/20",
         "md:-mt-[20%] md:flex-row md:items-start md:bg-none lg:-mt-[40%]",
         className,
       )}
@@ -36,16 +39,25 @@ export const ShowDetails = ({
             />
           </div>
         </div>
-        <div className="flex w-full flex-col justify-between gap-3 text-sm sm:mt-3">
+        <div className="flex w-full flex-col justify-between text-sm sm:mt-3">
           <span className="font-mono text-base sm:hidden md:text-3xl">
             {show?.tagline}
           </span>
-          <ButtonTrailer
-            onClick={playFunc}
-            title={`Play ${show?.name || show?.title} Trailer`}
-            className="w-32 sm:w-40"
-            type="button"
-          />
+          <div className="flex flex-wrap gap-3 sm:flex-col">
+            <ButtonTrailer
+              onClick={playFunc}
+              title="Play Trailer"
+              className="w-32 sm:w-40"
+              type="button"
+            />
+            <ButtonWatchlists
+              title={show?.title || show?.name}
+              showId={String(show?.id)}
+              backdropPath={show?.backdrop_path}
+              posterPath={show?.poster_path}
+              releaseDate={show?.release_date || show.first_air_date}
+            />
+          </div>
         </div>
       </div>
       <div className="w-full">

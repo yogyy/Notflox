@@ -1,58 +1,45 @@
-import { cn } from "@/lib/utils";
+import { fetcher } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { baseUrl } from "~/constants/movie";
 
-interface KW {
+interface Keyword {
   id: number;
   name: string;
 }
 
-interface KeywordProps extends React.ComponentProps<"div"> {
-  keyword: number;
+interface KeywordProps {
+  showId: number;
   type: string;
 }
 
-export const Keywords = ({
-  keyword,
-  type,
-  className,
-  ...props
-}: KeywordProps) => {
-  const { data, isLoading } = useQuery<KW[]>(
-    [`keywords ${type}`, keyword],
-    () =>
-      axios
-        .get(`/api/${type}/keyword/${keyword}`)
-        .then((res) => res.data.results || res.data.keywords),
+interface Response {
+  id: number;
+  keywords?: Keyword[];
+  results?: Keyword[];
+}
+
+export const Keywords = ({ showId, type }: KeywordProps) => {
+  const { data, isLoading } = useQuery([`keywords-${type}`, showId], () =>
+    fetcher<Response>(`${baseUrl}/${type}/${showId}/keywords`).then(
+      (res) => res.results || res.keywords,
+    ),
   );
 
-  if (isLoading) {
-    return (
-      <div className="mx-3 mt-5 flex flex-wrap items-center gap-2 py-2 xl:mb-52">
-        <h1>Keywords :</h1>
-        {[...Array(12)].map((_, index) => (
-          <div
-            key={index}
-            className="relative h-5 w-20 animate-pulse bg-white/5"
-          />
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={cn(
-        "mt-5 flex flex-wrap items-center px-3 py-2 xl:mb-52",
-        className,
-      )}
-      {...props}
-    >
+    <div className="mt-5 flex flex-wrap items-center px-3 py-2 xl:mb-52">
       <h1 className="px-3">Keywords :</h1>
-      {data?.map((keyword: KW) => (
+      {isLoading &&
+        [...Array(12)].map((_, index) => (
+          <p
+            key={index}
+            className="relative m-1 h-5 w-20 animate-pulse bg-white/5 text-opacity-0 first:ml-0 md:h-6"
+            aria-label="keyword loading"
+          ></p>
+        ))}
+      {data?.map((keyword) => (
         <p
           key={keyword.id}
-          className="m-1 w-max cursor-default rounded-md bg-white/5 px-2 text-sm text-gray-300 hover:bg-white/10 hover:text-gray-200 md:text-base"
+          className="m-1 w-max cursor-default rounded-sm bg-white/5 px-2 text-sm text-gray-300 hover:bg-white/10 hover:text-gray-200 md:text-base"
         >
           {keyword.name}
         </p>

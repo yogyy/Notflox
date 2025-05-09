@@ -41,7 +41,7 @@ const InnerThumbnail = ({
     <div
       className={cn(
         thumbnailVariants({ variant }),
-        "bg-zinc-800 transition duration-300 hover:bg-ireng group-focus-visible:bg-ireng",
+        "bg-zinc-800 transition duration-300 hover:bg-background group-focus-visible:bg-background",
       )}
     >
       {thumbnailUrl ? (

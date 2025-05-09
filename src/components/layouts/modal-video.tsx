@@ -78,7 +78,7 @@ const ModalVid = ({ showDetail }: { showDetail?: boolean }) => {
               >
                 <Dialog.Panel
                   className={cn(
-                    "absolute top-[15%] w-[64rem] max-w-5xl transform rounded-2xl bg-ireng/95 text-left align-middle shadow-xl transition-all",
+                    "absolute top-[15%] w-[64rem] max-w-5xl transform rounded-2xl bg-background/95 text-left align-middle shadow-xl transition-all",
                     !showDetail && "rounded-none",
                   )}
                 >

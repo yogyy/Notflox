@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Movie } from "~/types/tmdb-type";
 import dynamic from "next/dynamic";
@@ -12,33 +12,28 @@ import { ShowDetails } from "@/components/layouts/show-details";
 import { changeMovieState, modalState } from "~/atoms/jotaiAtoms";
 import { SimilarShow } from "@/components/layouts/similar-show";
 
-const DynamicModalVideo = dynamic(
-  () => import("@/components/layouts/modal-video"),
-  { ssr: false },
-);
+const DynamicModalVideo = dynamic(() => import("@/components/layouts/modal-video"), {
+  ssr: false,
+});
 
 export default function TvDetails({ tv }: { tv: Movie }) {
   const [, setCurrentMovie] = useAtom(changeMovieState);
   const [showModal, setShowModal] = useAtom(modalState);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setShowModal(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tv.id]);
 
-  const playTrailer = () => {
+  function playTrailer() {
     setCurrentMovie(tv);
     setShowModal(true);
-  };
+  }
 
   return (
-    <RootLayout
-      title={tv.name}
-      image={`${imageOg}${tv.backdrop_path}`}
-      description={tv.overview}
-    >
+    <div key={tv.id} className="bg-background/60">
       <div className="relative flex aspect-video w-full items-center justify-center object-cover brightness-50 sm:h-[56.25vw]">
-        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default font-mono text-xl sm:block md:text-[2vw]">
+        <span className="absolute left-[20%] top-[14%] z-10 hidden cursor-default select-none font-mono text-xl sm:block md:text-[2vw]">
           {tv.tagline}
         </span>
         {tv.backdrop_path !== null || tv.poster_path !== null ? (
@@ -55,40 +50,44 @@ export default function TvDetails({ tv }: { tv: Movie }) {
             </p>
           </div>
         )}
-        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-[#5f5f5f]" />
+        <div className="absolute bottom-0 h-full w-full bg-gradient-to-b from-transparent to-background" />
       </div>
       <ShowDetails show={tv} playFunc={playTrailer} />
       <div className="relative mx-auto max-w-7xl space-y-8">
-        <Keywords type="tv" keyword={tv.id} />
-        <SimilarShow type="tv" similar={tv.id} />
+        <Keywords type="tv" showId={tv.id} />
+        <SimilarShow type="tv" showId={tv.id} genres={tv.genres} />
       </div>
       {showModal && <DynamicModalVideo showDetail={false} />}
-    </RootLayout>
+    </div>
   );
 }
 
-export async function getServerSideProps(context: {
-  params: {
-    tvId: number;
-  };
-}) {
-  const tvId = Number(context.params.tvId);
+TvDetails.getLayout = function getLayout(page: React.ReactElement<{ tv: Movie }>) {
+  return (
+    <RootLayout
+      title={page.props.tv.name}
+      image={`${imageOg}${page.props.tv.backdrop_path}`}
+      description={page.props.tv.overview}
+    >
+      {page}
+    </RootLayout>
+  );
+};
+
+export async function getServerSideProps(ctx: { params: { tvId: string } }) {
+  const tvId = parseInt(ctx.params?.tvId);
+  if (!Number.isInteger(tvId)) {
+    return { notFound: true };
+  }
 
   try {
-    const data = await fetcher<Movie>(
-      `https://api.themoviedb.org/3/tv/${tvId}`,
-    );
-    return {
-      props: {
-        tv: data,
-      },
-    };
+    const data = await fetcher<Movie>(`https://api.themoviedb.org/3/tv/${tvId}`);
+
+    return { props: { tv: data } };
   } catch (err) {
     const error = err as AxiosError<Error>;
     if (error.response && error.response.status === 404) {
-      return {
-        notFound: true,
-      };
+      return { notFound: true };
     }
   }
 }

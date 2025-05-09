@@ -13,7 +13,7 @@ export const HeadMetaData = ({
   metaDescription = "Experience the world of cinema through our movie consumption app. Explore a vast collection of movies sourced from a reliable API. Dive into a diverse selection of films, genres, and more. Stream seamlessly and enjoy the magic of the movies. Discover your next favorite film today!",
   ogImageUrl = "https://res.cloudinary.com/dpegakmzh/image/upload/v1683377050/Group-3copyhero_wlchnc.jpg",
 }: MetaProps) => {
-  const defaultTitle = "NOTFLOX";
+  const defaultTitle = "Notflox";
   const { asPath } = useRouter();
   const pageUrl =
     process.env.NODE_ENV === "development"
