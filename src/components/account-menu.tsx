@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
 
 export const AccountMenu = () => {
   const { data: session } = authClient.useSession();
@@ -72,13 +73,22 @@ export const AccountMenu = () => {
           </div>
           <div className="-mx-1 border-t border-muted/20"></div>
           <div className="group rounded-md">
-            <button
-              type="button"
-              onClick={logOut}
-              className="flex w-full items-center justify-center gap-2 px-2 py-1 text-sm text-white group-hover:underline"
-            >
-              Logout
-            </button>
+            {session ? (
+              <button
+                type="button"
+                onClick={logOut}
+                className="flex w-full items-center justify-center gap-2 px-2 py-1 text-sm text-white group-hover:underline"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                className="flex w-full items-center justify-center gap-2 px-2 py-1 text-sm text-white group-hover:underline"
+                href="/auth"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </TooltipContent>
       </Tooltip>
