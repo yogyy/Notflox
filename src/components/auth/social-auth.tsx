@@ -1,23 +1,18 @@
-import { Github, Google, Spinner } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { providerState } from "~/atoms/auth-atoms";
 import { useAtom } from "jotai";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/router";
+import { Spinner } from "../icons/spinner";
+import { Github, Google } from "../icons/logo";
 
 export const Social = ({ disabled }: { disabled: boolean }) => {
   const [provider, setProvider] = useAtom(providerState);
-  const router = useRouter();
   const socialSignIn = async (provider: "google" | "github") => {
     const data = await authClient.signIn.social({
       provider,
+      callbackURL: "/profiles",
       fetchOptions: {
-        onSuccess: () => {
-          router
-            .push("/profiles")
-            .then(() => toast.success("Welcome To Notflox"));
-        },
+        onSuccess: () => setProvider(null),
       },
     });
 

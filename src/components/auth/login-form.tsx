@@ -1,4 +1,4 @@
-import * as z from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -15,15 +15,15 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "./form-error";
 import { useRouter } from "next/router";
 import { authState, providerState } from "~/atoms/auth-atoms";
-import { useAtomValue } from "jotai";
-import { Spinner } from "../icons";
+import { useAtom, useAtomValue } from "jotai";
+import { Spinner } from "../icons/spinner";
 import { cn } from "@/lib/utils";
 import { Social } from "./social-auth";
 import { authClient } from "@/lib/auth-client";
 
 export const LoginForm = () => {
   const router = useRouter();
-  const state = useAtomValue(authState);
+  const [state, setState] = useAtom(authState);
   const providerLogin = useAtomValue(providerState);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -33,14 +33,13 @@ export const LoginForm = () => {
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     if (state === "login") {
-      const { data, error } = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email: values.email,
         password: values.password,
         fetchOptions: {
           onSuccess: () => {
-            router
-              .push("/profiles")
-              .then(() => toast.success("Welcome To Notflox"));
+            setState("login");
+            router.push("/profiles").then(() => toast.success("Welcome To Notflox"));
           },
         },
       });
@@ -55,9 +54,8 @@ export const LoginForm = () => {
         name: values.username || "",
         fetchOptions: {
           onSuccess: () => {
-            router
-              .push("/profiles")
-              .then(() => toast.success("Welcome To Notflox"));
+            setState("login");
+            router.push("/profiles").then(() => toast.success("Welcome To Notflox"));
           },
         },
       });
@@ -103,8 +101,7 @@ export const LoginForm = () => {
                       {...field}
                       className={cn(
                         "min-h-14 rounded border-zinc-600 text-zinc-100",
-                        form.getFieldState("email").invalid &&
-                          "border-destructive",
+                        form.getFieldState("email").invalid && "border-destructive",
                       )}
                       autoComplete="off"
                       disabled={form.formState.isSubmitting}
@@ -126,8 +123,7 @@ export const LoginForm = () => {
                       {...field}
                       className={cn(
                         "min-h-14 rounded border-zinc-600 text-zinc-100",
-                        form.getFieldState("password").invalid &&
-                          "border-destructive",
+                        form.getFieldState("password").invalid && "border-destructive",
                       )}
                       autoComplete="off"
                       disabled={form.formState.isSubmitting}
