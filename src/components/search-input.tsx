@@ -29,7 +29,7 @@ export const SearchInput = () => {
     <button
       onClick={() => searchRef.current?.focus()}
       className={cn(
-        "hover:text-primary-foreground group relative inline-flex items-center justify-start rounded-sm border border-transparent bg-transparent px-1 py-1 text-sm font-medium text-white shadow-sm transition-colors focus-within:border-accent hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+        "group relative inline-flex items-center justify-start rounded-sm border border-transparent bg-transparent px-1 py-1 text-sm font-medium text-white shadow-sm transition-colors focus-within:border-accent hover:bg-white/10 hover:text-primary-foreground focus-visible:bg-white/10 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
         query?.length! >= 1 && "border-accent",
       )}
       aria-label="search by title"
