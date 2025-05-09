@@ -1,13 +1,14 @@
-## Notflox
+# Notflox
 
-Open Source Project to connect Public REST APIs(TMDB) using [Tanstack Query](https://tanstack.com/)
+Open Source TMDB client app
 
 ## Features
 
+- Authentications
 - Movie / Tv List
 - Movie / Tv Details
 - Trailer (if available)
-- Authentications
+- Watchlist (login require)
 
 ## Installation
 
@@ -23,9 +24,9 @@ npm run dev
 To run this project, you will need to add the following environment variables to your .env file
 
 ```bash
-DATABASE_URL=
-NEXTAUTH_JWT_SECRET=
-NEXTAUTH_SECRET=
+DATABASE_URL= # PostgreSQL DB
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
 
 GITHUB_ID=
 GITHUB_SECRET=
@@ -35,6 +36,10 @@ GOOGLE_CLIENT_SECRET=
 
 TMDB_API_KEY=
 NEXT_PUBLIC_UMAMI_WEBSITE_ID=
+
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+NODEJS_HELPERS=0 # require for vercel to hono work with the Pages Router
 ```
 
 ## Demo

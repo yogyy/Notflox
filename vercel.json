@@ -1,7 +1,7 @@
 {
   "git": {
     "deploymentEnabled": {
-      "move-static-file": false
+      "next-14": false
     }
   }
 }
