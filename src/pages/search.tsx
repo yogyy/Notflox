@@ -51,7 +51,7 @@ const SearchPage = () => {
                   {[...Array(12)].map((_, index) => (
                     <li key={index} className="relative w-full  px-[.2vw]">
                       <div className="aspect-video min-h-16 w-full animate-pulse rounded bg-zinc-800"></div>
-                      <p className="mx-0.5 mt-0.5 h-4 w-1/2 bg-foreground"></p>
+                      <p className="mx-0.5 mt-0.5 h-4 w-1/2 bg-foreground/70"></p>
                     </li>
                   ))}
                 </ul>
