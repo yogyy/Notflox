@@ -16,7 +16,7 @@ export default function Document() {
           defer
           src="/script.analytics.js"
           strategy="beforeInteractive"
-          data-website-id={process.env.NEXT_PUBLIC_UMAMI_ID}
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
         />
       </body>
     </Html>
